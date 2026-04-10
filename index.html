@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG Miles Credit Card Tracker</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --gold: #fbbf24;
+    --green: #34d399;
+    --red: #fb7185;
+    --border: #475569;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height:100vh; }
+
+  header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid var(--border); padding: 1.5rem 2rem; text-align:center; }
+  header h1 { font-size: 1.8rem; font-weight: 700; }
+  header h1 span { color: var(--accent); }
+  header p { color: var(--text2); margin-top: 0.3rem; font-size: 0.9rem; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .tab-btn { flex:1; padding: 0.85rem 1rem; background: var(--surface); color: var(--text2); border: none; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s; }
+  .tab-btn:hover { background: var(--surface2); }
+  .tab-btn.active { background: var(--accent); color: #0f172a; }
+
+  /* Search */
+  .search-box { position: relative; margin-bottom: 1.2rem; }
+  .search-box input { width: 100%; padding: 0.85rem 1rem 0.85rem 2.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 1rem; outline: none; transition: border-color 0.2s; }
+  .search-box input:focus { border-color: var(--accent); }
+  .search-box input::placeholder { color: var(--text2); }
+  .search-box .icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--text2); font-size: 1.1rem; }
+
+  /* Category chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .chip { padding: 0.4rem 0.9rem; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); color: var(--text2); cursor: pointer; font-size: 0.82rem; font-weight: 500; transition: all 0.2s; white-space: nowrap; }
+  .chip:hover, .chip.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+
+  /* Results */
+  .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .results-header h2 { font-size: 1.2rem; color: var(--text); }
+  .results-header .count { color: var(--text2); font-size: 0.85rem; }
+
+  .card-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .card-table thead th { background: var(--surface2); padding: 0.75rem 1rem; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text2); font-weight: 600; position: sticky; top:0; cursor: pointer; user-select: none; }
+  .card-table thead th:hover { color: var(--accent); }
+  .card-table thead th .sort-arrow { margin-left: 4px; font-size: 0.7rem; }
+  .card-table tbody td { padding: 0.7rem 1rem; border-top: 1px solid var(--border); font-size: 0.9rem; vertical-align: top; }
+  .card-table tbody tr:hover { background: rgba(56,189,248,0.05); }
+
+  .mpd { font-weight: 700; font-size: 1rem; }
+  .mpd-high { color: var(--gold); }
+  .mpd-mid { color: var(--green); }
+  .mpd-low { color: var(--text2); }
+
+  .bank-badge { display:inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em; }
+  .bank-UOB { background: #1e3a5f; color: #60a5fa; }
+  .bank-DBS { background: #3b1f1f; color: #f87171; }
+  .bank-OCBC { background: #1f3b2d; color: #4ade80; }
+  .bank-Citi { background: #2d2552; color: #a78bfa; }
+  .bank-HSBC { background: #3b2020; color: #fb923c; }
+  .bank-AMEX { background: #1f2d3b; color: #67e8f9; }
+  .bank-StanChart { background: #2b3b1f; color: #a3e635; }
+  .bank-Maybank { background: #3b3a1f; color: #fde047; }
+  .bank-BOC { background: #3b1f2d; color: #f9a8d4; }
+  .bank-Chocolate { background: #2d2d1f; color: #d4a574; }
+  .bank-KrisFlyer { background: #1f2b3b; color: #7dd3fc; }
+  .bank-DCS { background: #2b1f3b; color: #c4b5fd; }
+  .bank-Other { background: var(--surface2); color: var(--text2); }
+
+  .cap-info { font-size: 0.8rem; color: var(--text2); margin-top: 0.2rem; }
+  .cap-highlight { color: var(--red); font-weight: 500; }
+  .remarks-text { font-size: 0.82rem; color: var(--text2); line-height: 1.4; }
+
+  .no-results { text-align: center; padding: 3rem; color: var(--text2); }
+  .no-results .emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+  /* Card detail panel */
+  .card-detail { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+  .card-detail h3 { color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem; }
+  .card-detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.8rem; }
+  .cat-earn { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.8rem; background: var(--bg); border-radius: 8px; }
+  .cat-earn .cat-name { font-size: 0.85rem; color: var(--text2); }
+  .cat-earn .earn-rate { font-weight: 700; }
+
+  /* Summary stats */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; }
+  .stat-card .num { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+  .stat-card .label { font-size: 0.8rem; color: var(--text2); margin-top: 0.2rem; }
+
+  .source-note { text-align: center; color: var(--text2); font-size: 0.75rem; margin-top: 2rem; padding: 1rem; border-top: 1px solid var(--border); }
+  .source-note a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .container { padding: 1rem; }
+    .card-table { font-size: 0.85rem; }
+    .card-table thead th, .card-table tbody td { padding: 0.5rem 0.6rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    header h1 { font-size: 1.4rem; }
+    .card-detail-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Scrollable table wrapper */
+  .table-wrap { overflow-x: auto; border-radius: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✈️ SG <span>Miles</span> Card Tracker</h1>
+  <p>Find the best credit card for maximum miles — search by category or card</p>
+</header>
+
+<div class="container">
+
+  <div class="stats" id="stats"></div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="category" onclick="switchTab('category')">🏷️ Search by Category</button>
+    <button class="tab-btn" data-tab="card" onclick="switchTab('card')">💳 Search by Card</button>
+  </div>
+
+  <!-- Category Tab -->
+  <div id="tab-category">
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="cat-search" placeholder="Search categories (e.g. Dining, Online, Transport...)" oninput="filterCategories()">
+    </div>
+    <div class="chips" id="cat-chips"></div>
+    <div id="cat-results"></div>
+  </div>
+
+  <!-- Card Tab -->
+  <div id="tab-card" style="display:none">
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="card-search" placeholder="Search cards (e.g. UOB PPV, DBS Woman's, Citi Rewards...)" oninput="filterCards()">
+    </div>
+    <div class="chips" id="card-chips"></div>
+    <div id="card-results"></div>
+  </div>
+
+  <div class="source-note">
+    Data sourced from <a href="https://milelion.com/credit-cards/guide/" target="_blank">The MileLion's Credit Card Guide</a> (Last updated: Apr 2026). Always verify with the bank before applying.
+  </div>
+</div>
+
+<script>
+// ============================================================
+// COMPLETE CREDIT CARD DATA
+// ============================================================
+const DATA = [
+  // ===== LOCAL GENERAL SPENDING =====
+  {card:"Amaze + Citi Rewards", bank:"Citi", category:"Local General Spending", mpd:4, cap:"S$1K/s.month", remarks:"1% admin fee (min S$0.50). Excludes travel and mobile wallet"},
+  {card:"StanChart Beyond Card", bank:"StanChart", category:"Local General Spending", mpd:2, cap:"No cap", remarks:"Regular: 1.5 mpd, PB: 2 mpd, PP: 2 mpd (up to 2 mpd)"},
+  {card:"HSBC Premier Mastercard", bank:"HSBC", category:"Local General Spending", mpd:1.68, cap:"No cap", remarks:""},
+  {card:"Citi ULTIMA Card", bank:"Citi", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
+  {card:"DBS Insignia Card", bank:"DBS", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
+  {card:"UOB Reserve Card", bank:"UOB", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
+  {card:"OCBC VOYAGE Card (Premier/PPC/BOS)", bank:"OCBC", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
+  {card:"DBS Vantage Card", bank:"DBS", category:"Local General Spending", mpd:1.5, cap:"No cap", remarks:""},
+  {card:"BOC Elite Miles Card", bank:"BOC", category:"Local General Spending", mpd:1.4, cap:"No cap", remarks:""},
+  {card:"UOB Visa Infinite Metal Card", bank:"UOB", category:"Local General Spending", mpd:1.4, cap:"No cap", remarks:""},
+  {card:"UOB PRVI Miles", bank:"UOB", category:"Local General Spending", mpd:1.4, cap:"No cap", remarks:"AMEX / Mastercard / Visa"},
+  {card:"StanChart Visa Infinite", bank:"StanChart", category:"Local General Spending", mpd:1.4, cap:"No cap", remarks:"Min S$2K total spend/s.month, otherwise 1 mpd"},
+  {card:"DBS Altitude Card", bank:"DBS", category:"Local General Spending", mpd:1.3, cap:"No cap", remarks:"AMEX / Visa"},
+  {card:"Citi Prestige Card", bank:"Citi", category:"Local General Spending", mpd:1.3, cap:"No cap", remarks:"Up to 0.06/0.12 mpd extra from relationship bonus"},
+  {card:"OCBC 90°N Card", bank:"OCBC", category:"Local General Spending", mpd:1.3, cap:"No cap", remarks:"MC / Visa"},
+  {card:"OCBC VOYAGE Card", bank:"OCBC", category:"Local General Spending", mpd:1.3, cap:"No cap", remarks:""},
+  {card:"OCBC Premier Visa Infinite", bank:"OCBC", category:"Local General Spending", mpd:1.28, cap:"No cap", remarks:""},
+  {card:"AMEX HighFlyer Card", bank:"AMEX", category:"Local General Spending", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"HSBC TravelOne Card", bank:"HSBC", category:"Local General Spending", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"Maybank Visa Infinite", bank:"Maybank", category:"Local General Spending", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"StanChart Journey Card", bank:"StanChart", category:"Local General Spending", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Local General Spending", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"Citi PremierMiles Card", bank:"Citi", category:"Local General Spending", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"AMEX KrisFlyer Ascend", bank:"AMEX", category:"Local General Spending", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"AMEX KrisFlyer Credit Card", bank:"AMEX", category:"Local General Spending", mpd:1.1, cap:"No cap", remarks:""},
+  {card:"HSBC Visa Infinite", bank:"HSBC", category:"Local General Spending", mpd:1, cap:"No cap", remarks:"Step-up earn rates have been sunset"},
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Local General Spending", mpd:1, cap:"S$1K/c.month", remarks:"0.4 mpd after cap"},
+
+  // ===== FOREIGN CURRENCY GENERAL SPENDING =====
+  {card:"DCS Imperium Card", bank:"DCS", category:"Foreign Currency Spending", mpd:4, cap:"No cap", remarks:"Min S$4K FCY spend/c.month"},
+  {card:"Amaze + Citi Rewards", bank:"Citi", category:"Foreign Currency Spending", mpd:4, cap:"S$1K/s.month", remarks:"Excludes travel and mobile wallet"},
+  {card:"Maybank XL Card", bank:"Maybank", category:"Foreign Currency Spending", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"UOB Visa Signature", bank:"UOB", category:"Foreign Currency Spending", mpd:4, cap:"S$1.2K/s.month", remarks:"Min S$1K FCY spend/s.month"},
+  {card:"StanChart Beyond Card", bank:"StanChart", category:"Foreign Currency Spending", mpd:4, cap:"No cap", remarks:"Regular: 3 mpd, PB: 3.5 mpd, PP: 4 mpd"},
+  {card:"Maybank Visa Infinite", bank:"Maybank", category:"Foreign Currency Spending", mpd:3.2, cap:"No cap", remarks:"Min S$4K spend/c.month, otherwise 2 mpd"},
+  {card:"Maybank World Mastercard", bank:"Maybank", category:"Foreign Currency Spending", mpd:3.2, cap:"No cap", remarks:"Min S$4K spend/c.month. 2.8 mpd if min S$800/c.month, otherwise 0.4 mpd"},
+  {card:"StanChart Visa Infinite", bank:"StanChart", category:"Foreign Currency Spending", mpd:3, cap:"No cap", remarks:"Min S$2K overall spend/s.month, otherwise 1 mpd"},
+  {card:"StanChart Rewards+ Card", bank:"StanChart", category:"Foreign Currency Spending", mpd:2.9, cap:"S$2.2K/m.year", remarks:"FCY spending only"},
+  {card:"BOC Elite Miles Card", bank:"BOC", category:"Foreign Currency Spending", mpd:2.8, cap:"No cap", remarks:""},
+  {card:"Maybank Horizon Visa Signature", bank:"Maybank", category:"Foreign Currency Spending", mpd:2.8, cap:"No cap", remarks:"Min S$800 spend/c.month, otherwise 1.2 mpd. 3.2 mpd for CN/HK/ID/JP/MY/TW/KR/TH till 30 Jun 26"},
+  {card:"HSBC Premier Mastercard", bank:"HSBC", category:"Foreign Currency Spending", mpd:2.76, cap:"No cap", remarks:""},
+  {card:"HSBC TravelOne Card", bank:"HSBC", category:"Foreign Currency Spending", mpd:2.4, cap:"No cap", remarks:""},
+  {card:"UOB PRVI Miles", bank:"UOB", category:"Foreign Currency Spending", mpd:2.4, cap:"No cap", remarks:"3 mpd if in IDR, MYR, THB, VND. AMEX/MC/Visa"},
+  {card:"UOB Reserve Card", bank:"UOB", category:"Foreign Currency Spending", mpd:2.4, cap:"No cap", remarks:""},
+  {card:"UOB Visa Infinite Metal Card", bank:"UOB", category:"Foreign Currency Spending", mpd:2.4, cap:"No cap", remarks:""},
+  {card:"DBS Treasures AMEX", bank:"DBS", category:"Foreign Currency Spending", mpd:2.4, cap:"No cap", remarks:""},
+  {card:"OCBC VOYAGE (Premier/PPC/BOS)", bank:"OCBC", category:"Foreign Currency Spending", mpd:2.3, cap:"No cap", remarks:""},
+  {card:"OCBC Premier Visa Infinite", bank:"OCBC", category:"Foreign Currency Spending", mpd:2.24, cap:"No cap", remarks:""},
+  {card:"Citi PremierMiles Card", bank:"Citi", category:"Foreign Currency Spending", mpd:2.2, cap:"No cap", remarks:""},
+  {card:"DBS Altitude Card", bank:"DBS", category:"Foreign Currency Spending", mpd:2.2, cap:"No cap", remarks:"AMEX / Visa"},
+  {card:"DBS Vantage Card", bank:"DBS", category:"Foreign Currency Spending", mpd:2.2, cap:"No cap", remarks:""},
+  {card:"OCBC VOYAGE Card", bank:"OCBC", category:"Foreign Currency Spending", mpd:2.2, cap:"No cap", remarks:""},
+  {card:"OCBC 90°N Card", bank:"OCBC", category:"Foreign Currency Spending", mpd:2.1, cap:"No cap", remarks:"MC / Visa"},
+  {card:"Citi Prestige Card", bank:"Citi", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:"Up to 0.06/0.12 mpd extra from relationship bonus"},
+  {card:"Citi ULTIMA Card", bank:"Citi", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:""},
+  {card:"DBS Insignia Card", bank:"DBS", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:""},
+  {card:"HSBC Visa Infinite", bank:"HSBC", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:"Step-up earn rates sunset"},
+  {card:"StanChart Journey Card", bank:"StanChart", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:""},
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Foreign Currency Spending", mpd:1, cap:"S$1K/c.month", remarks:"No FCY fees. 0.4 mpd after cap"},
+
+  // ===== AIR TICKETS =====
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Air Tickets", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Air Tickets", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"Maybank XL Card", bank:"Maybank", category:"Air Tickets", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Air Tickets", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Travel must be chosen as bonus category"},
+  {card:"UOB PRVI Miles", bank:"UOB", category:"Air Tickets", mpd:3, cap:"No cap", remarks:"For selected airline bookings on Expedia"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Air Tickets", mpd:3, cap:"No cap", remarks:"SIA & Scoot only"},
+  {card:"Maybank Horizon Visa Signature", bank:"Maybank", category:"Air Tickets", mpd:2.8, cap:"S$10K/c.month", remarks:"Min S$800 spend/c.month"},
+  {card:"AMEX HighFlyer Card", bank:"AMEX", category:"Air Tickets", mpd:2, cap:"No cap", remarks:"SIA & Scoot only"},
+  {card:"AMEX KrisFlyer Ascend", bank:"AMEX", category:"Air Tickets", mpd:2, cap:"No cap", remarks:"SIA & Scoot only"},
+  {card:"AMEX KrisFlyer Credit Card", bank:"AMEX", category:"Air Tickets", mpd:2, cap:"No cap", remarks:"SIA & Scoot only"},
+
+  // ===== AMAZE =====
+  {card:"Citi Rewards Card", bank:"Citi", category:"Amaze", mpd:4, cap:"S$1K/s.month", remarks:"Excludes travel transactions"},
+  {card:"Maybank XL Card", bank:"Maybank", category:"Amaze", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500. Dining, shopping, entertainment, travel"},
+  {card:"OCBC Rewards Card", bank:"OCBC", category:"Amaze", mpd:4, cap:"S$1.1K/c.month", remarks:"Clothes, bags, shoes and shopping"},
+
+  // ===== ATOME =====
+  {card:"Citi Rewards Card", bank:"Citi", category:"Atome", mpd:4, cap:"S$1K/s.month", remarks:""},
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Atome", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Atome", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Atome", mpd:2.4, cap:"No cap", remarks:"Min S$1K spend on SIA Group in a m.year"},
+
+  // ===== CAR RENTAL =====
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Car Rental", mpd:4, cap:"S$1K/c.month", remarks:"Online only"},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Car Rental", mpd:4, cap:"S$1K/c.month", remarks:"MCC 7512 not included"},
+  {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Car Rental", mpd:4, cap:"S$1K/c.month", remarks:"FCY only. Min S$500/c.month"},
+  {card:"UOB Preferred Visa", bank:"UOB", category:"Car Rental", mpd:4, cap:"S$600/c.month", remarks:"Must pay via mobile contactless"},
+  {card:"UOB Visa Signature", bank:"UOB", category:"Car Rental", mpd:4, cap:"S$1.2K/s.month", remarks:"FCY only. Min S$1K/s.month"},
+  {card:"StanChart Beyond Card", bank:"StanChart", category:"Car Rental", mpd:4, cap:"No cap", remarks:"FCY only. 3 mpd regular, 3.5 mpd PB, 4 mpd PP"},
+  {card:"Maybank Visa Infinite", bank:"Maybank", category:"Car Rental", mpd:3.2, cap:"No cap", remarks:"FCY only. Min S$4K spend/c.month"},
+  {card:"Maybank World Mastercard", bank:"Maybank", category:"Car Rental", mpd:3.2, cap:"No cap", remarks:"FCY only. Min S$4K/c.month. 2.8 mpd with min S$800/c.month"},
+  {card:"StanChart Visa Infinite", bank:"StanChart", category:"Car Rental", mpd:3, cap:"No cap", remarks:"FCY only. Min S$2K/s.month, otherwise 1 mpd"},
+  {card:"BOC Elite Miles Card", bank:"BOC", category:"Car Rental", mpd:2.8, cap:"No cap", remarks:"FCY only. No min spend or cap"},
+  {card:"Maybank Horizon Visa Signature", bank:"Maybank", category:"Car Rental", mpd:2.8, cap:"No cap", remarks:"FCY only. Min retail S$800/c.month"},
+
+  // ===== CHARITABLE DONATIONS =====
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Charitable Donations", mpd:1, cap:"S$1K/c.month", remarks:"Card won't work for overseas charities. 0.4 mpd after cap"},
+  {card:"AMEX Centurion", bank:"AMEX", category:"Charitable Donations", mpd:0.78, cap:"No cap", remarks:""},
+  {card:"AMEX Platinum Charge", bank:"AMEX", category:"Charitable Donations", mpd:0.63, cap:"No cap", remarks:""},
+
+  // ===== DINING =====
+  {card:"StanChart Smart Card", bank:"StanChart", category:"Dining", mpd:9.28, cap:"No cap", remarks:"Min S$1.5K spend/s.month. 7.42 mpd with min S$800, 3.71 mpd otherwise. Selected fast food only"},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Dining", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"Maybank XL Card", bank:"Maybank", category:"Dining", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Dining", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Dining must be chosen as bonus category"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Dining", mpd:2.4, cap:"No cap", remarks:"Min S$1K spend on SIA Group in a m.year"},
+
+  // ===== EDUCATION =====
+  {card:"UOB Reserve Card", bank:"UOB", category:"Education", mpd:1.6, cap:"No cap", remarks:""},
+  {card:"UOB Visa Infinite Metal Card", bank:"UOB", category:"Education", mpd:1.4, cap:"No cap", remarks:""},
+  {card:"UOB Privilege Banking Card", bank:"UOB", category:"Education", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"Maybank Visa Infinite", bank:"Maybank", category:"Education", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Education", mpd:1, cap:"S$1K/c.month", remarks:"0.4 mpd after cap"},
+
+  // ===== EV CHARGING =====
+  {card:"DBS yuu Visa", bank:"DBS", category:"EV Charging", mpd:10, cap:"S$822/c.month", remarks:"For Charge+ only. Min S$800/c.month. Visa card only"},
+  {card:"StanChart Smart Card", bank:"StanChart", category:"EV Charging", mpd:9.28, cap:"No cap", remarks:"Min S$1.5K/s.month"},
+  {card:"Citi Rewards Card", bank:"Citi", category:"EV Charging", mpd:4, cap:"S$1K/s.month", remarks:"Online only"},
+  {card:"DBS Woman's World Card", bank:"DBS", category:"EV Charging", mpd:4, cap:"S$1K/c.month", remarks:"Online only"},
+
+  // ===== FOOD DELIVERY =====
+  {card:"DBS yuu Card", bank:"DBS", category:"Food Delivery", mpd:10, cap:"S$822/c.month", remarks:"For Foodpanda only. Min S$800/c.month. AMEX/Visa"},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Food Delivery", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Dining must be chosen as bonus category"},
+  {card:"Citi Rewards Card", bank:"Citi", category:"Food Delivery", mpd:4, cap:"S$1K/s.month", remarks:""},
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Food Delivery", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"Maybank XL Card", bank:"Maybank", category:"Food Delivery", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"UOB Preferred Visa", bank:"UOB", category:"Food Delivery", mpd:4, cap:"S$600/c.month", remarks:""},
+  {card:"StanChart Journey Card", bank:"StanChart", category:"Food Delivery", mpd:3, cap:"S$1K/s.month", remarks:"Must be online in SGD"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Food Delivery", mpd:2.4, cap:"No cap", remarks:"Min S$1K spend on SIA Group in a m.year"},
+
+  // ===== GRAB/GOJEK/RIDE HAILING =====
+  {card:"DBS yuu Card", bank:"DBS", category:"Grab/Gojek/Ride Hailing", mpd:10, cap:"S$822/c.month", remarks:"For Gojek. Min S$800/c.month"},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Grab/Gojek/Ride Hailing", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Transport must be chosen as bonus category"},
+  {card:"Citi Rewards Card", bank:"Citi", category:"Grab/Gojek/Ride Hailing", mpd:4, cap:"S$1K/s.month", remarks:""},
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Grab/Gojek/Ride Hailing", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Grab/Gojek/Ride Hailing", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"StanChart Journey Card", bank:"StanChart", category:"Grab/Gojek/Ride Hailing", mpd:3, cap:"S$1K/s.month", remarks:"Must be online in SGD"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Grab/Gojek/Ride Hailing", mpd:2.4, cap:"No cap", remarks:"Min S$1K spend on SIA Group in a m.year"},
+
+  // ===== GOVERNMENT SERVICES =====
+  {card:"AMEX Solitaire PPS Credit Card", bank:"AMEX", category:"Government Services", mpd:1.3, cap:"No cap", remarks:""},
+  {card:"AMEX PPS Credit Card", bank:"AMEX", category:"Government Services", mpd:1.3, cap:"No cap", remarks:""},
+  {card:"AMEX HighFlyer Card", bank:"AMEX", category:"Government Services", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"AMEX KrisFlyer Ascend", bank:"AMEX", category:"Government Services", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"AMEX KrisFlyer Credit Card", bank:"AMEX", category:"Government Services", mpd:1.1, cap:"No cap", remarks:""},
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Government Services", mpd:1, cap:"100 Max Miles/c.month", remarks:"Cap shared with all other bill payments"},
+
+  // ===== GROCERIES/SUPERMARKET =====
+  {card:"DBS yuu Card", bank:"DBS", category:"Groceries/Supermarket", mpd:10, cap:"S$822/c.month", remarks:"For Cold Storage and Giant. Min S$800/c.month"},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Groceries/Supermarket", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Family must be chosen as bonus category"},
+  {card:"StanChart Journey Card", bank:"StanChart", category:"Groceries/Supermarket", mpd:3, cap:"S$1K/s.month", remarks:"Must be online in SGD"},
+
+  // ===== HOSPITALS =====
+  {card:"Citi ULTIMA Card", bank:"Citi", category:"Hospitals", mpd:1.6, cap:"No cap", remarks:""},
+  {card:"AMEX Solitaire PPS Credit Card", bank:"AMEX", category:"Hospitals", mpd:1.3, cap:"No cap", remarks:"Excludes public hospitals"},
+  {card:"AMEX PPS Credit Card", bank:"AMEX", category:"Hospitals", mpd:1.3, cap:"No cap", remarks:"Excludes public hospitals"},
+  {card:"OCBC VOYAGE Card", bank:"OCBC", category:"Hospitals", mpd:1.3, cap:"No cap", remarks:"Excludes public hospitals"},
+  {card:"OCBC Premier Visa Infinite", bank:"OCBC", category:"Hospitals", mpd:1.28, cap:"No cap", remarks:"Excludes public hospitals"},
+  {card:"Maybank Visa Infinite", bank:"Maybank", category:"Hospitals", mpd:1.2, cap:"No cap", remarks:""},
+  {card:"AMEX HighFlyer Card", bank:"AMEX", category:"Hospitals", mpd:1.2, cap:"No cap", remarks:"Excludes public hospitals"},
+  {card:"AMEX KrisFlyer Ascend", bank:"AMEX", category:"Hospitals", mpd:1.2, cap:"No cap", remarks:"Excludes public hospitals"},
+  {card:"AMEX KrisFlyer Credit Card", bank:"AMEX", category:"Hospitals", mpd:1.1, cap:"No cap", remarks:"Excludes public hospitals"},
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Hospitals", mpd:1, cap:"100 Max Miles/c.month", remarks:"Cap shared with all other bill payments"},
+
+  // ===== HOTELS =====
+  {card:"Citi PremierMiles Card", bank:"Citi", category:"Hotels", mpd:10, cap:"No cap", remarks:"10 mpd on Kaligo, 7.2 mpd on Agoda. See T&Cs for exclusions"},
+  {card:"UOB PRVI Miles", bank:"UOB", category:"Hotels", mpd:8, cap:"No cap", remarks:"8 mpd on Agoda and Expedia"},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Hotels", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Travel must be chosen as bonus category"},
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:"Must be online"},
+  {card:"Maybank XL Card", bank:"Maybank", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Hotels", mpd:2.4, cap:"No cap", remarks:"Agoda, AirBnB, Booking.com, Expedia, Hotels.com, Kaligo, Traveloka, Trip.com. Min S$1K on SIA Group/m.year"},
+
+  // ===== INSURANCE PREMIUMS =====
+  {card:"Maybank Visa Infinite", bank:"Maybank", category:"Insurance Premiums", mpd:1.2, cap:"S$3K/c.month", remarks:""},
+  {card:"AMEX KrisFlyer Ascend", bank:"AMEX", category:"Insurance Premiums", mpd:1.2, cap:"No cap", remarks:"Chubb only"},
+  {card:"AMEX KrisFlyer Credit Card", bank:"AMEX", category:"Insurance Premiums", mpd:1.1, cap:"No cap", remarks:"Chubb only"},
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Insurance Premiums", mpd:1, cap:"100 Max Miles/c.month", remarks:"Cap shared with all other bill payments"},
+
+  // ===== KRIS+ =====
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Kris+", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"Citi Rewards + Amaze", bank:"Citi", category:"Kris+", mpd:4, cap:"S$1K/s.month", remarks:"1% admin fee (min S$0.50) for SGD. No bonuses for naked Citi Rewards Card"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Kris+", mpd:3, cap:"No cap", remarks:""},
+
+  // ===== ONLINE TRANSACTIONS =====
+  {card:"OCBC Rewards Card", bank:"OCBC", category:"Online Transactions", mpd:6, cap:"S$1K/c.month", remarks:"6 mpd for Shopee, Lazada, TikTok Shop, Taobao (till 30 Jun 26). 4 mpd other online, cap S$1.1K/c.month"},
+  {card:"Citi Rewards Card", bank:"Citi", category:"Online Transactions", mpd:4, cap:"S$1K/s.month", remarks:"Excludes travel"},
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Online Transactions", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Online Transactions", mpd:4, cap:"S$1K/c.month", remarks:"For online shopping and travel"},
+  {card:"UOB Preferred Visa", bank:"UOB", category:"Online Transactions", mpd:4, cap:"S$600/c.month", remarks:"For online shopping and entertainment"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Online Transactions", mpd:2.4, cap:"No cap", remarks:"Online shopping and travel. Min S$1K on SIA Group/m.year"},
+
+  // ===== PAYWAVE / MOBILE PAYMENTS =====
+  {card:"UOB Preferred Visa", bank:"UOB", category:"PayWave/Mobile Payments", mpd:4, cap:"S$600/c.month", remarks:"Must use mobile payments. No points for physical card paywave"},
+  {card:"UOB Visa Signature", bank:"UOB", category:"PayWave/Mobile Payments", mpd:4, cap:"S$1.2K/s.month", remarks:"Min S$1K/s.month. Must use contactless"},
+
+  // ===== PETROL =====
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Petrol", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Transport must be chosen as bonus category"},
+  {card:"UOB Visa Signature", bank:"UOB", category:"Petrol", mpd:4, cap:"S$1.2K/s.month", remarks:"Min S$1K. Combined spending on petrol and local contactless"},
+  {card:"Maybank World Mastercard", bank:"Maybank", category:"Petrol", mpd:4, cap:"No cap", remarks:"Offline only"},
+
+  // ===== PHARMACIES =====
+  {card:"DBS yuu Card", bank:"DBS", category:"Pharmacies", mpd:10, cap:"S$822/c.month", remarks:"For Guardian. Min S$800/c.month"},
+  {card:"OCBC Rewards Card", bank:"OCBC", category:"Pharmacies", mpd:4, cap:"S$1.1K/c.month", remarks:"6 mpd for Watsons (till 30 Jun 26)"},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Pharmacies", mpd:4, cap:"S$1K/c.month", remarks:""},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Pharmacies", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Beauty & Wellness must be chosen as bonus category"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Pharmacies", mpd:2.4, cap:"No cap", remarks:"Min S$1K on SIA Group/m.year. Must be online"},
+
+  // ===== PUBLIC TRANSPORTATION =====
+  {card:"DBS yuu Card", bank:"DBS", category:"Public Transportation (SimplyGo)", mpd:10, cap:"S$822/c.month", remarks:"Min S$800/c.month"},
+  {card:"StanChart Smart Card", bank:"StanChart", category:"Public Transportation (SimplyGo)", mpd:9.28, cap:"No cap", remarks:"Min S$1.5K spend/s.month. 7.42 mpd with min S$800, 3.71 mpd otherwise"},
+  {card:"UOB Preferred Visa", bank:"UOB", category:"Public Transportation (SimplyGo)", mpd:4, cap:"S$600/c.month", remarks:"Must use mobile contactless"},
+  {card:"UOB Visa Signature", bank:"UOB", category:"Public Transportation (SimplyGo)", mpd:4, cap:"S$1.2K/s.month", remarks:"Min S$1K/s.month. Must use contactless"},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Public Transportation (SimplyGo)", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Transport must be chosen as bonus category"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Public Transportation (SimplyGo)", mpd:2.4, cap:"No cap", remarks:"Min S$1K on SIA Group/m.year"},
+
+  // ===== SHOPPING =====
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"38 MCCs"},
+  {card:"UOB Preferred Visa", bank:"UOB", category:"Shopping", mpd:4, cap:"S$600/c.month", remarks:"Online only. 36 MCCs"},
+  {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month. 13 MCCs"},
+  {card:"OCBC Rewards Card", bank:"OCBC", category:"Shopping", mpd:4, cap:"S$1.1K/c.month", remarks:"13 MCCs. 6 mpd for Watsons, Shopee, Lazada, TikTok Shop, Taobao (till 30 Jun 26)"},
+  {card:"Citi Rewards Card", bank:"Citi", category:"Shopping", mpd:4, cap:"S$1K/s.month", remarks:"Offline. 11 MCCs"},
+  {card:"UOB Lady's Card", bank:"UOB", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"10 MCCs. Fashion as bonus category"},
+  {card:"UOB Lady's Solitaire", bank:"UOB", category:"Shopping", mpd:4, cap:"S$750/c.month", remarks:"10 MCCs. Fashion as bonus category"},
+  {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Shopping", mpd:2.4, cap:"No cap", remarks:"Online. 29 MCCs. Min S$1K on SIA Group/m.year"},
+
+  // ===== TELCO BILLS =====
+  {card:"DBS yuu Card", bank:"DBS", category:"Telco Bills", mpd:10, cap:"S$822/c.month", remarks:"For Singtel (must pay at kiosk). Min S$800/c.month"},
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Telco Bills", mpd:4, cap:"S$1K/c.month", remarks:"Bills paid via app. No points for recurring CC payment"},
+  {card:"Citi Rewards Card", bank:"Citi", category:"Telco Bills", mpd:4, cap:"S$1K/s.month", remarks:"Must be paid online or via app. No points for recurring CC payment"},
+
+  // ===== UTILITIES =====
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Utilities", mpd:1, cap:"100 Max Miles/c.month", remarks:"Cap shared with all other bill payments"},
+];
+
+// ============================================================
+// APP LOGIC
+// ============================================================
+const categories = [...new Set(DATA.map(d => d.category))].sort();
+const allCards = [...new Set(DATA.map(d => d.card))].sort();
+const allBanks = [...new Set(DATA.map(d => d.bank))].sort();
+
+let activeTab = 'category';
+let selectedCategory = null;
+let selectedCard = null;
+let sortCol = 'mpd';
+let sortDir = -1; // descending
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('tab-category').style.display = tab === 'category' ? '' : 'none';
+  document.getElementById('tab-card').style.display = tab === 'card' ? '' : 'none';
+  if (tab === 'category') { renderCategoryChips(); filterCategories(); }
+  if (tab === 'card') { renderCardChips(); filterCards(); }
+}
+
+// Render stats
+function renderStats() {
+  const maxMpd = Math.max(...DATA.map(d => d.mpd));
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="num">${allCards.length}</div><div class="label">Credit Cards</div></div>
+    <div class="stat-card"><div class="num">${categories.length}</div><div class="label">Categories</div></div>
+    <div class="stat-card"><div class="num">${allBanks.length}</div><div class="label">Banks</div></div>
+    <div class="stat-card"><div class="num">${maxMpd}</div><div class="label">Max MPD</div></div>
+  `;
+}
+
+// Category chips
+function renderCategoryChips() {
+  const q = document.getElementById('cat-search').value.toLowerCase();
+  const filtered = categories.filter(c => c.toLowerCase().includes(q));
+  document.getElementById('cat-chips').innerHTML = filtered.map(c =>
+    `<span class="chip ${selectedCategory===c?'active':''}" onclick="selectCategory('${c.replace(/'/g,"\\'")}')">${c}</span>`
+  ).join('');
+}
+
+function selectCategory(cat) {
+  selectedCategory = selectedCategory === cat ? null : cat;
+  renderCategoryChips();
+  renderCategoryResults();
+}
+
+function filterCategories() {
+  selectedCategory = null;
+  renderCategoryChips();
+  renderCategoryResults();
+}
+
+function renderCategoryResults() {
+  const q = document.getElementById('cat-search').value.toLowerCase();
+  let results;
+  if (selectedCategory) {
+    results = DATA.filter(d => d.category === selectedCategory);
+  } else if (q) {
+    results = DATA.filter(d => d.category.toLowerCase().includes(q));
+  } else {
+    results = [];
+  }
+
+  if (!q && !selectedCategory) {
+    document.getElementById('cat-results').innerHTML = `
+      <div class="no-results">
+        <div class="emoji">🏷️</div>
+        <p>Select a category above or type to search</p>
+      </div>`;
+    return;
+  }
+
+  results.sort((a, b) => {
+    if (sortCol === 'mpd') return (a.mpd - b.mpd) * sortDir;
+    if (sortCol === 'card') return a.card.localeCompare(b.card) * sortDir;
+    if (sortCol === 'bank') return a.bank.localeCompare(b.bank) * sortDir;
+    return 0;
+  });
+
+  // Group by category
+  const grouped = {};
+  results.forEach(r => {
+    if (!grouped[r.category]) grouped[r.category] = [];
+    grouped[r.category].push(r);
+  });
+
+  let html = '';
+  for (const [cat, items] of Object.entries(grouped)) {
+    html += `<div class="results-header"><h2>${cat}</h2><span class="count">${items.length} card${items.length>1?'s':''}</span></div>`;
+    html += renderTable(items);
+  }
+  document.getElementById('cat-results').innerHTML = html || `<div class="no-results"><div class="emoji">🔍</div><p>No results found</p></div>`;
+}
+
+// Card chips
+function renderCardChips() {
+  const q = document.getElementById('card-search').value.toLowerCase();
+  const banks = allBanks;
+  document.getElementById('card-chips').innerHTML = banks.map(b =>
+    `<span class="chip ${selectedCard===b?'active':''}" onclick="selectBank('${b}')">${b}</span>`
+  ).join('');
+}
+
+function selectBank(bank) {
+  selectedCard = selectedCard === bank ? null : bank;
+  renderCardChips();
+  renderCardResults();
+}
+
+function filterCards() {
+  selectedCard = null;
+  renderCardChips();
+  renderCardResults();
+}
+
+function renderCardResults() {
+  const q = document.getElementById('card-search').value.toLowerCase();
+  let results;
+
+  if (selectedCard) {
+    results = DATA.filter(d => d.bank === selectedCard);
+  } else if (q) {
+    results = DATA.filter(d =>
+      d.card.toLowerCase().includes(q) ||
+      d.bank.toLowerCase().includes(q) ||
+      d.category.toLowerCase().includes(q) ||
+      d.remarks.toLowerCase().includes(q)
+    );
+  } else {
+    results = [];
+  }
+
+  if (!q && !selectedCard) {
+    document.getElementById('card-results').innerHTML = `
+      <div class="no-results">
+        <div class="emoji">💳</div>
+        <p>Select a bank above or search for a card name</p>
+      </div>`;
+    return;
+  }
+
+  // Group by card
+  const grouped = {};
+  results.forEach(r => {
+    if (!grouped[r.card]) grouped[r.card] = { bank: r.bank, entries: [] };
+    grouped[r.card].entries.push(r);
+  });
+
+  // Sort cards by max mpd
+  const sortedCards = Object.entries(grouped).sort((a, b) => {
+    const maxA = Math.max(...a[1].entries.map(e => e.mpd));
+    const maxB = Math.max(...b[1].entries.map(e => e.mpd));
+    return maxB - maxA;
+  });
+
+  let html = '';
+  for (const [cardName, data] of sortedCards) {
+    const maxMpd = Math.max(...data.entries.map(e => e.mpd));
+    const entries = data.entries.sort((a, b) => b.mpd - a.mpd);
+    html += `
+      <div class="card-detail">
+        <h3><span class="bank-badge bank-${data.bank}">${data.bank}</span> ${escHtml(cardName)} <span class="mpd ${mpdClass(maxMpd)}" style="margin-left:8px">up to ${maxMpd} mpd</span></h3>
+        <div class="card-detail-grid">
+          ${entries.map(e => `
+            <div class="cat-earn">
+              <span class="cat-name">${escHtml(e.category)}</span>
+              <div>
+                <span class="mpd ${mpdClass(e.mpd)}">${e.mpd} mpd</span>
+                ${e.cap !== 'No cap' ? `<div class="cap-info cap-highlight">${escHtml(e.cap)}</div>` : ''}
+                ${e.remarks ? `<div class="cap-info">${escHtml(e.remarks)}</div>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('card-results').innerHTML = html || `<div class="no-results"><div class="emoji">🔍</div><p>No results found</p></div>`;
+}
+
+function renderTable(items) {
+  return `<div class="table-wrap"><table class="card-table">
+    <thead><tr>
+      <th onclick="toggleSort('card')">Card ${sortArrow('card')}</th>
+      <th onclick="toggleSort('bank')">Bank ${sortArrow('bank')}</th>
+      <th onclick="toggleSort('mpd')">MPD ${sortArrow('mpd')}</th>
+      <th>Spending Cap</th>
+      <th>Remarks</th>
+    </tr></thead>
+    <tbody>
+      ${items.map(r => `<tr>
+        <td><strong>${escHtml(r.card)}</strong></td>
+        <td><span class="bank-badge bank-${r.bank}">${r.bank}</span></td>
+        <td><span class="mpd ${mpdClass(r.mpd)}">${r.mpd}</span></td>
+        <td>${r.cap !== 'No cap' ? `<span class="cap-highlight">${escHtml(r.cap)}</span>` : '<span style="color:var(--green)">No cap</span>'}</td>
+        <td class="remarks-text">${escHtml(r.remarks) || '—'}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+function toggleSort(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = col === 'mpd' ? -1 : 1; }
+  renderCategoryResults();
+}
+
+function sortArrow(col) {
+  if (sortCol !== col) return '<span class="sort-arrow">⇅</span>';
+  return `<span class="sort-arrow">${sortDir > 0 ? '↑' : '↓'}</span>`;
+}
+
+function mpdClass(mpd) {
+  if (mpd >= 4) return 'mpd-high';
+  if (mpd >= 2) return 'mpd-mid';
+  return 'mpd-low';
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Init
+renderStats();
+renderCategoryChips();
+renderCardChips();
+</script>
+
+</body>
+</html>
