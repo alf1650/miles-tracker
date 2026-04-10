@@ -103,12 +103,56 @@
   .source-note a { color: var(--accent); text-decoration: none; }
 
   @media (max-width: 768px) {
-    .container { padding: 1rem; }
-    .card-table { font-size: 0.85rem; }
-    .card-table thead th, .card-table tbody td { padding: 0.5rem 0.6rem; }
-    .stats { grid-template-columns: repeat(2, 1fr); }
-    header h1 { font-size: 1.4rem; }
-    .card-detail-grid { grid-template-columns: 1fr; }
+    .container { padding: 0.75rem; }
+    header { padding: 1rem; }
+    header h1 { font-size: 1.3rem; }
+    header p { font-size: 0.8rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .stat-card { padding: 0.7rem; }
+    .stat-card .num { font-size: 1.4rem; }
+    .tabs { border-radius: 8px; }
+    .tab-btn { padding: 0.7rem 0.5rem; font-size: 0.85rem; }
+    .search-box input { padding: 0.75rem 1rem 0.75rem 2.5rem; font-size: 0.9rem; border-radius: 8px; }
+    .chips { gap: 0.4rem; }
+    .chip { padding: 0.35rem 0.7rem; font-size: 0.78rem; min-height: 2rem; display: inline-flex; align-items: center; }
+    .card-detail { padding: 1rem; }
+    .card-detail h3 { font-size: 0.95rem; }
+    .card-detail-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+    .cat-earn { padding: 0.5rem 0.6rem; }
+    .results-header h2 { font-size: 1rem; }
+
+    /* Convert table to card layout on mobile */
+    .card-table thead { display: none; }
+    .card-table, .card-table tbody, .card-table tr, .card-table td {
+      display: block; width: 100%;
+    }
+    .card-table tbody tr {
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .card-table tbody td {
+      border-top: none;
+      padding: 0.2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-table tbody td:before {
+      content: attr(data-label);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text2);
+      min-width: 5rem;
+    }
+    .card-table tbody td:first-child { padding-top: 0; }
+    .card-table tbody td:last-child { padding-bottom: 0; }
+    .card-table { border: none; background: none; }
+    .source-note { font-size: 0.7rem; }
   }
 
   /* Scrollable table wrapper */
@@ -591,11 +635,11 @@ function renderTable(items) {
     </tr></thead>
     <tbody>
       ${items.map(r => `<tr>
-        <td><strong>${escHtml(r.card)}</strong></td>
-        <td><span class="bank-badge bank-${r.bank}">${r.bank}</span></td>
-        <td><span class="mpd ${mpdClass(r.mpd)}">${r.mpd}</span></td>
-        <td>${r.cap !== 'No cap' ? `<span class="cap-highlight">${escHtml(r.cap)}</span>` : '<span style="color:var(--green)">No cap</span>'}</td>
-        <td class="remarks-text">${escHtml(r.remarks) || '—'}</td>
+        <td data-label="Card"><strong>${escHtml(r.card)}</strong></td>
+        <td data-label="Bank"><span class="bank-badge bank-${r.bank}">${r.bank}</span></td>
+        <td data-label="MPD"><span class="mpd ${mpdClass(r.mpd)}">${r.mpd}</span></td>
+        <td data-label="Cap">${r.cap !== 'No cap' ? `<span class="cap-highlight">${escHtml(r.cap)}</span>` : '<span style="color:var(--green)">No cap</span>'}</td>
+        <td data-label="Remarks" class="remarks-text">${escHtml(r.remarks) || '—'}</td>
       </tr>`).join('')}
     </tbody>
   </table></div>`;
