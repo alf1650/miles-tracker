@@ -102,82 +102,6 @@
   .source-note { text-align: center; color: var(--text2); font-size: 0.75rem; margin-top: 2rem; padding: 1rem; border-top: 1px solid var(--border); }
   .source-note a { color: var(--accent); text-decoration: none; }
 
-  .wallet-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1.2rem;
-  }
-  .wallet-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.8rem;
-  }
-  .wallet-title {
-    font-size: 1rem;
-    font-weight: 700;
-  }
-  .wallet-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-  }
-  .wallet-actions label {
-    font-size: 0.85rem;
-    color: var(--text2);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-  .wallet-clear-btn {
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: var(--text);
-    border-radius: 8px;
-    padding: 0.35rem 0.7rem;
-    cursor: pointer;
-    font-size: 0.82rem;
-  }
-  .wallet-clear-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .wallet-selected {
-    font-size: 0.8rem;
-    color: var(--text2);
-    margin-bottom: 0.7rem;
-  }
-  .wallet-options {
-    max-height: 230px;
-    overflow: auto;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg);
-    padding: 0.6rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 0.5rem;
-  }
-  .wallet-option {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.45rem;
-    font-size: 0.83rem;
-    color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.45rem 0.55rem;
-  }
-  .wallet-option input { margin-top: 0.12rem; }
-  .wallet-option .wallet-card-bank {
-    color: var(--text2);
-    font-size: 0.76rem;
-    margin-left: 0.25rem;
-  }
-
   @media (max-width: 768px) {
     .container { padding: 0.75rem; }
     header { padding: 1rem; }
@@ -229,7 +153,6 @@
     .card-table tbody td:last-child { padding-bottom: 0; }
     .card-table { border: none; background: none; }
     .source-note { font-size: 0.7rem; }
-    .wallet-options { grid-template-columns: 1fr; max-height: 260px; }
   }
 
   /* Scrollable table wrapper */
@@ -250,23 +173,6 @@
   <div class="tabs">
     <button class="tab-btn active" data-tab="category" onclick="switchTab('category')">🏷️ Search by Category</button>
     <button class="tab-btn" data-tab="card" onclick="switchTab('card')">💳 Search by Card</button>
-  </div>
-
-  <div class="wallet-panel">
-    <div class="wallet-head">
-      <div class="wallet-title">🧾 My Wallet</div>
-      <div class="wallet-actions">
-        <label><input type="checkbox" id="show-my-cards" onchange="toggleMyCardsOnly(this.checked)"> Show my cards only</label>
-        <label><input type="checkbox" id="remember-wallet" onchange="toggleRememberWallet(this.checked)"> Remember my card selection</label>
-        <button class="wallet-clear-btn" onclick="clearWalletSelection()">Clear selection</button>
-      </div>
-    </div>
-    <div class="wallet-selected" id="wallet-selected">0 cards selected</div>
-    <div class="search-box" style="margin-bottom:0.7rem">
-      <span class="icon">🔎</span>
-      <input type="text" id="wallet-search" placeholder="Search your cards..." oninput="renderWalletCardOptions()">
-    </div>
-    <div class="wallet-options" id="wallet-options"></div>
   </div>
 
   <!-- Category Tab -->
@@ -416,7 +322,7 @@ const DATA = [
   {card:"Chocolate Visa Card", bank:"Chocolate", category:"Education", mpd:1, cap:"S$1K/c.month", remarks:"0.4 mpd after cap"},
 
   // ===== EV CHARGING =====
-  {card:"DBS yuu Card", bank:"DBS", category:"EV Charging", mpd:10, cap:"S$822/c.month", remarks:"For Charge+ only. Min S$800/c.month. Visa card only"},
+  {card:"DBS yuu Visa", bank:"DBS", category:"EV Charging", mpd:10, cap:"S$822/c.month", remarks:"For Charge+ only. Min S$800/c.month. Visa card only"},
   {card:"StanChart Smart Card", bank:"StanChart", category:"EV Charging", mpd:9.28, cap:"No cap", remarks:"Min S$1.5K/s.month"},
   {card:"Citi Rewards Card", bank:"Citi", category:"EV Charging", mpd:4, cap:"S$1K/s.month", remarks:"Online only"},
   {card:"DBS Woman's World Card", bank:"DBS", category:"EV Charging", mpd:4, cap:"S$1K/c.month", remarks:"Online only"},
@@ -523,7 +429,8 @@ const DATA = [
   {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month. 13 MCCs"},
   {card:"OCBC Rewards Card", bank:"OCBC", category:"Shopping", mpd:4, cap:"S$1.1K/c.month", remarks:"13 MCCs. 6 mpd for Watsons, Shopee, Lazada, TikTok Shop, Taobao (till 30 Jun 26)"},
   {card:"Citi Rewards Card", bank:"Citi", category:"Shopping", mpd:4, cap:"S$1K/s.month", remarks:"Offline. 11 MCCs"},
-  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Shopping", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"10 MCCs. Fashion as bonus category"},
+  {card:"UOB Lady's Card", bank:"UOB", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"10 MCCs. Fashion as bonus category"},
+  {card:"UOB Lady's Solitaire", bank:"UOB", category:"Shopping", mpd:4, cap:"S$750/c.month", remarks:"10 MCCs. Fashion as bonus category"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Shopping", mpd:2.4, cap:"No cap", remarks:"Online. 29 MCCs. Min S$1K on SIA Group/m.year"},
 
   // ===== TELCO BILLS =====
@@ -541,165 +448,12 @@ const DATA = [
 const categories = [...new Set(DATA.map(d => d.category))].sort();
 const allCards = [...new Set(DATA.map(d => d.card))].sort();
 const allBanks = [...new Set(DATA.map(d => d.bank))].sort();
-const cardToBank = Object.fromEntries(DATA.map(d => [d.card, d.bank]));
-
-const COOKIE_WALLET = 'mt_wallet_v1';
-const COOKIE_REMEMBER = 'mt_wallet_remember';
-const COOKIE_MY_CARDS_ONLY = 'mt_show_my_cards';
 
 let activeTab = 'category';
 let selectedCategory = null;
 let selectedCard = null;
-let selectedOwnedCards = new Set();
-let rememberWallet = true;
-let showMyCardsOnly = false;
 let sortCol = 'mpd';
 let sortDir = -1; // descending
-
-function setCookie(name, value, days) {
-  const maxAge = days * 24 * 60 * 60;
-  document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${maxAge}; path=/; SameSite=Lax`;
-}
-
-function getCookie(name) {
-  const target = `${name}=`;
-  const cookie = document.cookie.split('; ').find(c => c.startsWith(target));
-  return cookie ? decodeURIComponent(cookie.slice(target.length)) : null;
-}
-
-function deleteCookie(name) {
-  document.cookie = `${name}=; max-age=0; path=/; SameSite=Lax`;
-}
-
-function serializeOwnedCards() {
-  return [...selectedOwnedCards]
-    .map(card => allCards.indexOf(card))
-    .filter(idx => idx >= 0)
-    .sort((a, b) => a - b)
-    .join('.');
-}
-
-function deserializeOwnedCards(serialized) {
-  if (!serialized) return new Set();
-  const cards = serialized.split('.')
-    .map(i => Number.parseInt(i, 10))
-    .filter(i => Number.isInteger(i) && i >= 0 && i < allCards.length)
-    .map(i => allCards[i]);
-  return new Set(cards);
-}
-
-function persistWalletSelection() {
-  setCookie(COOKIE_REMEMBER, rememberWallet ? '1' : '0', 365);
-  if (!rememberWallet) {
-    deleteCookie(COOKIE_WALLET);
-    deleteCookie(COOKIE_MY_CARDS_ONLY);
-    return;
-  }
-  setCookie(COOKIE_WALLET, serializeOwnedCards(), 365);
-  setCookie(COOKIE_MY_CARDS_ONLY, showMyCardsOnly ? '1' : '0', 365);
-}
-
-function loadWalletSelection() {
-  const rememberCookie = getCookie(COOKIE_REMEMBER);
-  rememberWallet = rememberCookie !== '0';
-
-  if (rememberWallet) {
-    selectedOwnedCards = deserializeOwnedCards(getCookie(COOKIE_WALLET));
-    showMyCardsOnly = getCookie(COOKIE_MY_CARDS_ONLY) === '1';
-  } else {
-    selectedOwnedCards = new Set();
-    showMyCardsOnly = false;
-  }
-
-  const rememberEl = document.getElementById('remember-wallet');
-  const showMineEl = document.getElementById('show-my-cards');
-  if (rememberEl) rememberEl.checked = rememberWallet;
-  if (showMineEl) showMineEl.checked = showMyCardsOnly;
-}
-
-function toggleRememberWallet(checked) {
-  rememberWallet = checked;
-  persistWalletSelection();
-}
-
-function toggleMyCardsOnly(checked) {
-  showMyCardsOnly = checked;
-  persistWalletSelection();
-  renderCategoryResults();
-  renderCardResults();
-}
-
-function clearWalletSelection() {
-  selectedOwnedCards = new Set();
-  renderWalletCardOptions();
-  renderCategoryResults();
-  renderCardResults();
-  persistWalletSelection();
-}
-
-function toggleOwnedCard(encodedCard, checked) {
-  const card = decodeURIComponent(encodedCard);
-  if (checked) selectedOwnedCards.add(card);
-  else selectedOwnedCards.delete(card);
-  updateWalletSelectedCount();
-  renderCategoryResults();
-  renderCardResults();
-  persistWalletSelection();
-}
-
-function updateWalletSelectedCount() {
-  const count = selectedOwnedCards.size;
-  document.getElementById('wallet-selected').textContent = `${count} card${count === 1 ? '' : 's'} selected`;
-}
-
-function renderWalletCardOptions() {
-  const q = document.getElementById('wallet-search').value.trim().toLowerCase();
-  const filteredCards = allCards.filter(card => {
-    const bank = cardToBank[card] || '';
-    if (!q) return true;
-    return card.toLowerCase().includes(q) || bank.toLowerCase().includes(q);
-  });
-
-  document.getElementById('wallet-options').innerHTML = filteredCards.map(card => {
-    const checked = selectedOwnedCards.has(card) ? 'checked' : '';
-    const bank = cardToBank[card] || 'Other';
-    const encodedCard = encodeURIComponent(card).replace(/'/g, '%27');
-    return `<label class="wallet-option">
-      <input type="checkbox" ${checked} onchange="toggleOwnedCard('${encodedCard}', this.checked)">
-      <span>${escHtml(card)} <span class="wallet-card-bank">(${escHtml(bank)})</span></span>
-    </label>`;
-  }).join('') || '<div class="no-results"><p>No cards match your search</p></div>';
-
-  updateWalletSelectedCount();
-}
-
-function cardNameVariants(cardName) {
-  const clean = cardName.trim();
-  const variants = new Set([clean]);
-  if (clean.includes('&')) {
-    clean.split('&')
-      .map(part => part.trim())
-      .filter(Boolean)
-      .forEach(part => variants.add(part));
-  }
-  return variants;
-}
-
-function applyWalletFilter(results) {
-  if (!showMyCardsOnly) return results;
-  const ownedVariants = new Set();
-  selectedOwnedCards.forEach(card => {
-    cardNameVariants(card).forEach(v => ownedVariants.add(v));
-  });
-
-  return results.filter(r => {
-    const rowVariants = cardNameVariants(r.card);
-    for (const variant of rowVariants) {
-      if (ownedVariants.has(variant)) return true;
-    }
-    return false;
-  });
-}
 
 function switchTab(tab) {
   activeTab = tab;
@@ -744,33 +498,20 @@ function filterCategories() {
 
 function renderCategoryResults() {
   const q = document.getElementById('cat-search').value.toLowerCase();
-  const hasOwnedCards = selectedOwnedCards.size > 0;
   let results;
   if (selectedCategory) {
     results = DATA.filter(d => d.category === selectedCategory);
   } else if (q) {
     results = DATA.filter(d => d.category.toLowerCase().includes(q));
-  } else if (showMyCardsOnly && hasOwnedCards) {
-    results = [...DATA];
   } else {
     results = [];
   }
-  results = applyWalletFilter(results);
 
-  if (!q && !selectedCategory && !showMyCardsOnly) {
+  if (!q && !selectedCategory) {
     document.getElementById('cat-results').innerHTML = `
       <div class="no-results">
         <div class="emoji">🏷️</div>
         <p>Select a category above or type to search</p>
-      </div>`;
-    return;
-  }
-
-  if (showMyCardsOnly && !hasOwnedCards) {
-    document.getElementById('cat-results').innerHTML = `
-      <div class="no-results">
-        <div class="emoji">🧾</div>
-        <p>Select at least one card in My Wallet to use "Show my cards only"</p>
       </div>`;
     return;
   }
@@ -820,7 +561,6 @@ function filterCards() {
 
 function renderCardResults() {
   const q = document.getElementById('card-search').value.toLowerCase();
-  const hasOwnedCards = selectedOwnedCards.size > 0;
   let results;
 
   if (selectedCard) {
@@ -832,28 +572,15 @@ function renderCardResults() {
       d.category.toLowerCase().includes(q) ||
       d.remarks.toLowerCase().includes(q)
     );
-  } else if (showMyCardsOnly && hasOwnedCards) {
-    results = [...DATA];
   } else {
     results = [];
   }
 
-  results = applyWalletFilter(results);
-
-  if (!q && !selectedCard && !showMyCardsOnly) {
+  if (!q && !selectedCard) {
     document.getElementById('card-results').innerHTML = `
       <div class="no-results">
         <div class="emoji">💳</div>
         <p>Select a bank above or search for a card name</p>
-      </div>`;
-    return;
-  }
-
-  if (showMyCardsOnly && !hasOwnedCards) {
-    document.getElementById('card-results').innerHTML = `
-      <div class="no-results">
-        <div class="emoji">🧾</div>
-        <p>Select at least one card in My Wallet to use "Show my cards only"</p>
       </div>`;
     return;
   }
@@ -942,9 +669,7 @@ function escHtml(s) {
 }
 
 // Init
-loadWalletSelection();
 renderStats();
-renderWalletCardOptions();
 renderCategoryChips();
 renderCardChips();
 </script>
