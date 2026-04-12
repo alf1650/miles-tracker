@@ -157,6 +157,82 @@
 
   /* Scrollable table wrapper */
   .table-wrap { overflow-x: auto; border-radius: 12px; }
+
+  /* Card Advisor Tab */
+  .advisor-layout { display: grid; grid-template-columns: 300px 1fr; gap: 1.5rem; }
+  .advisor-sidebar { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; max-height: 70vh; overflow-y: auto; }
+  .advisor-sidebar h3 { font-size: 0.95rem; margin-bottom: 0.8rem; color: var(--text); }
+  .advisor-sidebar .search-box { margin-bottom: 0.8rem; }
+  .advisor-sidebar .search-box input { font-size: 0.85rem; padding: 0.6rem 0.8rem 0.6rem 2.2rem; }
+  .advisor-sidebar .search-box .icon { font-size: 0.9rem; left: 0.7rem; }
+  .advisor-actions { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; }
+  .advisor-actions button { flex: 1; padding: 0.4rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text2); cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+  .advisor-actions button:hover { border-color: var(--accent); color: var(--accent); }
+  .bank-group { margin-bottom: 0.8rem; }
+  .bank-group-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text2); margin-bottom: 0.4rem; letter-spacing: 0.03em; }
+  .card-checkbox { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.4rem; border-radius: 6px; cursor: pointer; font-size: 0.82rem; transition: background 0.15s; }
+  .card-checkbox:hover { background: var(--surface2); }
+  .card-checkbox input { accent-color: var(--accent); cursor: pointer; }
+  .selected-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; min-height: 2rem; }
+  .selected-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; background: var(--accent); color: #fff; border-radius: 14px; font-size: 0.75rem; font-weight: 500; }
+  .selected-chip .remove { cursor: pointer; opacity: 0.8; font-size: 0.9rem; }
+  .selected-chip .remove:hover { opacity: 1; }
+  .advisor-main { display: flex; flex-direction: column; gap: 1rem; }
+  .prompt-area textarea { width: 100%; min-height: 100px; padding: 1rem; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.95rem; color: var(--text); background: var(--surface); resize: vertical; outline: none; transition: border-color 0.2s; }
+  .prompt-area textarea:focus { border-color: var(--accent); }
+  .prompt-area textarea::placeholder { color: var(--text2); }
+  .example-prompts { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+  .example-prompt { padding: 0.35rem 0.7rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; font-size: 0.78rem; color: var(--text2); cursor: pointer; transition: all 0.2s; }
+  .example-prompt:hover { border-color: var(--accent); color: var(--accent); }
+  .advisor-submit { display: flex; gap: 0.8rem; align-items: center; }
+  .advisor-submit button { padding: 0.8rem 2rem; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+  .advisor-submit button:hover { opacity: 0.9; }
+  .advisor-submit button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .advisor-submit .card-count { font-size: 0.82rem; color: var(--text2); }
+  .advisor-response { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; min-height: 120px; }
+  .advisor-response.loading { display: flex; align-items: center; justify-content: center; color: var(--text2); }
+  .advisor-response .placeholder { text-align: center; color: var(--text2); padding: 2rem; }
+  .advisor-response .placeholder .emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .advisor-response .result { line-height: 1.7; font-size: 0.92rem; }
+  .advisor-response .result strong { color: var(--accent); }
+  .advisor-error { color: var(--red); font-weight: 500; text-align: center; padding: 1rem; }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 0.5rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 768px) {
+    .advisor-layout { grid-template-columns: 1fr; }
+    .advisor-sidebar { max-height: 40vh; }
+    .advisor-submit button { padding: 0.7rem 1.2rem; font-size: 0.9rem; width: 100%; }
+    .advisor-submit { flex-direction: column; align-items: stretch; }
+    .advisor-submit .card-count { text-align: center; }
+    .prompt-area textarea { min-height: 80px; font-size: 0.9rem; padding: 0.8rem; }
+    .example-prompts { gap: 0.3rem; }
+    .example-prompt { font-size: 0.72rem; padding: 0.3rem 0.6rem; }
+    .advisor-response { padding: 1rem; }
+    .selected-chips { gap: 0.3rem; }
+    .selected-chip { font-size: 0.7rem; padding: 0.2rem 0.5rem; }
+
+    .my-cards-bar { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 0.6rem 0.8rem; }
+    .my-cards-panel { max-height: 40vh; padding: 0.8rem; }
+    .my-cards-panel-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .my-cards-grid { grid-template-columns: 1fr; }
+  }
+
+  /* My Cards filter bar */
+  .my-cards-bar { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; padding: 0.7rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; flex-wrap: wrap; }
+  .my-cards-bar .toggle-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text); cursor: pointer; }
+  .my-cards-bar .toggle-label input { accent-color: var(--accent); cursor: pointer; }
+  .my-cards-bar .card-count-label { font-size: 0.78rem; color: var(--text2); }
+  .my-cards-bar .edit-btn { padding: 0.3rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text2); cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.2s; }
+  .my-cards-bar .edit-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .my-cards-panel { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; max-height: 50vh; overflow-y: auto; }
+  .my-cards-panel.open { display: block; }
+  .my-cards-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+  .my-cards-panel-header h3 { font-size: 0.95rem; color: var(--text); margin: 0; }
+  .my-cards-panel-actions { display: flex; gap: 0.5rem; }
+  .my-cards-panel-actions button { padding: 0.3rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text2); cursor: pointer; font-size: 0.72rem; font-weight: 600; }
+  .my-cards-panel-actions button:hover { border-color: var(--accent); color: var(--accent); }
+  .my-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.5rem; }
 </style>
 </head>
 <body>
@@ -173,10 +249,31 @@
   <div class="tabs">
     <button class="tab-btn active" data-tab="category" onclick="switchTab('category')">🏷️ Search by Category</button>
     <button class="tab-btn" data-tab="card" onclick="switchTab('card')">💳 Search by Card</button>
+    <button class="tab-btn" data-tab="advisor" onclick="switchTab('advisor')">🤖 Card Advisor</button>
   </div>
 
   <!-- Category Tab -->
   <div id="tab-category">
+    <p style="color:var(--text2);font-size:0.88rem;margin-bottom:0.8rem;">💳 Add the cards you have to filter results. Toggle <strong>Show only my cards</strong> to see only your cards in each category.</p>
+    <div class="my-cards-bar">
+      <label class="toggle-label"><input type="checkbox" id="cat-my-cards-toggle" onchange="toggleMyCardsFilter()"> Show only my cards</label>
+      <span class="card-count-label" id="cat-my-cards-count">0 cards selected</span>
+      <button class="edit-btn" onclick="toggleMyCardsPanel()">✏️ Add / Edit my cards</button>
+    </div>
+    <div class="my-cards-panel" id="cat-my-cards-panel">
+      <div class="my-cards-panel-header">
+        <h3>🃏 Select Your Cards</h3>
+        <div class="my-cards-panel-actions">
+          <button onclick="panelSelectAll()">Select All</button>
+          <button onclick="panelClearAll()">Clear All</button>
+        </div>
+      </div>
+      <div class="search-box" style="margin-bottom:0.8rem">
+        <span class="icon">🔍</span>
+        <input type="text" id="panel-card-search" placeholder="Filter cards..." oninput="renderMyCardsPanel()">
+      </div>
+      <div class="my-cards-grid" id="panel-card-list"></div>
+    </div>
     <div class="search-box">
       <span class="icon">🔍</span>
       <input type="text" id="cat-search" placeholder="Search categories (e.g. Dining, Online, Transport...)" oninput="filterCategories()">
@@ -193,6 +290,50 @@
     </div>
     <div class="chips" id="card-chips"></div>
     <div id="card-results"></div>
+  </div>
+
+  <!-- Advisor Tab -->
+  <div id="tab-advisor" style="display:none">
+    <p style="color:var(--text2);font-size:0.88rem;margin-bottom:0.8rem;">💳 Add the cards you have to get personalised recommendations. You can also toggle <strong>Use all cards</strong> to compare across all cards.</p>
+    <div class="my-cards-bar">
+      <label class="toggle-label"><input type="checkbox" id="advisor-remember" onchange="toggleRememberCards()" checked> 💾 Remember my cards</label>
+      <label class="toggle-label"><input type="checkbox" id="advisor-use-all" onchange="toggleUseAllCards()"> Use all cards</label>
+      <span class="card-count-label" id="advisor-card-count">0 cards selected</span>
+      <button class="edit-btn" onclick="toggleAdvisorPanel()">✏️ Add / Edit my cards</button>
+    </div>
+    <div class="my-cards-panel" id="advisor-cards-panel">
+      <div class="my-cards-panel-header">
+        <h3>🃏 Select Your Cards</h3>
+        <div class="my-cards-panel-actions">
+          <button onclick="advisorSelectAll()">Select All</button>
+          <button onclick="advisorClearAll()">Clear All</button>
+        </div>
+      </div>
+      <div class="search-box" style="margin-bottom:0.8rem">
+        <span class="icon">🔍</span>
+        <input type="text" id="advisor-card-search" placeholder="Filter cards..." oninput="renderAdvisorCards()">
+      </div>
+      <div class="my-cards-grid" id="advisor-card-list"></div>
+    </div>
+    <div class="prompt-area">
+      <textarea id="advisor-prompt" placeholder="Describe your spending scenario...&#10;&#10;e.g. I'm spending $1,500 on a luxury hotel in Japan."></textarea>
+      <div class="example-prompts">
+        <span class="example-prompt" onclick="useExample(this)">Hotel booking in Japan for $1,500</span>
+        <span class="example-prompt" onclick="useExample(this)">$200 dining at a local restaurant</span>
+        <span class="example-prompt" onclick="useExample(this)">$3,000 online shopping on Shopee</span>
+        <span class="example-prompt" onclick="useExample(this)">$500 Grab rides this month</span>
+        <span class="example-prompt" onclick="useExample(this)">$800 groceries at Cold Storage</span>
+      </div>
+    </div>
+    <div class="advisor-submit">
+      <button id="advisor-btn" onclick="getRecommendation()" disabled>Get Recommendation</button>
+    </div>
+    <div class="advisor-response" id="advisor-response">
+      <div class="placeholder">
+        <div class="emoji">🤖</div>
+        <p>Select your cards and describe a spending scenario to get a recommendation</p>
+      </div>
+    </div>
   </div>
 
   <div class="source-note">
@@ -388,7 +529,7 @@ const DATA = [
 
   // ===== KRIS+ =====
   {card:"DBS Woman's World Card", bank:"DBS", category:"Kris+", mpd:4, cap:"S$1K/c.month", remarks:""},
-  {card:"Citi Rewards + Amaze", bank:"Citi", category:"Kris+", mpd:4, cap:"S$1K/s.month", remarks:"1% admin fee (min S$0.50) for SGD. No bonuses for naked Citi Rewards Card"},
+  {card:"Amaze + Citi Rewards", bank:"Citi", category:"Kris+", mpd:4, cap:"S$1K/s.month", remarks:"1% admin fee (min S$0.50) for SGD. No bonuses for naked Citi Rewards Card"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Kris+", mpd:3, cap:"No cap", remarks:""},
 
   // ===== ONLINE TRANSACTIONS =====
@@ -429,8 +570,7 @@ const DATA = [
   {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month. 13 MCCs"},
   {card:"OCBC Rewards Card", bank:"OCBC", category:"Shopping", mpd:4, cap:"S$1.1K/c.month", remarks:"13 MCCs. 6 mpd for Watsons, Shopee, Lazada, TikTok Shop, Taobao (till 30 Jun 26)"},
   {card:"Citi Rewards Card", bank:"Citi", category:"Shopping", mpd:4, cap:"S$1K/s.month", remarks:"Offline. 11 MCCs"},
-  {card:"UOB Lady's Card", bank:"UOB", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"10 MCCs. Fashion as bonus category"},
-  {card:"UOB Lady's Solitaire", bank:"UOB", category:"Shopping", mpd:4, cap:"S$750/c.month", remarks:"10 MCCs. Fashion as bonus category"},
+  {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Shopping", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"10 MCCs. Fashion as bonus category"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Shopping", mpd:2.4, cap:"No cap", remarks:"Online. 29 MCCs. Min S$1K on SIA Group/m.year"},
 
   // ===== TELCO BILLS =====
@@ -449,19 +589,23 @@ const categories = [...new Set(DATA.map(d => d.category))].sort();
 const allCards = [...new Set(DATA.map(d => d.card))].sort();
 const allBanks = [...new Set(DATA.map(d => d.bank))].sort();
 
-let activeTab = 'category';
-let selectedCategory = null;
-let selectedCard = null;
+let activeTab = localStorage.getItem('milesTab') || 'category';
+let selectedCategory = localStorage.getItem('milesSelectedCategory') || null;
+let selectedCard = localStorage.getItem('milesSelectedBank') || null;
 let sortCol = 'mpd';
 let sortDir = -1; // descending
+let myCardsFilterOn = localStorage.getItem('myCardsFilterOn') === 'true';
 
 function switchTab(tab) {
   activeTab = tab;
+  localStorage.setItem('milesTab', tab);
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.getElementById('tab-category').style.display = tab === 'category' ? '' : 'none';
   document.getElementById('tab-card').style.display = tab === 'card' ? '' : 'none';
-  if (tab === 'category') { renderCategoryChips(); filterCategories(); }
+  document.getElementById('tab-advisor').style.display = tab === 'advisor' ? '' : 'none';
+  if (tab === 'category') { updateMyCardsBar(); renderCategoryChips(); filterCategories(); }
   if (tab === 'card') { renderCardChips(); filterCards(); }
+  if (tab === 'advisor') { updateAdvisorButton(); }
 }
 
 // Render stats
@@ -486,6 +630,7 @@ function renderCategoryChips() {
 
 function selectCategory(cat) {
   selectedCategory = selectedCategory === cat ? null : cat;
+  localStorage.setItem('milesSelectedCategory', selectedCategory || '');
   renderCategoryChips();
   renderCategoryResults();
 }
@@ -505,6 +650,11 @@ function renderCategoryResults() {
     results = DATA.filter(d => d.category.toLowerCase().includes(q));
   } else {
     results = [];
+  }
+
+  // Apply "my cards" filter
+  if (myCardsFilterOn && advisorSelectedCards.size > 0) {
+    results = results.filter(d => advisorSelectedCards.has(d.card));
   }
 
   if (!q && !selectedCategory) {
@@ -549,6 +699,7 @@ function renderCardChips() {
 
 function selectBank(bank) {
   selectedCard = selectedCard === bank ? null : bank;
+  localStorage.setItem('milesSelectedBank', selectedCard || '');
   renderCardChips();
   renderCardResults();
 }
@@ -668,10 +819,248 @@ function escHtml(s) {
   return d.innerHTML;
 }
 
+// ============================================================
+// MY CARDS — shared state across Category tab & Card Advisor
+// ============================================================
+const WORKER_URL = 'https://miles-tracker-ai.holiday-radar-api.workers.dev';
+let advisorSelectedCards = new Set();
+let advisorRemember = true;
+
+// Load saved cards from localStorage
+try {
+  const remPref = localStorage.getItem('advisorRemember');
+  advisorRemember = remPref === null ? true : remPref === 'true';
+  if (advisorRemember) {
+    const saved = localStorage.getItem('advisorSelectedCards');
+    if (saved) advisorSelectedCards = new Set(JSON.parse(saved));
+  }
+} catch(e) {}
+
+function toggleRememberCards() {
+  advisorRemember = document.getElementById('advisor-remember').checked;
+  localStorage.setItem('advisorRemember', advisorRemember);
+  if (advisorRemember) {
+    saveAdvisorCards();
+  } else {
+    localStorage.removeItem('advisorSelectedCards');
+  }
+}
+
+function saveAdvisorCards() {
+  if (advisorRemember) {
+    localStorage.setItem('advisorSelectedCards', JSON.stringify([...advisorSelectedCards]));
+  }
+}
+
+// ============================================================
+// MY CARDS PANEL (Category tab)
+// ============================================================
+function updateMyCardsBar() {
+  const toggle = document.getElementById('cat-my-cards-toggle');
+  if (toggle) toggle.checked = myCardsFilterOn;
+  const n = advisorSelectedCards.size;
+  const countEl = document.getElementById('cat-my-cards-count');
+  if (countEl) countEl.textContent = `${n} card${n !== 1 ? 's' : ''} selected`;
+}
+
+function toggleMyCardsFilter() {
+  myCardsFilterOn = document.getElementById('cat-my-cards-toggle').checked;
+  localStorage.setItem('myCardsFilterOn', myCardsFilterOn);
+  renderCategoryResults();
+}
+
+function toggleMyCardsPanel() {
+  const panel = document.getElementById('cat-my-cards-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderMyCardsPanel();
+}
+
+function renderMyCardsPanel() {
+  const q = (document.getElementById('panel-card-search')?.value || '').toLowerCase();
+  const cardsByBank = {};
+  allCards.forEach(card => {
+    if (q && !card.toLowerCase().includes(q)) return;
+    const bank = DATA.find(d => d.card === card).bank;
+    if (!cardsByBank[bank]) cardsByBank[bank] = [];
+    cardsByBank[bank].push(card);
+  });
+  let html = '';
+  for (const bank of Object.keys(cardsByBank).sort()) {
+    html += `<div class="bank-group">`;
+    html += `<div class="bank-group-label"><span class="bank-badge bank-${bank}">${bank}</span></div>`;
+    for (const card of cardsByBank[bank]) {
+      const checked = advisorSelectedCards.has(card) ? 'checked' : '';
+      html += `<label class="card-checkbox"><input type="checkbox" ${checked} onchange="toggleMyCard('${card.replace(/'/g, '&#39;')}')"> ${escHtml(card)}</label>`;
+    }
+    html += `</div>`;
+  }
+  document.getElementById('panel-card-list').innerHTML = html;
+}
+
+function toggleMyCard(card) {
+  if (advisorSelectedCards.has(card)) advisorSelectedCards.delete(card);
+  else advisorSelectedCards.add(card);
+  saveAdvisorCards();
+  updateMyCardsBar();
+  renderMyCardsPanel();
+  renderCategoryResults();
+  // Keep advisor tab in sync
+  if (document.getElementById('advisor-card-list').innerHTML) {
+    renderAdvisorCards();
+  }
+}
+
+function panelSelectAll() {
+  const q = (document.getElementById('panel-card-search')?.value || '').toLowerCase();
+  allCards.forEach(card => {
+    if (!q || card.toLowerCase().includes(q)) advisorSelectedCards.add(card);
+  });
+  saveAdvisorCards();
+  updateMyCardsBar();
+  renderMyCardsPanel();
+  renderCategoryResults();
+}
+
+function panelClearAll() {
+  advisorSelectedCards.clear();
+  saveAdvisorCards();
+  updateMyCardsBar();
+  renderMyCardsPanel();
+  renderCategoryResults();
+}
+
+// ============================================================
+// CARD ADVISOR UI
+// ============================================================
+
+function toggleAdvisorPanel() {
+  const panel = document.getElementById('advisor-cards-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderAdvisorCards();
+}
+
+function renderAdvisorCards() {
+  const q = (document.getElementById('advisor-card-search')?.value || '').toLowerCase();
+  const rememberCb = document.getElementById('advisor-remember');
+  if (rememberCb) rememberCb.checked = advisorRemember;
+  const cardsByBank = {};
+  allCards.forEach(card => {
+    if (q && !card.toLowerCase().includes(q)) return;
+    const bank = DATA.find(d => d.card === card).bank;
+    if (!cardsByBank[bank]) cardsByBank[bank] = [];
+    cardsByBank[bank].push(card);
+  });
+
+  let html = '';
+  for (const bank of Object.keys(cardsByBank).sort()) {
+    html += `<div class="bank-group">`;
+    html += `<div class="bank-group-label"><span class="bank-badge bank-${bank}">${bank}</span></div>`;
+    for (const card of cardsByBank[bank]) {
+      const checked = advisorSelectedCards.has(card) ? 'checked' : '';
+      html += `<label class="card-checkbox"><input type="checkbox" ${checked} onchange="toggleAdvisorCard('${card.replace(/'/g, '&#39;')}')"> ${escHtml(card)}</label>`;
+    }
+    html += `</div>`;
+  }
+  document.getElementById('advisor-card-list').innerHTML = html;
+  updateAdvisorButton();
+}
+
+function toggleAdvisorCard(card) {
+  if (advisorSelectedCards.has(card)) advisorSelectedCards.delete(card);
+  else advisorSelectedCards.add(card);
+  saveAdvisorCards();
+  updateAdvisorButton();
+  updateMyCardsBar();
+}
+
+function advisorSelectAll() {
+  const q = (document.getElementById('advisor-card-search')?.value || '').toLowerCase();
+  allCards.forEach(card => {
+    if (!q || card.toLowerCase().includes(q)) advisorSelectedCards.add(card);
+  });
+  saveAdvisorCards();
+  renderAdvisorCards();
+  updateMyCardsBar();
+}
+
+function advisorClearAll() {
+  advisorSelectedCards.clear();
+  saveAdvisorCards();
+  renderAdvisorCards();
+  updateMyCardsBar();
+}
+
+function updateAdvisorButton() {
+  const n = advisorSelectedCards.size;
+  const useAll = document.getElementById('advisor-use-all')?.checked;
+  const prompt = document.getElementById('advisor-prompt')?.value.trim();
+  const count = useAll ? allCards.length : n;
+  document.getElementById('advisor-btn').disabled = count === 0 || !prompt;
+  document.getElementById('advisor-card-count').textContent = useAll
+    ? `All ${allCards.length} cards`
+    : `${n} card${n !== 1 ? 's' : ''} selected`;
+}
+
+function toggleUseAllCards() {
+  updateAdvisorButton();
+}
+
+function useExample(el) {
+  document.getElementById('advisor-prompt').value = el.textContent;
+  updateAdvisorButton();
+}
+
+// Listen for prompt input changes
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('advisor-prompt');
+  if (ta) ta.addEventListener('input', updateAdvisorButton);
+});
+
+async function getRecommendation() {
+  const prompt = document.getElementById('advisor-prompt').value.trim();
+  const useAll = document.getElementById('advisor-use-all')?.checked;
+  if (!prompt || (!useAll && advisorSelectedCards.size === 0)) return;
+
+  const responseDiv = document.getElementById('advisor-response');
+  const btn = document.getElementById('advisor-btn');
+  btn.disabled = true;
+  responseDiv.className = 'advisor-response loading';
+  responseDiv.innerHTML = '<span><span class="spinner"></span> Analyzing your cards...</span>';
+
+  // Gather DATA entries — all cards or just selected
+  const cardData = useAll ? DATA : DATA.filter(d => advisorSelectedCards.has(d.card));
+
+  try {
+    const res = await fetch(`${WORKER_URL}/recommend`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cards: cardData, prompt }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Request failed');
+    }
+
+    responseDiv.className = 'advisor-response';
+    // Convert markdown-style bold to HTML
+    const formatted = escHtml(data.recommendation)
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+    responseDiv.innerHTML = `<div class="result">${formatted}</div>`;
+  } catch (err) {
+    responseDiv.className = 'advisor-response';
+    responseDiv.innerHTML = `<div class="advisor-error">⚠️ ${escHtml(err.message)}<br><small>Make sure the AI worker is deployed and running.</small></div>`;
+  } finally {
+    btn.disabled = false;
+    updateAdvisorButton();
+  }
+}
+
 // Init
 renderStats();
-renderCategoryChips();
-renderCardChips();
+switchTab(activeTab);
 </script>
 
 </body>
