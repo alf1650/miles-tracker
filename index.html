@@ -890,7 +890,7 @@ function renderMyCardsPanel() {
     html += `<div class="bank-group-label"><span class="bank-badge bank-${bank}">${bank}</span></div>`;
     for (const card of cardsByBank[bank]) {
       const checked = advisorSelectedCards.has(card) ? 'checked' : '';
-      html += `<label class="card-checkbox"><input type="checkbox" ${checked} onchange="toggleMyCard('${card.replace(/'/g, '&#39;')}')"> ${escHtml(card)}</label>`;
+      html += `<label class="card-checkbox"><input type="checkbox" ${checked} data-card="${escHtml(card)}" onchange="toggleMyCard(this.dataset.card)"> ${escHtml(card)}</label>`;
     }
     html += `</div>`;
   }
@@ -957,7 +957,7 @@ function renderAdvisorCards() {
     html += `<div class="bank-group-label"><span class="bank-badge bank-${bank}">${bank}</span></div>`;
     for (const card of cardsByBank[bank]) {
       const checked = advisorSelectedCards.has(card) ? 'checked' : '';
-      html += `<label class="card-checkbox"><input type="checkbox" ${checked} onchange="toggleAdvisorCard('${card.replace(/'/g, '&#39;')}')"> ${escHtml(card)}</label>`;
+      html += `<label class="card-checkbox"><input type="checkbox" ${checked} data-card="${escHtml(card)}" onchange="toggleAdvisorCard(this.dataset.card)"> ${escHtml(card)}</label>`;
     }
     html += `</div>`;
   }
