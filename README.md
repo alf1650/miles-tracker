@@ -6,7 +6,7 @@ A single-page web app that helps you find the best miles-earning credit cards in
 
 - **Search by Category** – Filter cards by name, bank, or spending category with sortable MPD columns
 - **My Cards** – Save the cards you own and filter results to show only your cards across all categories
-- **🤖 Card Advisor (AI)** – Describe a spending scenario and get personalised AI recommendations ranked by miles earned, powered by Cloudflare Workers AI (Llama 3.1)
+- **🤖 Card Advisor (AI)** – Describe a spending scenario and get personalised AI recommendations ranked by miles earned, powered by Gemini 2.5 Flash-Lite via Cloudflare Workers
 - **Remember Me** – Card selections persist across sessions via localStorage
 - **Bank Badges** – Visual indicators for each issuing bank
 - **Responsive Design** – Works on desktop and mobile
