@@ -1719,9 +1719,9 @@ function renderMCCResults() {
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap">
           <span style="font-size:0.88rem;color:var(--text2)">S$</span>
           <input id="${mccId}-amt" type="number" min="1" placeholder="Amount" style="width:110px;padding:0.35rem 0.6rem;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:0.88rem">
-          <button onclick="askMCC('${mccId}', ${JSON.stringify(m.code)}, ${JSON.stringify(m.desc)}, ${JSON.stringify(m.categories[0])})" style="padding:0.35rem 0.9rem;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:0.88rem">🤖 Ask Advisor</button>
+          <button data-mid="${escHtml(mccId)}" data-code="${escHtml(m.code)}" data-desc="${escHtml(m.desc)}" data-cat="${escHtml(m.categories[0])}" onclick="askMCC(this.dataset.mid, this.dataset.code, this.dataset.desc, this.dataset.cat)" style="padding:0.35rem 0.9rem;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:0.88rem">🤖 Ask Advisor</button>
         </div>
-        <div id="${mccId}-resp" style="display:none" class="advisor-response" style="margin-bottom:0.8rem"></div>
+        <div id="${mccId}-resp" style="display:none;margin-bottom:0.8rem"></div>
         ${cards.length > 0 ? renderTable(cards) : '<p class="cap-info">No specific bonus cards tracked for this MCC category.</p>'}
       </div>`;
   }
@@ -1736,6 +1736,7 @@ async function askMCC(mccId, code, desc, category) {
   const cardData = advisorSelectedCards.size > 0 ? DATA.filter(d => advisorSelectedCards.has(d.card)) : DATA;
 
   respEl.style.display = '';
+  respEl.style.marginBottom = '0.8rem';
   respEl.className = 'advisor-response loading';
   respEl.innerHTML = '<span><span class="spinner"></span> Analyzing...</span>';
 
