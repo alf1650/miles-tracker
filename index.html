@@ -295,7 +295,26 @@
 
   <!-- MCC Tab -->
   <div id="tab-mcc" style="display:none">
-    <p style="color:var(--text2);font-size:0.88rem;margin-bottom:0.8rem;">Enter a 4-digit MCC code or keyword to find which credit cards earn bonus miles for that merchant category.</p>
+    <p style="color:var(--text2);font-size:0.88rem;margin-bottom:0.8rem;">💳 Add the cards you have to see personalised results. Toggle <strong>Show only my cards</strong> to filter by your wallet.</p>
+    <div class="my-cards-bar">
+      <label class="toggle-label"><input type="checkbox" id="mcc-my-cards-toggle" onchange="toggleMCCCardsFilter()"> Show only my cards</label>
+      <span class="card-count-label" id="mcc-my-cards-count">0 cards selected</span>
+      <button class="edit-btn" onclick="toggleMCCPanel()">✏️ Add / Edit my cards</button>
+    </div>
+    <div class="my-cards-panel" id="mcc-my-cards-panel">
+      <div class="my-cards-panel-header">
+        <h3>🃏 Select Your Cards</h3>
+        <div class="my-cards-panel-actions">
+          <button onclick="mccPanelSelectAll()">Select All</button>
+          <button onclick="mccPanelClearAll()">Clear All</button>
+        </div>
+      </div>
+      <div class="search-box" style="margin-bottom:0.8rem">
+        <span class="icon">🔍</span>
+        <input type="text" id="mcc-panel-card-search" placeholder="Filter cards..." oninput="renderMCCPanel()">
+      </div>
+      <div class="my-cards-grid" id="mcc-panel-card-list"></div>
+    </div>
     <div class="search-box">
       <span class="icon">🔢</span>
       <input type="text" id="mcc-search" placeholder="Search by MCC code (e.g. 5812) or description (e.g. Restaurant)..." oninput="filterMCC()">
@@ -1091,7 +1110,7 @@ function switchTab(tab) {
   document.getElementById('tab-advisor').style.display = tab === 'advisor' ? '' : 'none';
   if (tab === 'category') { updateMyCardsBar(); renderCategoryChips(); filterCategories(); }
   if (tab === 'card') { renderCardChips(); filterCards(); }
-  if (tab === 'mcc') { renderMCCChips(); renderMCCResults(); }
+  if (tab === 'mcc') { updateMCCBar(); renderMCCChips(); renderMCCResults(); }
   if (tab === 'advisor') { updateAdvisorButton(); }
 }
 
@@ -1389,8 +1408,10 @@ function toggleMyCard(card) {
   else advisorSelectedCards.add(card);
   saveAdvisorCards();
   updateMyCardsBar();
+  updateMCCBar();
   renderMyCardsPanel();
   renderCategoryResults();
+  if (document.getElementById('tab-mcc').style.display !== 'none') renderMCCResults();
   // Keep advisor tab in sync
   if (document.getElementById('advisor-card-list').innerHTML) {
     renderAdvisorCards();
@@ -1404,6 +1425,7 @@ function panelSelectAll() {
   });
   saveAdvisorCards();
   updateMyCardsBar();
+  updateMCCBar();
   renderMyCardsPanel();
   renderCategoryResults();
 }
@@ -1412,6 +1434,7 @@ function panelClearAll() {
   advisorSelectedCards.clear();
   saveAdvisorCards();
   updateMyCardsBar();
+  updateMCCBar();
   renderMyCardsPanel();
   renderCategoryResults();
 }
@@ -1546,6 +1569,76 @@ async function getRecommendation() {
 }
 
 // ============================================================
+// MCC MY CARDS
+// ============================================================
+let mccMyCardsFilterOn = localStorage.getItem('mccMyCardsFilterOn') === 'true';
+
+function updateMCCBar() {
+  const toggle = document.getElementById('mcc-my-cards-toggle');
+  if (toggle) toggle.checked = mccMyCardsFilterOn;
+  const n = advisorSelectedCards.size;
+  const countEl = document.getElementById('mcc-my-cards-count');
+  if (countEl) countEl.textContent = `${n} card${n !== 1 ? 's' : ''} selected`;
+}
+
+function toggleMCCCardsFilter() {
+  mccMyCardsFilterOn = document.getElementById('mcc-my-cards-toggle').checked;
+  localStorage.setItem('mccMyCardsFilterOn', mccMyCardsFilterOn);
+  renderMCCResults();
+}
+
+function toggleMCCPanel() {
+  const panel = document.getElementById('mcc-my-cards-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderMCCPanel();
+}
+
+function renderMCCPanel() {
+  const q = (document.getElementById('mcc-panel-card-search')?.value || '').toLowerCase();
+  const cardsByBank = {};
+  allCards.forEach(card => {
+    if (q && !card.toLowerCase().includes(q)) return;
+    const bank = DATA.find(d => d.card === card).bank;
+    if (!cardsByBank[bank]) cardsByBank[bank] = [];
+    cardsByBank[bank].push(card);
+  });
+  let html = '';
+  for (const bank of Object.keys(cardsByBank).sort()) {
+    html += `<div class="bank-group">`;
+    html += `<div class="bank-group-label"><span class="bank-badge bank-${bank}">${bank}</span></div>`;
+    for (const card of cardsByBank[bank]) {
+      const checked = advisorSelectedCards.has(card) ? 'checked' : '';
+      html += `<label class="card-checkbox"><input type="checkbox" ${checked} data-card="${escHtml(card)}" onchange="toggleMCCCard(this.dataset.card)"> ${escHtml(card)}</label>`;
+    }
+    html += `</div>`;
+  }
+  document.getElementById('mcc-panel-card-list').innerHTML = html;
+}
+
+function toggleMCCCard(card) {
+  if (advisorSelectedCards.has(card)) advisorSelectedCards.delete(card);
+  else advisorSelectedCards.add(card);
+  saveAdvisorCards();
+  updateMCCBar();
+  updateMyCardsBar();
+  renderMCCPanel();
+  renderMCCResults();
+  if (document.getElementById('advisor-card-list').innerHTML) renderAdvisorCards();
+  if (document.getElementById('panel-card-list').innerHTML) renderMyCardsPanel();
+}
+
+function mccPanelSelectAll() {
+  const q = (document.getElementById('mcc-panel-card-search')?.value || '').toLowerCase();
+  allCards.forEach(card => { if (!q || card.toLowerCase().includes(q)) advisorSelectedCards.add(card); });
+  saveAdvisorCards(); updateMCCBar(); updateMyCardsBar(); renderMCCPanel(); renderMCCResults();
+}
+
+function mccPanelClearAll() {
+  advisorSelectedCards.clear();
+  saveAdvisorCards(); updateMCCBar(); updateMyCardsBar(); renderMCCPanel(); renderMCCResults();
+}
+
+// ============================================================
 // MCC SEARCH
 // ============================================================
 const MCC_GROUPS = [
@@ -1609,16 +1702,14 @@ function renderMCCResults() {
     return;
   }
 
-  // Unique categories across all matched MCCs
-  const allCats = [...new Set(matched.flatMap(m => m.categories))];
-  const cardsByCategory = {};
-  for (const cat of allCats) {
-    cardsByCategory[cat] = DATA.filter(d => d.category === cat).sort((a, b) => b.mpd - a.mpd);
-  }
+  // Source pool — filtered by my cards if toggle is on
+  const pool = (mccMyCardsFilterOn && advisorSelectedCards.size > 0)
+    ? DATA.filter(d => advisorSelectedCards.has(d.card))
+    : DATA;
 
   let html = '';
   for (const m of matched) {
-    const cards = [...new Set(m.categories.flatMap(cat => DATA.filter(d => d.category === cat)))]
+    const cards = [...new Set(m.categories.flatMap(cat => pool.filter(d => d.category === cat)))]
       .sort((a, b) => b.mpd - a.mpd);
     const mccId = `mcc-${m.code.replace(/[^a-z0-9]/gi, '_')}`;
     html += `
@@ -1642,8 +1733,7 @@ async function askMCC(mccId, code, desc, category) {
   const amount = parseFloat(amtVal) || 100;
   const respEl = document.getElementById(`${mccId}-resp`);
 
-  const useAll = document.getElementById('advisor-use-all')?.checked;
-  const cardData = useAll || advisorSelectedCards.size === 0 ? DATA : DATA.filter(d => advisorSelectedCards.has(d.card));
+  const cardData = advisorSelectedCards.size > 0 ? DATA.filter(d => advisorSelectedCards.has(d.card)) : DATA;
 
   respEl.style.display = '';
   respEl.className = 'advisor-response loading';
