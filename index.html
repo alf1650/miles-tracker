@@ -31,6 +31,7 @@
   /* Tabs */
   .tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
   .tab-btn { flex:1; padding: 0.85rem 1rem; background: var(--surface); color: var(--text2); border: none; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s; }
+  .tab-btn .tab-short { display: none; }
   .tab-btn:hover { background: var(--surface2); }
   .tab-btn.active { background: var(--accent); color: #ffffff; }
 
@@ -110,8 +111,12 @@
     .stats { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
     .stat-card { padding: 0.7rem; }
     .stat-card .num { font-size: 1.4rem; }
-    .tabs { border-radius: 8px; }
-    .tab-btn { padding: 0.7rem 0.5rem; font-size: 0.85rem; }
+    .tabs { border-radius: 8px; flex-wrap: wrap; }
+    .tab-btn { padding: 0.7rem 0.5rem; font-size: 0.82rem; flex: 0 0 50%; box-sizing: border-box; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .tab-btn:nth-child(2n) { border-right: none; }
+    .tab-btn:nth-child(3), .tab-btn:nth-child(4) { border-bottom: none; }
+    .tab-btn .tab-full { display: none; }
+    .tab-btn .tab-short { display: inline; }
     .search-box input { padding: 0.75rem 1rem 0.75rem 2.5rem; font-size: 0.9rem; border-radius: 8px; }
     .chips { gap: 0.4rem; }
     .chip { padding: 0.35rem 0.7rem; font-size: 0.78rem; min-height: 2rem; display: inline-flex; align-items: center; }
@@ -247,10 +252,10 @@
   <div class="stats" id="stats"></div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="category" onclick="switchTab('category')">🏷️ Search by Category</button>
-    <button class="tab-btn" data-tab="card" onclick="switchTab('card')">💳 Search by Card</button>
-    <button class="tab-btn" data-tab="mcc" onclick="switchTab('mcc')">🔢 Search by MCC</button>
-    <button class="tab-btn" data-tab="advisor" onclick="switchTab('advisor')">🤖 Card Advisor</button>
+    <button class="tab-btn active" data-tab="category" onclick="switchTab('category')"><span class="tab-full">🏷️ Search by Category</span><span class="tab-short">🏷️ Category</span></button>
+    <button class="tab-btn" data-tab="card" onclick="switchTab('card')"><span class="tab-full">💳 Search by Card</span><span class="tab-short">💳 By Card</span></button>
+    <button class="tab-btn" data-tab="mcc" onclick="switchTab('mcc')"><span class="tab-full">🔢 Search by MCC</span><span class="tab-short">🔢 MCC</span></button>
+    <button class="tab-btn" data-tab="advisor" onclick="switchTab('advisor')"><span class="tab-full">🤖 Card Advisor</span><span class="tab-short">🤖 Advisor</span></button>
   </div>
 
   <!-- Category Tab -->
