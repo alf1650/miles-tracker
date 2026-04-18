@@ -1709,8 +1709,13 @@ function renderMCCResults() {
 
   let html = '';
   for (const m of matched) {
-    const cards = [...new Set(m.categories.flatMap(cat => pool.filter(d => d.category === cat)))]
-      .sort((a, b) => b.mpd - a.mpd);
+    const cardMap = new Map();
+    for (const cat of m.categories) {
+      for (const d of pool.filter(d => d.category === cat)) {
+        if (!cardMap.has(d.card) || d.mpd > cardMap.get(d.card).mpd) cardMap.set(d.card, d);
+      }
+    }
+    const cards = [...cardMap.values()].sort((a, b) => b.mpd - a.mpd);
     const mccId = `mcc-${m.code.replace(/[^a-z0-9]/gi, '_')}`;
     html += `
       <div class="card-detail" style="margin-bottom:1.2rem">
