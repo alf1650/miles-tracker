@@ -249,6 +249,7 @@
   <div class="tabs">
     <button class="tab-btn active" data-tab="category" onclick="switchTab('category')">🏷️ Search by Category</button>
     <button class="tab-btn" data-tab="card" onclick="switchTab('card')">💳 Search by Card</button>
+    <button class="tab-btn" data-tab="mcc" onclick="switchTab('mcc')">🔢 Search by MCC</button>
     <button class="tab-btn" data-tab="advisor" onclick="switchTab('advisor')">🤖 Card Advisor</button>
   </div>
 
@@ -290,6 +291,17 @@
     </div>
     <div class="chips" id="card-chips"></div>
     <div id="card-results"></div>
+  </div>
+
+  <!-- MCC Tab -->
+  <div id="tab-mcc" style="display:none">
+    <p style="color:var(--text2);font-size:0.88rem;margin-bottom:0.8rem;">Enter a 4-digit MCC code or keyword to find which credit cards earn bonus miles for that merchant category.</p>
+    <div class="search-box">
+      <span class="icon">🔢</span>
+      <input type="text" id="mcc-search" placeholder="Search by MCC code (e.g. 5812) or description (e.g. Restaurant)..." oninput="filterMCC()">
+    </div>
+    <div class="chips" id="mcc-chips"></div>
+    <div id="mcc-results"></div>
   </div>
 
   <!-- Advisor Tab -->
@@ -342,6 +354,479 @@
 </div>
 
 <script>
+// ============================================================
+// MCC DATA (sourced from milelion.com)
+// Maps MCC codes to categories and descriptions
+// ============================================================
+const MCC_DATA = [
+  // Dining
+  { code: "5812", desc: "Eating Places, Restaurants", categories: ["Dining", "Food Delivery"] },
+  { code: "5814", desc: "Fast Food Restaurants", categories: ["Dining", "Food Delivery"] },
+  { code: "5811", desc: "Caterers", categories: ["Dining"] },
+  { code: "5499", desc: "Misc. Food Stores, Convenience Stores", categories: ["Dining"] },
+  { code: "5813", desc: "Bars, Lounges, Discos, Nightclubs", categories: ["Dining"] },
+
+  // Groceries / Supermarket
+  { code: "5411", desc: "Grocery Stores & Supermarkets", categories: ["Groceries/Supermarket"] },
+  { code: "5641", desc: "Children's and Infant's Wear Stores", categories: ["Groceries/Supermarket"] },
+
+  // Shopping (Offline)
+  { code: "5311", desc: "Department Stores", categories: ["Shopping", "Online Transactions", "Amaze"] },
+  { code: "5611", desc: "Men & Boy's Clothing and Accessories Stores", categories: ["Shopping"] },
+  { code: "5621", desc: "Women's Ready-to-Wear Stores", categories: ["Shopping"] },
+  { code: "5631", desc: "Women's Accessory and Specialty Stores", categories: ["Shopping"] },
+  { code: "5651", desc: "Family Clothing Stores", categories: ["Shopping"] },
+  { code: "5655", desc: "Sports Apparel, Riding Apparel Stores", categories: ["Shopping"] },
+  { code: "5661", desc: "Shoe Stores", categories: ["Shopping"] },
+  { code: "5691", desc: "Men's and Women's Clothing Stores", categories: ["Shopping"] },
+  { code: "5699", desc: "Accessory and Apparel Stores — Misc.", categories: ["Shopping"] },
+  { code: "5948", desc: "Luggage and Leather Goods Stores", categories: ["Shopping"] },
+  { code: "5945", desc: "Hobby, Toy and Game Shops", categories: ["Shopping", "Online Transactions"] },
+  { code: "5947", desc: "Card, Gift, Novelty and Souvenir Shops", categories: ["Shopping", "Online Transactions"] },
+  { code: "5965", desc: "Direct Marketing: Combination Catalog & Retail Merchants", categories: ["Shopping", "Online Transactions"] },
+  { code: "5999", desc: "Misc. & Specialty Retail Stores (incl. Atome, Giftano)", categories: ["Online Transactions", "Atome", "Food Delivery"] },
+  { code: "5712", desc: "Furniture, Home Furnishings & Equipment Stores", categories: ["Shopping"] },
+  { code: "5722", desc: "Household Appliance Stores", categories: ["Shopping"] },
+  { code: "5732", desc: "Electronics Stores", categories: ["Shopping"] },
+  { code: "5734", desc: "Computer and Computer Software Stores", categories: ["Shopping"] },
+  { code: "5065", desc: "Electrical Parts and Equipment", categories: ["Shopping"] },
+  { code: "5200", desc: "Home Supply Warehouse Stores", categories: ["Shopping"] },
+
+  // Air Tickets / Airlines
+  { code: "4511", desc: "Air Carriers, Airlines — Not Elsewhere Classified", categories: ["Air Tickets"] },
+  { code: "4582", desc: "Airports, Airport Terminals and Flying Fields", categories: ["Air Tickets"] },
+  { code: "3000", desc: "United Airlines", categories: ["Air Tickets"] },
+  { code: "3001", desc: "American Airlines", categories: ["Air Tickets"] },
+  { code: "3002", desc: "Pan American (defunct)", categories: ["Air Tickets"] },
+  { code: "3003", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3004", desc: "Trans World Airlines", categories: ["Air Tickets"] },
+  { code: "3005", desc: "British Airways", categories: ["Air Tickets"] },
+  { code: "3006", desc: "Japan Airlines", categories: ["Air Tickets"] },
+  { code: "3007", desc: "Air France", categories: ["Air Tickets"] },
+  { code: "3008", desc: "Lufthansa", categories: ["Air Tickets"] },
+  { code: "3009", desc: "Air Canada", categories: ["Air Tickets"] },
+  { code: "3010", desc: "KLM / Royal Dutch Airlines", categories: ["Air Tickets"] },
+  { code: "3011", desc: "Aeroflot", categories: ["Air Tickets"] },
+  { code: "3012", desc: "Qantas", categories: ["Air Tickets"] },
+  { code: "3013", desc: "Alitalia", categories: ["Air Tickets"] },
+  { code: "3014", desc: "Saudi Arabian Airlines", categories: ["Air Tickets"] },
+  { code: "3015", desc: "Swiss Air", categories: ["Air Tickets"] },
+  { code: "3016", desc: "SAS / Scandinavian Airlines", categories: ["Air Tickets"] },
+  { code: "3017", desc: "South African Airways", categories: ["Air Tickets"] },
+  { code: "3018", desc: "Varig (Brazil)", categories: ["Air Tickets"] },
+  { code: "3020", desc: "Air India", categories: ["Air Tickets"] },
+  { code: "3021", desc: "Air Algerie", categories: ["Air Tickets"] },
+  { code: "3022", desc: "Philippine Airlines", categories: ["Air Tickets"] },
+  { code: "3023", desc: "Mexicana Airlines", categories: ["Air Tickets"] },
+  { code: "3024", desc: "Pakistan International Airlines", categories: ["Air Tickets"] },
+  { code: "3025", desc: "Air New Zealand", categories: ["Air Tickets"] },
+  { code: "3026", desc: "Emirates Airlines", categories: ["Air Tickets"] },
+  { code: "3027", desc: "Union de Transports Aeriens (UTA)", categories: ["Air Tickets"] },
+  { code: "3028", desc: "Air Malta", categories: ["Air Tickets"] },
+  { code: "3029", desc: "Sabena (defunct)", categories: ["Air Tickets"] },
+  { code: "3030", desc: "Aer Lingus", categories: ["Air Tickets"] },
+  { code: "3031", desc: "Air Mauritius", categories: ["Air Tickets"] },
+  { code: "3032", desc: "Czechoslovak Airlines", categories: ["Air Tickets"] },
+  { code: "3033", desc: "Olympic Airways", categories: ["Air Tickets"] },
+  { code: "3034", desc: "El Al Airlines", categories: ["Air Tickets"] },
+  { code: "3035", desc: "Ansett Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3036", desc: "Egyptair", categories: ["Air Tickets"] },
+  { code: "3037", desc: "Thai Airways International", categories: ["Air Tickets"] },
+  { code: "3038", desc: "China Airlines", categories: ["Air Tickets"] },
+  { code: "3040", desc: "NAS Air (Saudi Arabia)", categories: ["Air Tickets"] },
+  { code: "3041", desc: "Balkan-Bulgarian Airlines", categories: ["Air Tickets"] },
+  { code: "3042", desc: "Finnair", categories: ["Air Tickets"] },
+  { code: "3043", desc: "Aer Lingus", categories: ["Air Tickets"] },
+  { code: "3044", desc: "Iberia", categories: ["Air Tickets"] },
+  { code: "3045", desc: "Not Assigned", categories: ["Air Tickets"] },
+  { code: "3046", desc: "JAT Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3047", desc: "Royal Air Maroc", categories: ["Air Tickets"] },
+  { code: "3048", desc: "Tunis Air", categories: ["Air Tickets"] },
+  { code: "3049", desc: "ICELANDAIR", categories: ["Air Tickets"] },
+  { code: "3050", desc: "Nigerian Airways (defunct)", categories: ["Air Tickets"] },
+  { code: "3051", desc: "Cruzeiro do Sul", categories: ["Air Tickets"] },
+  { code: "3052", desc: "TAM Airlines (Brazil)", categories: ["Air Tickets"] },
+  { code: "3053", desc: "LOT Polish Airlines", categories: ["Air Tickets"] },
+  { code: "3054", desc: "TAROM Romanian Air Transport", categories: ["Air Tickets"] },
+  { code: "3055", desc: "Avianca", categories: ["Air Tickets"] },
+  { code: "3056", desc: "not Assigned", categories: ["Air Tickets"] },
+  { code: "3057", desc: "East West Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3058", desc: "Delta Airlines", categories: ["Air Tickets"] },
+  { code: "3059", desc: "DBA", categories: ["Air Tickets"] },
+  { code: "3060", desc: "Northwest Airlines (now Delta)", categories: ["Air Tickets"] },
+  { code: "3061", desc: "Continental Airlines (now United)", categories: ["Air Tickets"] },
+  { code: "3062", desc: "Western Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3063", desc: "US Air (now American)", categories: ["Air Tickets"] },
+  { code: "3064", desc: "Adria Airways", categories: ["Air Tickets"] },
+  { code: "3065", desc: "Air Inter (defunct)", categories: ["Air Tickets"] },
+  { code: "3066", desc: "Southwest Airlines", categories: ["Air Tickets"] },
+  { code: "3067", desc: "Vanguard Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3068", desc: "Midwest Express Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3069", desc: "Sun Country Airlines", categories: ["Air Tickets"] },
+  { code: "3071", desc: "Aloha Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3072", desc: "Alaska Airlines", categories: ["Air Tickets"] },
+  { code: "3075", desc: "Singapore Airlines", categories: ["Air Tickets"] },
+  { code: "3076", desc: "Southern Air Transport (defunct)", categories: ["Air Tickets"] },
+  { code: "3077", desc: "Cathay Pacific", categories: ["Air Tickets"] },
+  { code: "3078", desc: "China Eastern Airlines", categories: ["Air Tickets"] },
+  { code: "3079", desc: "American West Airlines (now American)", categories: ["Air Tickets"] },
+  { code: "3082", desc: "Korean Air", categories: ["Air Tickets"] },
+  { code: "3083", desc: "Air Afrique", categories: ["Air Tickets"] },
+  { code: "3084", desc: "Malaysia Airlines", categories: ["Air Tickets"] },
+  { code: "3085", desc: "British Midland (defunct)", categories: ["Air Tickets"] },
+  { code: "3086", desc: "Garuda Indonesia", categories: ["Air Tickets"] },
+  { code: "3087", desc: "not Assigned", categories: ["Air Tickets"] },
+  { code: "3088", desc: "not Assigned", categories: ["Air Tickets"] },
+  { code: "3089", desc: "Braathens SAFE (defunct)", categories: ["Air Tickets"] },
+  { code: "3090", desc: "Dominicana de Aviacion (defunct)", categories: ["Air Tickets"] },
+  { code: "3094", desc: "Zambia Airways (defunct)", categories: ["Air Tickets"] },
+  { code: "3096", desc: "Air Zimbabwe (defunct)", categories: ["Air Tickets"] },
+  { code: "3097", desc: "Not Assigned", categories: ["Air Tickets"] },
+  { code: "3098", desc: "not Assigned", categories: ["Air Tickets"] },
+  { code: "3099", desc: "Cathay Pacific", categories: ["Air Tickets"] },
+  { code: "3100", desc: "Miat Mongolian Airlines", categories: ["Air Tickets"] },
+  { code: "3102", desc: "Iberia", categories: ["Air Tickets"] },
+  { code: "3103", desc: "Japan Airlines (JAL)", categories: ["Air Tickets"] },
+  { code: "3106", desc: "Quantas", categories: ["Air Tickets"] },
+  { code: "3110", desc: "Air Canada", categories: ["Air Tickets"] },
+  { code: "3111", desc: "British Airways", categories: ["Air Tickets"] },
+  { code: "3112", desc: "Thai International", categories: ["Air Tickets"] },
+  { code: "3115", desc: "Singapore Airlines", categories: ["Air Tickets"] },
+  { code: "3117", desc: "Aeroflot", categories: ["Air Tickets"] },
+  { code: "3118", desc: "Scandinavian Airlines (SAS)", categories: ["Air Tickets"] },
+  { code: "3119", desc: "Swissair", categories: ["Air Tickets"] },
+  { code: "3120", desc: "Lufthansa", categories: ["Air Tickets"] },
+  { code: "3121", desc: "Austrian Airlines", categories: ["Air Tickets"] },
+  { code: "3122", desc: "Air Malta", categories: ["Air Tickets"] },
+  { code: "3123", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3125", desc: "KLM Royal Dutch Airlines", categories: ["Air Tickets"] },
+  { code: "3126", desc: "Finnair", categories: ["Air Tickets"] },
+  { code: "3127", desc: "Air France", categories: ["Air Tickets"] },
+  { code: "3129", desc: "Alitalia", categories: ["Air Tickets"] },
+  { code: "3130", desc: "Saeta SocAec Ecuatoriana (defunct)", categories: ["Air Tickets"] },
+  { code: "3131", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3132", desc: "China Airlines", categories: ["Air Tickets"] },
+  { code: "3133", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3135", desc: "Japan Air System (defunct)", categories: ["Air Tickets"] },
+  { code: "3136", desc: "LOT Polish Airlines", categories: ["Air Tickets"] },
+  { code: "3137", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3138", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3140", desc: "Malaysian Airline System", categories: ["Air Tickets"] },
+  { code: "3141", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3142", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3143", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3144", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3145", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3151", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3159", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3161", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3170", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3171", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3172", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3174", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3175", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3176", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3177", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3178", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3180", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3181", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3182", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3183", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3184", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3185", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3186", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3187", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3188", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3190", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3191", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3193", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3196", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3197", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3200", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3204", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3206", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3211", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3212", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3213", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3214", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3215", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3216", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3217", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3218", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3219", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3220", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3221", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3222", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3223", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3226", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3228", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3229", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3231", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3233", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3234", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3235", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3236", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3238", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3239", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3240", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3241", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3242", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3243", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3245", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3246", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3247", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3248", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3251", desc: "Aloha Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3252", desc: "Hawaiian Airlines", categories: ["Air Tickets"] },
+  { code: "3253", desc: "Memphis-Nashville Airlines (defunct)", categories: ["Air Tickets"] },
+  { code: "3254", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3256", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3259", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3260", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3261", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3262", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3263", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3266", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3267", desc: "Airlines (various)", categories: ["Air Tickets"] },
+  { code: "3280", desc: "Air Jamaica", categories: ["Air Tickets"] },
+  { code: "3282", desc: "Air Pacific", categories: ["Air Tickets"] },
+  { code: "3284", desc: "LIAT (The Caribbean Airline)", categories: ["Air Tickets"] },
+  { code: "3285", desc: "BWIA International Airways (defunct)", categories: ["Air Tickets"] },
+  { code: "3286", desc: "Turks Air (defunct)", categories: ["Air Tickets"] },
+  { code: "3287", desc: "Rohr Industries", categories: ["Air Tickets"] },
+  { code: "3292", desc: "Cyprus Airways (defunct)", categories: ["Air Tickets"] },
+  { code: "3293", desc: "Ecuatoriana", categories: ["Air Tickets"] },
+  { code: "3294", desc: "Ethiopian Airlines", categories: ["Air Tickets"] },
+  { code: "3295", desc: "Kenya Airways", categories: ["Air Tickets"] },
+  { code: "3297", desc: "Dan-Air Services", categories: ["Air Tickets"] },
+  { code: "3298", desc: "Air Nostrum (Operated by Iberia regional)", categories: ["Air Tickets"] },
+  { code: "3299", desc: "Cubana", categories: ["Air Tickets"] },
+
+  // Hotels (MCC 3501-3999, 7011)
+  { code: "7011", desc: "Hotels, Motels, Resorts (incl. Airbnb, Booking.com)", categories: ["Hotels"] },
+  { code: "3501", desc: "Holiday Inns", categories: ["Hotels"] },
+  { code: "3502", desc: "Best Western Hotels", categories: ["Hotels"] },
+  { code: "3503", desc: "Sheraton Hotels", categories: ["Hotels"] },
+  { code: "3504", desc: "Hilton Hotels", categories: ["Hotels"] },
+  { code: "3505", desc: "Forte Hotels", categories: ["Hotels"] },
+  { code: "3506", desc: "Golden Tulip Hotels", categories: ["Hotels"] },
+  { code: "3507", desc: "Friendship Inns", categories: ["Hotels"] },
+  { code: "3508", desc: "Quality Hotels", categories: ["Hotels"] },
+  { code: "3509", desc: "Marriott Hotels", categories: ["Hotels"] },
+  { code: "3510", desc: "Days Inn Hotels", categories: ["Hotels"] },
+  { code: "3511", desc: "Arabella Hotels", categories: ["Hotels"] },
+  { code: "3512", desc: "Inter-Continental Hotels", categories: ["Hotels"] },
+  { code: "3513", desc: "Westin Hotels", categories: ["Hotels"] },
+  { code: "3514", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3515", desc: "Rodeway Inns", categories: ["Hotels"] },
+  { code: "3516", desc: "La Quinta Motor Inns", categories: ["Hotels"] },
+  { code: "3517", desc: "Americana Hotels", categories: ["Hotels"] },
+  { code: "3518", desc: "Sol Hotels", categories: ["Hotels"] },
+  { code: "3519", desc: "Pullman International Hotels", categories: ["Hotels"] },
+  { code: "3520", desc: "Meridien Hotels", categories: ["Hotels"] },
+  { code: "3521", desc: "Crest Hotels", categories: ["Hotels"] },
+  { code: "3522", desc: "Tokyo Hotel (Japan)", categories: ["Hotels"] },
+  { code: "3523", desc: "Pennsula Hotels", categories: ["Hotels"] },
+  { code: "3524", desc: "Welcome Hotels", categories: ["Hotels"] },
+  { code: "3525", desc: "Dunfey Hotels", categories: ["Hotels"] },
+  { code: "3526", desc: "Prince Hotels", categories: ["Hotels"] },
+  { code: "3527", desc: "Downtowner-Rowntowner Hotels", categories: ["Hotels"] },
+  { code: "3528", desc: "Red Lion Hotels & Inns", categories: ["Hotels"] },
+  { code: "3529", desc: "CP (Canadian Pacific) Hotels", categories: ["Hotels"] },
+  { code: "3530", desc: "Renaissance Hotels", categories: ["Hotels"] },
+  { code: "3531", desc: "Kempinski Hotels", categories: ["Hotels"] },
+  { code: "3532", desc: "Ramada Inns, Ramada Limited", categories: ["Hotels"] },
+  { code: "3533", desc: "HoJo (Howard Johnson)", categories: ["Hotels"] },
+  { code: "3534", desc: "Novotel Hotels (Accor)", categories: ["Hotels"] },
+  { code: "3535", desc: "Sofitel Hotels (Accor)", categories: ["Hotels"] },
+  { code: "3536", desc: "Ibis Hotels (Accor)", categories: ["Hotels"] },
+  { code: "3537", desc: "Mercure Hotels (Accor)", categories: ["Hotels"] },
+  { code: "3538", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3539", desc: "Loews Hotels", categories: ["Hotels"] },
+  { code: "3540", desc: "Club Med-all inclusive", categories: ["Hotels"] },
+  { code: "3541", desc: "Mélia Hotels", categories: ["Hotels"] },
+  { code: "3542", desc: "Hermitage Hotels", categories: ["Hotels"] },
+  { code: "3543", desc: "Canada Pacific Hotels", categories: ["Hotels"] },
+  { code: "3544", desc: "Radisson Hotels", categories: ["Hotels"] },
+  { code: "3545", desc: "Meridien Hotels", categories: ["Hotels"] },
+  { code: "3546", desc: "Mandarin Oriental Hotels", categories: ["Hotels"] },
+  { code: "3547", desc: "Ritz-Carlton Hotels", categories: ["Hotels"] },
+  { code: "3548", desc: "Flags Inns", categories: ["Hotels"] },
+  { code: "3549", desc: "Golden Chain Hotels", categories: ["Hotels"] },
+  { code: "3550", desc: "Omni Hotels", categories: ["Hotels"] },
+  { code: "3551", desc: "Summerfield Hotel Suites", categories: ["Hotels"] },
+  { code: "3552", desc: "Four Seasons Hotels", categories: ["Hotels"] },
+  { code: "3553", desc: "Fairmont Hotels", categories: ["Hotels"] },
+  { code: "3554", desc: "Prince Hotels and Resorts", categories: ["Hotels"] },
+  { code: "3555", desc: "Park Hotels & Inns", categories: ["Hotels"] },
+  { code: "3556", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3557", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3558", desc: "Jolly Hotels", categories: ["Hotels"] },
+  { code: "3559", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3560", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3561", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3562", desc: "Colony Hotels & Resorts", categories: ["Hotels"] },
+  { code: "3563", desc: "Sahara Casino Hotels", categories: ["Hotels"] },
+  { code: "3564", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3565", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3566", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3567", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3568", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3569", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3570", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3571", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3572", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3573", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3574", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3575", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3576", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3577", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3578", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3579", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3580", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3581", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3582", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3583", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3584", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3585", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3586", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3587", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3588", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3589", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3590", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3591", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3592", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3593", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3594", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3595", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3596", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3597", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3598", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3599", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3600", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3609", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3612", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3615", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3700", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3750", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3800", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3900", desc: "Hotels (various)", categories: ["Hotels"] },
+  { code: "3999", desc: "Hotels (various)", categories: ["Hotels"] },
+
+  // Car Rental (MCC 3351-3500, 7512)
+  { code: "7512", desc: "Automobile Rental Agency — Not Elsewhere Classified (Avis, Hertz, Europcar)", categories: ["Car Rental"] },
+  { code: "3351", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3352", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3353", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3354", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3355", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3356", desc: "Budget Rent-A-Car", categories: ["Car Rental"] },
+  { code: "3357", desc: "Avis Car Rental", categories: ["Car Rental"] },
+  { code: "3358", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3359", desc: "Hertz Car Rental", categories: ["Car Rental"] },
+  { code: "3360", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3361", desc: "National Car Rental", categories: ["Car Rental"] },
+  { code: "3362", desc: "Tilden Car Rental", categories: ["Car Rental"] },
+  { code: "3363", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3364", desc: "Dollar Rent A Car", categories: ["Car Rental"] },
+  { code: "3365", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3366", desc: "Enterprise Car Rental", categories: ["Car Rental"] },
+  { code: "3367", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3368", desc: "Thrifty Car Rental", categories: ["Car Rental"] },
+  { code: "3369", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3370", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3374", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3376", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3380", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3381", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3384", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3385", desc: "Sixt Car Rental", categories: ["Car Rental"] },
+  { code: "3386", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3387", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3388", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3389", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3390", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3391", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3393", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3394", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3395", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3396", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3397", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3398", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3399", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3400", desc: "Car Rental (various)", categories: ["Car Rental"] },
+  { code: "3500", desc: "Car Rental (various)", categories: ["Car Rental"] },
+
+  // Public Transportation
+  { code: "4111", desc: "Transportation — Suburban & Local Commuter (MRT, Bus)", categories: ["Public Transportation (SimplyGo)"] },
+  { code: "4112", desc: "Passenger Railways (Shinkansen, Eurostar etc.)", categories: ["Public Transportation (SimplyGo)"] },
+  { code: "4131", desc: "Bus Lines", categories: ["Public Transportation (SimplyGo)"] },
+
+  // Ride Hailing / Taxis
+  { code: "4121", desc: "Taxicabs and Limousines (incl. Airport transfers, Private Hire Cars)", categories: ["Grab/Gojek/Ride Hailing"] },
+  { code: "7299", desc: "Transportation / Services Not Elsewhere Classified", categories: ["Grab/Gojek/Ride Hailing"] },
+  { code: "4789", desc: "Transportation Services — Not Elsewhere Classified", categories: ["Grab/Gojek/Ride Hailing"] },
+
+  // Petrol
+  { code: "5541", desc: "Service Stations (Petrol / Gas)", categories: ["Petrol"] },
+  { code: "5542", desc: "Automated Fuel Dispensers (Petrol kiosk self-service)", categories: ["Petrol"] },
+
+  // Pharmacies / Beauty / Wellness
+  { code: "5912", desc: "Drug Stores and Pharmacies (Watsons, Guardian)", categories: ["Pharmacies"] },
+  { code: "5977", desc: "Cosmetic Stores", categories: ["Pharmacies"] },
+  { code: "7230", desc: "Barber and Beauty Shops", categories: ["Pharmacies"] },
+  { code: "7231", desc: "Beauty, Barber Shop & Gyms", categories: ["Pharmacies"] },
+  { code: "7297", desc: "Massage Parlours", categories: ["Pharmacies"] },
+  { code: "7298", desc: "Health and Beauty Spas", categories: ["Pharmacies"] },
+
+  // Travel Agencies
+  { code: "4722", desc: "Travel Agencies and Tour Operators (Agoda, Expedia, Klook, Booking.com)", categories: ["Hotels", "Air Tickets"] },
+
+  // Cruise Lines
+  { code: "4411", desc: "Cruise Lines (Royal Caribbean, Carnival, Celebrity)", categories: ["Hotels"] },
+
+  // Duty Free
+  { code: "5309", desc: "Duty-Free Stores (DFS, KrisShop, Lotte)", categories: ["Shopping"] },
+
+  // Insurance
+  { code: "6300", desc: "Insurance Sales, Underwriting and Premiums", categories: ["Insurance Premiums"] },
+
+  // Utilities / Telco
+  { code: "4814", desc: "Telecommunication Services", categories: ["Telco Bills"] },
+  { code: "4899", desc: "Cable and Other Pay Television Services", categories: ["Utilities"] },
+  { code: "4900", desc: "Utilities — Electric, Gas, Water, Sanitary", categories: ["Utilities"] },
+  { code: "4816", desc: "Computer Network / Information Services", categories: ["Online Transactions"] },
+
+  // Government / Public Services
+  { code: "9311", desc: "Tax Payments", categories: ["Government Services"] },
+  { code: "9399", desc: "Government Services — Not Elsewhere Classified", categories: ["Government Services"] },
+  { code: "8099", desc: "Health Practitioners and Medical Services NEC (HealthHub, Health Buddy)", categories: ["Hospitals"] },
+  { code: "8049", desc: "Podiatrists and Chiropodists", categories: ["Hospitals"] },
+  { code: "8050", desc: "Nursing / Personal Care Facilities", categories: ["Hospitals"] },
+
+  // Charitable Donations
+  { code: "8398", desc: "Charitable and Social Service Organisations", categories: ["Charitable Donations"] },
+
+  // Education
+  { code: "8220", desc: "Colleges, Universities, Professional Schools", categories: ["Education"] },
+  { code: "8241", desc: "Correspondence Schools", categories: ["Education"] },
+  { code: "8244", desc: "Business and Secretarial Schools", categories: ["Education"] },
+  { code: "8249", desc: "Trade and Vocational Schools", categories: ["Education"] },
+  { code: "8299", desc: "Schools and Educational Services", categories: ["Education"] },
+
+  // Entertainment
+  { code: "7832", desc: "Motion Picture Theatres (Cinemas)", categories: ["Shopping"] },
+  { code: "7922", desc: "Theatrical Producers, Ticket Agencies", categories: ["Shopping"] },
+  { code: "7991", desc: "Tourist Attractions and Exhibitions", categories: ["Shopping"] },
+  { code: "7996", desc: "Amusement Parks, Carnivals, Circuses", categories: ["Shopping"] },
+
+  // EV Charging
+  { code: "5552", desc: "Electric Vehicle Charging", categories: ["EV Charging"] },
+
+  // Food Delivery specific
+  { code: "5963", desc: "Door-to-Door Sales", categories: ["Food Delivery"] },
+];
+
 // ============================================================
 // COMPLETE CREDIT CARD DATA
 // ============================================================
@@ -602,9 +1087,11 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.getElementById('tab-category').style.display = tab === 'category' ? '' : 'none';
   document.getElementById('tab-card').style.display = tab === 'card' ? '' : 'none';
+  document.getElementById('tab-mcc').style.display = tab === 'mcc' ? '' : 'none';
   document.getElementById('tab-advisor').style.display = tab === 'advisor' ? '' : 'none';
   if (tab === 'category') { updateMyCardsBar(); renderCategoryChips(); filterCategories(); }
   if (tab === 'card') { renderCardChips(); filterCards(); }
+  if (tab === 'mcc') { renderMCCChips(); renderMCCResults(); }
   if (tab === 'advisor') { updateAdvisorButton(); }
 }
 
@@ -1055,6 +1542,129 @@ async function getRecommendation() {
   } finally {
     btn.disabled = false;
     updateAdvisorButton();
+  }
+}
+
+// ============================================================
+// MCC SEARCH
+// ============================================================
+const MCC_GROUPS = [
+  { label: '✈️ Airlines', codes: ['4511', '4582', '3075', '3005', '3058', '3026', '3077'] },
+  { label: '🏨 Hotels', codes: ['7011', '3509', '3504', '3552', '3544'] },
+  { label: '🗺️ Travel Agencies', codes: ['4722'] },
+  { label: '🏖️ Cruises', codes: ['4411'] },
+  { label: '🚗 Car Rental', codes: ['7512', '3357', '3359', '3366'] },
+  { label: '🍽️ Dining', codes: ['5812', '5814', '5811', '5813', '5499'] },
+  { label: '🛍️ Shopping', codes: ['5311', '5621', '5651', '5661', '5699'] },
+  { label: '🛒 Groceries', codes: ['5411'] },
+  { label: '🚕 Ride Hailing', codes: ['4121'] },
+  { label: '⛽ Petrol', codes: ['5541', '5542'] },
+  { label: '💊 Pharmacies', codes: ['5912', '5977'] },
+  { label: '🚌 Public Transport', codes: ['4111', '4112'] },
+  { label: '🎁 Gift/Special', codes: ['5999', '5947', '5309'] },
+  { label: '🏥 Hospitals', codes: ['8099'] },
+  { label: '⚡ Utilities', codes: ['4900', '4814'] },
+  { label: '📚 Education', codes: ['8220', '8299'] },
+  { label: '🎬 Entertainment', codes: ['7832', '7922'] },
+];
+
+function renderMCCChips() {
+  const q = document.getElementById('mcc-search').value.trim();
+  document.getElementById('mcc-chips').innerHTML = MCC_GROUPS.map(g =>
+    `<span class="chip ${q && g.codes.some(c => q === c) ? 'active' : ''}" onclick="selectMCCGroup(${JSON.stringify(g.codes)})">${escHtml(g.label)}</span>`
+  ).join('');
+}
+
+function selectMCCGroup(codes) {
+  document.getElementById('mcc-search').value = codes[0];
+  renderMCCChips();
+  renderMCCResults();
+}
+
+function filterMCC() {
+  renderMCCChips();
+  renderMCCResults();
+}
+
+function renderMCCResults() {
+  const q = document.getElementById('mcc-search').value.trim().toLowerCase();
+  const resultsEl = document.getElementById('mcc-results');
+  if (!q) {
+    resultsEl.innerHTML = `
+      <div class="no-results">
+        <div class="emoji">🔢</div>
+        <p>Enter an MCC code (e.g. <strong>5812</strong>) or keyword (e.g. <strong>restaurant</strong>) to see which cards earn bonus miles</p>
+      </div>`;
+    return;
+  }
+
+  const matched = MCC_DATA.filter(m =>
+    m.code.toLowerCase().includes(q) ||
+    m.desc.toLowerCase().includes(q) ||
+    m.categories.some(c => c.toLowerCase().includes(q))
+  );
+
+  if (matched.length === 0) {
+    resultsEl.innerHTML = `<div class="no-results"><div class="emoji">🔍</div><p>No MCC found for "<strong>${escHtml(q)}</strong>". Try a 4-digit code or keyword.</p></div>`;
+    return;
+  }
+
+  // Unique categories across all matched MCCs
+  const allCats = [...new Set(matched.flatMap(m => m.categories))];
+  const cardsByCategory = {};
+  for (const cat of allCats) {
+    cardsByCategory[cat] = DATA.filter(d => d.category === cat).sort((a, b) => b.mpd - a.mpd);
+  }
+
+  let html = '';
+  for (const m of matched) {
+    const cards = [...new Set(m.categories.flatMap(cat => DATA.filter(d => d.category === cat)))]
+      .sort((a, b) => b.mpd - a.mpd);
+    const mccId = `mcc-${m.code.replace(/[^a-z0-9]/gi, '_')}`;
+    html += `
+      <div class="card-detail" style="margin-bottom:1.2rem">
+        <h3 style="margin:0 0 0.3rem">MCC ${escHtml(m.code)} — ${escHtml(m.desc)}</h3>
+        <p class="cap-info" style="margin-bottom:0.5rem">Category: ${m.categories.map(c => `<strong>${escHtml(c)}</strong>`).join(', ')}</p>
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap">
+          <span style="font-size:0.88rem;color:var(--text2)">S$</span>
+          <input id="${mccId}-amt" type="number" min="1" placeholder="Amount" style="width:110px;padding:0.35rem 0.6rem;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:0.88rem">
+          <button onclick="askMCC('${mccId}', ${JSON.stringify(m.code)}, ${JSON.stringify(m.desc)}, ${JSON.stringify(m.categories[0])})" style="padding:0.35rem 0.9rem;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:0.88rem">🤖 Ask Advisor</button>
+        </div>
+        <div id="${mccId}-resp" style="display:none" class="advisor-response" style="margin-bottom:0.8rem"></div>
+        ${cards.length > 0 ? renderTable(cards) : '<p class="cap-info">No specific bonus cards tracked for this MCC category.</p>'}
+      </div>`;
+  }
+  resultsEl.innerHTML = html;
+}
+
+async function askMCC(mccId, code, desc, category) {
+  const amtVal = document.getElementById(`${mccId}-amt`).value.trim();
+  const amount = parseFloat(amtVal) || 100;
+  const respEl = document.getElementById(`${mccId}-resp`);
+
+  const useAll = document.getElementById('advisor-use-all')?.checked;
+  const cardData = useAll || advisorSelectedCards.size === 0 ? DATA : DATA.filter(d => advisorSelectedCards.has(d.card));
+
+  respEl.style.display = '';
+  respEl.className = 'advisor-response loading';
+  respEl.innerHTML = '<span><span class="spinner"></span> Analyzing...</span>';
+
+  try {
+    const res = await fetch(`${WORKER_URL}/recommend-mcc`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cards: cardData, mcc: code, desc, category, amount }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Request failed');
+    const formatted = escHtml(data.recommendation)
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+    respEl.className = 'advisor-response';
+    respEl.innerHTML = `<div class="result">${formatted}</div>`;
+  } catch (err) {
+    respEl.className = 'advisor-response';
+    respEl.innerHTML = `<div class="advisor-error">⚠️ ${escHtml(err.message)}</div>`;
   }
 }
 
