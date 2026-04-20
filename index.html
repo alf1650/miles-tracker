@@ -863,10 +863,10 @@ const MCC_DATA = [
   { code: "8299", desc: "Schools and Educational Services", categories: ["Education"] },
 
   // Entertainment
-  { code: "7832", desc: "Motion Picture Theatres (Cinemas)", categories: ["Shopping"] },
-  { code: "7922", desc: "Theatrical Producers, Ticket Agencies", categories: ["Shopping"] },
-  { code: "7991", desc: "Tourist Attractions and Exhibitions (e.g. Gardens by the Bay, Klook, Pelago). Book online for best rates", categories: ["Shopping", "Online Transactions"] },
-  { code: "7996", desc: "Amusement Parks, Carnivals, Circuses (e.g. Universal Studios, Disneyland)", categories: ["Shopping", "Online Transactions"] },
+  { code: "7832", desc: "Motion Picture Theatres (Cinemas)", categories: ["Entertainment"] },
+  { code: "7922", desc: "Theatrical Producers, Ticket Agencies (e.g. SISTIC, Ticketmaster)", categories: ["Entertainment"] },
+  { code: "7991", desc: "Tourist Attractions and Exhibitions (e.g. Gardens by the Bay, Klook, Pelago). Book online for best rates", categories: ["Entertainment", "Online Transactions"] },
+  { code: "7996", desc: "Amusement Parks, Carnivals, Circuses (e.g. Universal Studios, Disneyland)", categories: ["Entertainment", "Online Transactions"] },
 
   // EV Charging
   { code: "5552", desc: "Electric Vehicle Charging", categories: ["EV Charging"] },
@@ -1000,6 +1000,12 @@ const DATA = [
   {card:"UOB Privilege Banking Card", bank:"UOB", category:"Education", mpd:1.2, cap:"No cap", remarks:""},
   {card:"Maybank Visa Infinite", bank:"Maybank", category:"Education", mpd:1.2, cap:"No cap", remarks:""},
   {card:"Chocolate Visa Card", bank:"Chocolate", category:"Education", mpd:1, cap:"S$1K/c.month", remarks:"0.4 mpd after cap"},
+
+  // ===== ENTERTAINMENT =====
+  {card:"UOB Preferred Visa", bank:"UOB", category:"Entertainment", mpd:4, cap:"S$600/c.month", remarks:"Mobile contactless (Apple/Google Pay). Best for in-person ticket purchases"},
+  {card:"HSBC Revolution Card", bank:"HSBC", category:"Entertainment", mpd:4, cap:"S$1K/c.month", remarks:"Online or contactless. 8 mpd with S$50K in HSBC EGA"},
+  {card:"DBS Woman's World Card", bank:"DBS", category:"Entertainment", mpd:4, cap:"S$1K/c.month", remarks:"Online only"},
+  {card:"Citi Rewards Card", bank:"Citi", category:"Entertainment", mpd:0.4, cap:"No cap", remarks:"Base rate only — Citi excludes entertainment from 10X online bonus"},
 
   // ===== EV CHARGING =====
   {card:"DBS yuu Visa", bank:"DBS", category:"EV Charging", mpd:10, cap:"S$822/c.month", remarks:"For Charge+ only. Min S$800/c.month. Visa card only"},
