@@ -813,7 +813,7 @@ const MCC_DATA = [
   { code: "5309", desc: "Duty-Free Stores (DFS, KrisShop, Lotte)", categories: ["Shopping"] },
 
   // Financial Services
-  { code: "6211", desc: "Securities — Brokers and Dealers", categories: ["Financial Services"] },
+  { code: "6211", desc: "Securities — Brokers and Dealers (e.g. Syfe). Excluded by most banks incl. Citi, StanChart, OCBC, HSBC, Trust", categories: ["Financial Services"] },
   { code: "6513", desc: "Real Estate Agents & Managers — Rentals", categories: ["Financial Services"] },
   { code: "6540", desc: "Stored Value Card Purchase / Load", categories: ["Financial Services"] },
 
@@ -974,6 +974,9 @@ const DATA = [
   {card:"StanChart Visa Infinite", bank:"StanChart", category:"Car Rental", mpd:3, cap:"No cap", remarks:"FCY only. Min S$2K/s.month, otherwise 1 mpd"},
   {card:"BOC Elite Miles Card", bank:"BOC", category:"Car Rental", mpd:2.8, cap:"No cap", remarks:"FCY only. No min spend or cap"},
   {card:"Maybank Horizon Visa Signature", bank:"Maybank", category:"Car Rental", mpd:2.8, cap:"No cap", remarks:"FCY only. Min retail S$800/c.month"},
+
+  // ===== FINANCIAL SERVICES (MCC 6211, 6513, 6540) =====
+  {card:"Chocolate Visa Card", bank:"Chocolate", category:"Financial Services", mpd:1, cap:"S$1K/c.month", remarks:"Works with Syfe (MCC 6211). 0.4 mpd after cap"},
 
   // ===== CHARITABLE DONATIONS =====
   {card:"Chocolate Visa Card", bank:"Chocolate", category:"Charitable Donations", mpd:1, cap:"S$1K/c.month", remarks:"Card won't work for overseas charities. 0.4 mpd after cap"},
