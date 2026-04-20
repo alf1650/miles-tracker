@@ -814,7 +814,7 @@ const MCC_DATA = [
 
   // Financial Services
   { code: "6211", desc: "Securities — Brokers and Dealers (e.g. Syfe). Excluded by most banks incl. Citi, StanChart, OCBC, HSBC, Trust", categories: ["Financial Services"] },
-  { code: "6513", desc: "Real Estate Agents & Managers — Rentals", categories: ["Financial Services"] },
+  { code: "6513", desc: "Real Estate Agents & Managers — Rentals (e.g. CardUp, iPaymy). Excluded by most banks incl. Citi, UOB, StanChart, BOC", categories: ["Financial Services"] },
   { code: "6540", desc: "Stored Value Card Purchase / Load", categories: ["Financial Services"] },
 
   // Insurance
@@ -977,6 +977,9 @@ const DATA = [
 
   // ===== FINANCIAL SERVICES (MCC 6211, 6513, 6540) =====
   {card:"Chocolate Visa Card", bank:"Chocolate", category:"Financial Services", mpd:1, cap:"S$1K/c.month", remarks:"Works with Syfe (MCC 6211). 0.4 mpd after cap"},
+  {card:"DBS Altitude Card", bank:"DBS", category:"Financial Services", mpd:1.3, cap:"No cap", remarks:"MCC 6513 rental via CardUp may work but base points excluded since Dec 2025"},
+  {card:"DBS Vantage Card", bank:"DBS", category:"Financial Services", mpd:1.5, cap:"No cap", remarks:"MCC 6513 rental via CardUp may work but base points excluded since Dec 2025"},
+  {card:"Maybank Horizon Visa Signature", bank:"Maybank", category:"Financial Services", mpd:1.2, cap:"No cap", remarks:"MCC 6513 may earn under everyday spend. Min S$800/c.month"},
 
   // ===== CHARITABLE DONATIONS =====
   {card:"Chocolate Visa Card", bank:"Chocolate", category:"Charitable Donations", mpd:1, cap:"S$1K/c.month", remarks:"Card won't work for overseas charities. 0.4 mpd after cap"},
