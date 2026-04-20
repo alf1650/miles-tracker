@@ -1059,8 +1059,8 @@ const DATA = [
   {card:"Chocolate Visa Card", bank:"Chocolate", category:"Hospitals", mpd:1, cap:"100 Max Miles/c.month", remarks:"Cap shared with all other bill payments"},
 
   // ===== HOTELS =====
-  {card:"Citi PremierMiles Card", bank:"Citi", category:"Hotels", mpd:10, cap:"No cap", remarks:"10 mpd via Kaligo, 7.2 mpd via Agoda. Base 1.2 mpd for direct hotel bookings"},
-  {card:"UOB PRVI Miles", bank:"UOB", category:"Hotels", mpd:8, cap:"No cap", remarks:"8 mpd via Agoda and Expedia. Base 1.4 mpd for direct hotel bookings"},
+  {card:"Citi PremierMiles Card", bank:"Citi", category:"Hotels", mpd:10, mpdDisplay:"10 / 1.2", cap:"No cap", remarks:"10 mpd via Kaligo, 7.2 mpd via Agoda. Base 1.2 mpd for direct hotel bookings"},
+  {card:"UOB PRVI Miles", bank:"UOB", category:"Hotels", mpd:8, mpdDisplay:"8 / 1.4", cap:"No cap", remarks:"8 mpd via Agoda and Expedia. Base 1.4 mpd for direct hotel bookings"},
   {card:"HSBC Revolution Card", bank:"HSBC", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:""},
   {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Hotels", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Travel must be chosen as bonus category"},
   {card:"DBS Woman's World Card", bank:"DBS", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:"Must be online"},
@@ -1310,7 +1310,7 @@ function renderCardResults() {
             <div class="cat-earn">
               <span class="cat-name">${escHtml(e.category)}</span>
               <div>
-                <span class="mpd ${mpdClass(e.mpd)}">${e.mpd} mpd</span>
+                <span class="mpd ${mpdClass(e.mpd)}">${e.mpdDisplay || e.mpd} mpd</span>
                 ${e.cap !== 'No cap' ? `<div class="cap-info cap-highlight">${escHtml(e.cap)}</div>` : ''}
                 ${e.remarks ? `<div class="cap-info">${escHtml(e.remarks)}</div>` : ''}
               </div>
@@ -1336,7 +1336,7 @@ function renderTable(items) {
       ${items.map(r => `<tr>
         <td data-label="Card"><strong>${escHtml(r.card)}</strong></td>
         <td data-label="Bank"><span class="bank-badge bank-${r.bank}">${r.bank}</span></td>
-        <td data-label="MPD"><span class="mpd ${mpdClass(r.mpd)}">${r.mpd}</span></td>
+        <td data-label="MPD"><span class="mpd ${mpdClass(r.mpd)}">${r.mpdDisplay || r.mpd}</span></td>
         <td data-label="Cap">${r.cap !== 'No cap' ? `<span class="cap-highlight">${escHtml(r.cap)}</span>` : '<span style="color:var(--green)">No cap</span>'}</td>
         <td data-label="Remarks" class="remarks-text">${escHtml(r.remarks) || '—'}</td>
       </tr>`).join('')}
