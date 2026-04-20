@@ -815,10 +815,10 @@ const MCC_DATA = [
   // Financial Services
   { code: "6211", desc: "Securities — Brokers and Dealers (e.g. Syfe). Excluded by most banks incl. Citi, StanChart, OCBC, HSBC, Trust", categories: ["Financial Services"] },
   { code: "6513", desc: "Real Estate Agents & Managers — Rentals (e.g. CardUp, iPaymy). Excluded by most banks incl. Citi, UOB, StanChart, BOC", categories: ["Financial Services"] },
-  { code: "6540", desc: "Stored Value Card Purchase / Load", categories: ["Financial Services"] },
+  { code: "6540", desc: "Stored Value Card Purchase / Load (e.g. EZ-Link, GrabPay top-ups). Excluded by most rewards cards", categories: ["Financial Services"] },
 
   // Insurance
-  { code: "6300", desc: "Insurance Sales, Underwriting and Premiums", categories: ["Insurance Premiums"] },
+  { code: "6300", desc: "Insurance Sales, Underwriting and Premiums. Restricted by most banks — use Maybank or AMEX", categories: ["Insurance Premiums"] },
 
   // Utilities / Telco
   { code: "4814", desc: "Telecommunication Services", categories: ["Telco Bills"] },
@@ -828,25 +828,25 @@ const MCC_DATA = [
 
   // Property & Services
   { code: "7349", desc: "Cleaning, Maintenance, Janitorial Services aka Property Management", categories: ["Services"] },
-  { code: "7523", desc: "Automobile Parking Lots and Garages", categories: ["Services"] },
-  { code: "8999", desc: "Professional Services (Not Elsewhere Classified)", categories: ["Services"] },
+  { code: "7523", desc: "Automobile Parking Lots and Garages. Citi SMRT Card (up to 5% cashback) is a rare exception", categories: ["Services"] },
+  { code: "8999", desc: "Professional Services (NEC). New exclusion WEF Oct 2024 — most rewards now blocked", categories: ["Services"] },
   { code: "8699", desc: "Membership Organizations (Not Elsewhere Classified)", categories: ["Services"] },
 
   // Gambling
-  { code: "7995", desc: "Gambling — Betting, Lottery Tickets, Casino Gaming Chips, Off-Track Betting, Wagers at Race Tracks", categories: ["Gambling"] },
+  { code: "7995", desc: "Gambling — Betting, Lottery Tickets, Casino Gaming Chips, Off-Track Betting, Wagers at Race Tracks. Excluded by virtually all banks", categories: ["Gambling"] },
 
   // Government / Public Services
   { code: "9211", desc: "Court Costs, Including Alimony and Child Support", categories: ["Government Services"] },
   { code: "9222", desc: "Fines", categories: ["Government Services"] },
   { code: "9223", desc: "Bail and Bond Payments", categories: ["Government Services"] },
-  { code: "9311", desc: "Tax Payments", categories: ["Government Services"] },
+  { code: "9311", desc: "Tax Payments (e.g. IRAS). Use CardUp/iPaymy to convert to rewards-eligible category for a fee", categories: ["Government Services"] },
   { code: "9399", desc: "Government Services — Not Elsewhere Classified", categories: ["Government Services"] },
   { code: "9402", desc: "Postal Services — Government Only", categories: ["Government Services"] },
   { code: "9405", desc: "Intra-Government Purchases — Government Only", categories: ["Government Services"] },
   { code: "8099", desc: "Health Practitioners and Medical Services NEC (HealthHub, Health Buddy)", categories: ["Hospitals"] },
   { code: "8049", desc: "Podiatrists and Chiropodists", categories: ["Hospitals"] },
   { code: "8050", desc: "Nursing / Personal Care Facilities", categories: ["Hospitals"] },
-  { code: "8062", desc: "Hospitals", categories: ["Hospitals"] },
+  { code: "8062", desc: "Hospitals. Excluded by many banks — Maybank Horizon Visa Signature is the best remaining miles option", categories: ["Hospitals"] },
 
   // Charitable / Religious / Political Donations
   { code: "8398", desc: "Charitable and Social Service Organisations", categories: ["Charitable Donations"] },
@@ -1044,6 +1044,7 @@ const DATA = [
   {card:"AMEX PPS Credit Card", bank:"AMEX", category:"Hospitals", mpd:1.3, cap:"No cap", remarks:"Excludes public hospitals"},
   {card:"OCBC VOYAGE Card", bank:"OCBC", category:"Hospitals", mpd:1.3, cap:"No cap", remarks:"Excludes public hospitals"},
   {card:"OCBC Premier Visa Infinite", bank:"OCBC", category:"Hospitals", mpd:1.28, cap:"No cap", remarks:"Excludes public hospitals"},
+  {card:"Maybank Horizon Visa Signature", bank:"Maybank", category:"Hospitals", mpd:1.2, cap:"No cap", remarks:"Min S$800 spend/c.month, otherwise base rate"},
   {card:"Maybank Visa Infinite", bank:"Maybank", category:"Hospitals", mpd:1.2, cap:"No cap", remarks:""},
   {card:"AMEX HighFlyer Card", bank:"AMEX", category:"Hospitals", mpd:1.2, cap:"No cap", remarks:"Excludes public hospitals"},
   {card:"AMEX KrisFlyer Ascend", bank:"AMEX", category:"Hospitals", mpd:1.2, cap:"No cap", remarks:"Excludes public hospitals"},
