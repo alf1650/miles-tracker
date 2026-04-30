@@ -123,7 +123,7 @@
     .tabs { border-radius: 8px; flex-wrap: wrap; }
     .tab-btn { padding: 0.7rem 0.5rem; font-size: 0.82rem; flex: 0 0 50%; box-sizing: border-box; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .tab-btn:nth-child(2n) { border-right: none; }
-    .tab-btn:nth-child(3), .tab-btn:nth-child(4) { border-bottom: none; }
+    .tab-btn:nth-last-child(-n+2) { border-bottom: none; }
     .tab-btn .tab-full { display: none; }
     .tab-btn .tab-short { display: inline; }
     .search-box input { padding: 0.75rem 1rem 0.75rem 2.5rem; font-size: 0.9rem; border-radius: 8px; }
@@ -247,6 +247,40 @@
   .my-cards-panel-actions button { padding: 0.3rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text2); cursor: pointer; font-size: 0.72rem; font-weight: 600; }
   .my-cards-panel-actions button:hover { border-color: var(--accent); color: var(--accent); }
   .my-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.5rem; }
+
+  /* Redemptions Tab */
+  .redeem-disclaimer { background: #fef3c7; border: 1px solid #fcd34d; color: #78350f; padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.82rem; margin-bottom: 1rem; line-height: 1.5; }
+  .redeem-disclaimer strong { color: #78350f; }
+  .redeem-controls { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+  .redeem-controls .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface); }
+  .redeem-controls .seg button { padding: 0.45rem 0.85rem; background: transparent; border: none; color: var(--text2); cursor: pointer; font-size: 0.82rem; font-weight: 600; }
+  .redeem-controls .seg button.active { background: var(--accent); color: #fff; }
+  .redeem-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.6rem; margin-bottom: 1rem; }
+  .zone-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem; }
+  .zone-card .zone-name { font-size: 0.78rem; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .zone-card .zone-range { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-top: 0.25rem; }
+  .zone-card .zone-cabins { font-size: 0.78rem; color: var(--text2); margin-top: 0.3rem; line-height: 1.5; }
+  .zone-card .cabin-row { display: flex; justify-content: space-between; }
+  .zone-card .cabin-y { color: var(--green); font-weight: 600; }
+  .zone-card .cabin-j { color: var(--accent2); font-weight: 600; }
+  .zone-card .cabin-f { color: var(--gold); font-weight: 600; }
+
+  .miles-cell { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .miles-y { color: var(--green); }
+  .miles-j { color: var(--accent2); }
+  .miles-f { color: var(--gold); }
+  .miles-na { color: var(--text2); font-weight: 400; font-size: 0.8rem; }
+  .city-cell { font-weight: 600; }
+  .city-cell .iata { color: var(--text2); font-weight: 500; font-size: 0.78rem; margin-left: 0.3rem; }
+  .city-cell .country { display: block; color: var(--text2); font-weight: 400; font-size: 0.78rem; margin-top: 0.1rem; }
+  .zone-badge { display: inline-block; padding: 0.1rem 0.45rem; background: var(--surface2); color: var(--text2); border-radius: 4px; font-size: 0.72rem; font-weight: 600; }
+
+  @media (max-width: 768px) {
+    .redeem-zones { grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
+    .zone-card { padding: 0.55rem 0.6rem; }
+    .zone-card .zone-range { font-size: 0.85rem; }
+    .redeem-controls .seg button { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+  }
 </style>
 </head>
 <body>
@@ -265,6 +299,7 @@
     <button class="tab-btn" data-tab="card" onclick="switchTab('card')"><span class="tab-full">💳 Search by Card</span><span class="tab-short">💳 By Card</span></button>
     <button class="tab-btn" data-tab="mcc" onclick="switchTab('mcc')"><span class="tab-full">🔢 Search by MCC</span><span class="tab-short">🔢 MCC</span></button>
     <button class="tab-btn" data-tab="advisor" onclick="switchTab('advisor')"><span class="tab-full">🤖 Card Advisor</span><span class="tab-short">🤖 Advisor</span></button>
+    <button class="tab-btn" data-tab="redeem" onclick="switchTab('redeem')"><span class="tab-full">✈️ KrisFlyer Redemptions</span><span class="tab-short">✈️ Redeem</span></button>
   </div>
 
   <!-- Category Tab -->
@@ -378,6 +413,60 @@
         <div class="emoji">🤖</div>
         <p>Select your cards and describe a spending scenario to get a recommendation</p>
       </div>
+    </div>
+  </div>
+
+  <!-- KrisFlyer Redemptions Tab -->
+  <div id="tab-redeem" style="display:none">
+    <div class="redeem-disclaimer">
+      ✈️ <strong>Official KrisFlyer award chart, effective 1 November 2025.</strong>
+      All values are <strong>one-way miles from Singapore</strong> (Star Alliance partner chart is round-trip; values shown here are halved). Sources:
+      <a href="https://www.singaporeair.com/content/dam/sia/web-assets/pdfs/ppsclub-krisflyer/krisflyer/progupdates/awardcharts/SingaporeAirlinesOne-WayAdvantageSaverAwardChartupdated1Nov25.pdf" target="_blank" rel="noopener">SQ Saver/Advantage PDF</a>
+      ·
+      <a href="https://www.singaporeair.com/content/dam/sia/web-assets/pdfs/ppsclub-krisflyer/krisflyer/progupdates/awardcharts/StarAllianceRound-TripAwardChartupdated1Nov25.pdf" target="_blank" rel="noopener">Star Alliance PDF</a>.
+      Saver has limited availability; Advantage (peak) is always available but costs more. Premium Economy is only available on Saver awards.
+    </div>
+
+    <div class="redeem-controls">
+      <div class="seg" id="redeem-airline-seg">
+        <button class="active" data-airline="sq-saver" onclick="setRedeemAirline('sq-saver')">SQ Saver</button>
+        <button data-airline="sq-adv" onclick="setRedeemAirline('sq-adv')">SQ Advantage</button>
+        <button data-airline="partner" onclick="setRedeemAirline('partner')">Star Alliance Partners</button>
+      </div>
+      <div class="seg" id="redeem-cabin-seg">
+        <button class="active" data-cabin="all" onclick="setRedeemCabin('all')">All cabins</button>
+        <button data-cabin="Y" onclick="setRedeemCabin('Y')">Economy</button>
+        <button data-cabin="W" onclick="setRedeemCabin('W')">Premium Economy</button>
+        <button data-cabin="J" onclick="setRedeemCabin('J')">Business</button>
+        <button data-cabin="F" onclick="setRedeemCabin('F')">First / Suites</button>
+      </div>
+    </div>
+
+    <div class="redeem-zones" id="redeem-zone-summary"></div>
+
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="redeem-search" placeholder="Search destinations (e.g. Tokyo, NRT, Japan, Europe...)" oninput="renderRedemptions()">
+    </div>
+
+    <div class="results-header">
+      <h2>Destinations from Singapore</h2>
+      <div class="count" id="redeem-count"></div>
+    </div>
+    <div class="table-wrap">
+      <table class="card-table" id="redeem-table">
+        <thead>
+          <tr>
+            <th onclick="sortRedeem('city')">Destination <span class="sort-arrow" id="rsa-city"></span></th>
+            <th onclick="sortRedeem('zone')">Zone <span class="sort-arrow" id="rsa-zone"></span></th>
+            <th onclick="sortRedeem('Y')">Economy <span class="sort-arrow" id="rsa-Y">▼</span></th>
+            <th onclick="sortRedeem('W')">Prem Economy <span class="sort-arrow" id="rsa-W"></span></th>
+            <th onclick="sortRedeem('J')">Business <span class="sort-arrow" id="rsa-J"></span></th>
+            <th onclick="sortRedeem('F')">First / Suites <span class="sort-arrow" id="rsa-F"></span></th>
+          </tr>
+        </thead>
+        <tbody id="redeem-tbody"></tbody>
+      </table>
     </div>
   </div>
 
@@ -1160,10 +1249,12 @@ function switchTab(tab) {
   document.getElementById('tab-card').style.display = tab === 'card' ? '' : 'none';
   document.getElementById('tab-mcc').style.display = tab === 'mcc' ? '' : 'none';
   document.getElementById('tab-advisor').style.display = tab === 'advisor' ? '' : 'none';
+  document.getElementById('tab-redeem').style.display = tab === 'redeem' ? '' : 'none';
   if (tab === 'category') { updateMyCardsBar(); renderCategoryChips(); filterCategories(); }
   if (tab === 'card') { renderCardChips(); filterCards(); }
   if (tab === 'mcc') { updateMCCBar(); renderMCCChips(); renderMCCResults(); }
   if (tab === 'advisor') { updateAdvisorButton(); }
+  if (tab === 'redeem') { renderRedemptions(); }
 }
 
 // Render stats
@@ -1596,7 +1687,7 @@ async function getRecommendation() {
     const res = await fetch(`${WORKER_URL}/recommend`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cards: cardData, prompt }),
+      body: JSON.stringify({ cards: cardData, prompt, mccData: MCC_DATA }),
     });
 
     const data = await res.json();
@@ -1818,6 +1909,352 @@ async function askMCC(mccId, code, desc, category) {
 
 // Init
 renderStats();
+
+// ============================================================
+// KRISFLYER REDEMPTIONS
+// Source: Singapore Airlines official PDFs effective 1 Nov 2025.
+//   • SQ Saver/Advantage (one-way ex-SIN, Z1 row)
+//   • Star Alliance round-trip chart (we display one-way = round-trip / 2)
+// All values in actual miles (not thousands). Verify on
+// singaporeair.com before booking.
+// ============================================================
+
+// SQ-operated Saver Award (one-way ex-SIN, Zone 1).
+// Cabins: Y=Economy, W=Premium Economy, J=Business, F=Suites/First.
+// `null` = blank cell on PDF (use SQ mileage calculator).
+const SQ_SAVER_BY_ZONE = {
+  2:  { label: 'Z2 — Malaysia / Indonesia / Brunei',                Y:  8000, W:  null,  J: 22000,  F:  32000 },
+  3:  { label: 'Z3 — Philippines / Thailand / Vietnam / Myanmar / Cambodia', Y: 13000, W: null, J: 25000, F: 38000 },
+  4:  { label: 'Z4 — South China / HK SAR / Taiwan',                Y: 15500, W: 28000,  J: 35500,  F:  47500 },
+  5:  { label: 'Z5 — North China (Beijing & Shanghai)',             Y: 20500, W: 36000,  J: 45000,  F:  61500 },
+  6:  { label: 'Z6 — South Asia (India, SL, MV, NP, BD)',           Y: 19000, W: 36000,  J: 45000,  F:  61500 },
+  7:  { label: 'Z7 — Japan & South Korea',                          Y: 25500, W: 39500,  J: 54500,  F:  81000 },
+  8:  { label: 'Z8 — Australia (Perth & Darwin)',                   Y: 20500, W:  null,  J: 42500,  F:  60500 },
+  9:  { label: 'Z9 — Australia (rest) & New Zealand',               Y: 29000, W: 53500,  J: 72000,  F:  98000 },
+  10: { label: 'Z10 — Africa, Middle East & Turkey',                Y: 32000, W: 51500,  J: 68000,  F:  95000 },
+  11: { label: 'Z11 — Europe',                                      Y: 44000, W: 74500,  J:108500,  F: 148000 },
+  12: { label: 'Z12 — USA (West Coast)',                            Y: 44000, W: 79000,  J:112500,  F: 154000 },
+  13: { label: 'Z13 — USA (East Coast)',                            Y: 46000, W: 84500,  J:117000,  F: 156000 },
+};
+
+// SQ-operated Advantage (peak) Award (one-way ex-SIN, Zone 1).
+// Premium Economy redemptions use the Saver chart (see PDF note).
+const SQ_ADVANTAGE_BY_ZONE = {
+  2:  { label: 'Z2 — Malaysia / Indonesia / Brunei',                Y: 16500, W: null, J:  40500, F:  60500 },
+  3:  { label: 'Z3 — Philippines / Thailand / Vietnam / Myanmar / Cambodia', Y: 27500, W: null, J: 46000, F: 72000 },
+  4:  { label: 'Z4 — South China / HK SAR / Taiwan',                Y: 33000, W: null, J:  57500, F:  84000 },
+  5:  { label: 'Z5 — North China (Beijing & Shanghai)',             Y: 44000, W: null, J:  75000, F: 112500 },
+  6:  { label: 'Z6 — South Asia (India, SL, MV, NP, BD)',           Y: 40500, W: null, J:  75000, F: 112500 },
+  7:  { label: 'Z7 — Japan & South Korea',                          Y: 49500, W: null, J:  80500, F: 138000 },
+  8:  { label: 'Z8 — Australia (Perth & Darwin)',                   Y: 40500, W: null, J:  75000, F: 114500 },
+  9:  { label: 'Z9 — Australia (rest) & New Zealand',               Y: 60500, W: null, J: 103500, F: 178500 },
+  10: { label: 'Z10 — Africa, Middle East & Turkey',                Y: 66500, W: null, J: 122000, F: 171000 },
+  11: { label: 'Z11 — Europe',                                      Y: 79000, W: null, J: 141500, F: 259500 },
+  12: { label: 'Z12 — USA (West Coast)',                            Y: 79000, W: null, J: 148000, F: 262000 },
+  13: { label: 'Z13 — USA (East Coast)',                            Y: 84500, W: null, J: 165000, F: 279500 },
+};
+
+// Star Alliance partner award (one-way = round-trip chart / 2),
+// from origin "South East Asia 1" (Singapore). Round-trip starts at 18,000.
+// Cabins: Y / J / F. Premium Economy not on partner chart.
+const PARTNER_SAVER_BY_ZONE = {
+  // SE Asia 1 row from PDF (round-trip values shown here are halved)
+  sea1: { label: 'South East Asia 1 (within SG/MY/ID/BN)', Y:  9000, W: null, J: 23500, F: 34000 },
+  sea2: { label: 'South East Asia 2 (TH/PH/VN/KH/MM/LA)',  Y: 14500, W: null, J: 26500, F: 40000 },
+  na1:  { label: 'North Asia 1 (HK / Taiwan / S China)',   Y: 17500, W: null, J: 51000, F: 63000 },
+  csa:  { label: 'Central / South Asia (India, SL, MV, NP, BD)', Y: 28500, W: null, J: 57500, F: 81000 },
+  na2:  { label: 'North Asia 2 (Japan / Korea / N China)', Y: 28500, W: null, J: 58000, F: 85000 },
+  swp:  { label: 'South West Pacific (Australia / NZ)',    Y: 37000, W: null, J: 90000, F: 119000 },
+  mena: { label: 'Middle East & North Africa',             Y: 43000, W: null, J: 90500, F: 115500 },
+  eur:  { label: 'Europe',                                 Y: 52000, W: null, J: 114000, F: 174500 },
+  na:   { label: 'North America',                          Y: 64000, W: null, J: 131000, F: 184500 },
+  hca:  { label: 'Hawaii / Central America',               Y: 64000, W: null, J: 131000, F: 184500 },
+  sam:  { label: 'South America',                          Y: 78500, W: null, J: 147500, F: 188000 },
+  csaf: { label: 'Central / South Africa',                 Y: 46000, W: null, J:  76000, F: 102500 },
+};
+
+// Destinations ex-SIN with their SQ zone (2-13) and Star Alliance partner zone.
+const REDEEM_DESTINATIONS = [
+  // SQ Z2 — Malaysia / Indonesia / Brunei (partner: SE Asia 1)
+  { city: 'Kuala Lumpur',         iata: 'KUL', country: 'Malaysia',  region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Penang',               iata: 'PEN', country: 'Malaysia',  region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Langkawi',             iata: 'LGK', country: 'Malaysia',  region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Kota Kinabalu',        iata: 'BKI', country: 'Malaysia',  region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Jakarta',              iata: 'CGK', country: 'Indonesia', region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Surabaya',             iata: 'SUB', country: 'Indonesia', region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Bali (Denpasar)',      iata: 'DPS', country: 'Indonesia', region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Yogyakarta',           iata: 'JOG', country: 'Indonesia', region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Medan',                iata: 'KNO', country: 'Indonesia', region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+  { city: 'Bandar Seri Begawan',  iata: 'BWN', country: 'Brunei',    region: 'SE Asia',     sqZone: 2, partnerZone: 'sea1' },
+
+  // SQ Z3 — Philippines / Thailand / Vietnam / Myanmar / Cambodia (partner: SE Asia 2)
+  { city: 'Bangkok',              iata: 'BKK', country: 'Thailand',  region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Phuket',               iata: 'HKT', country: 'Thailand',  region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Chiang Mai',           iata: 'CNX', country: 'Thailand',  region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Koh Samui',            iata: 'USM', country: 'Thailand',  region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Krabi',                iata: 'KBV', country: 'Thailand',  region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Hanoi',                iata: 'HAN', country: 'Vietnam',   region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Ho Chi Minh',          iata: 'SGN', country: 'Vietnam',   region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Da Nang',              iata: 'DAD', country: 'Vietnam',   region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Phnom Penh',           iata: 'PNH', country: 'Cambodia',  region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Siem Reap',            iata: 'REP', country: 'Cambodia',  region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Vientiane',            iata: 'VTE', country: 'Laos',      region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Yangon',               iata: 'RGN', country: 'Myanmar',   region: 'SE Asia',     sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Manila',               iata: 'MNL', country: 'Philippines', region: 'SE Asia',   sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Cebu',                 iata: 'CEB', country: 'Philippines', region: 'SE Asia',   sqZone: 3, partnerZone: 'sea2' },
+  { city: 'Clark',                iata: 'CRK', country: 'Philippines', region: 'SE Asia',   sqZone: 3, partnerZone: 'sea2' },
+
+  // SQ Z4 — South China / HK SAR / Taiwan (partner: North Asia 1)
+  { city: 'Hong Kong',            iata: 'HKG', country: 'Hong Kong', region: 'North Asia',  sqZone: 4, partnerZone: 'na1' },
+  { city: 'Taipei',               iata: 'TPE', country: 'Taiwan',    region: 'North Asia',  sqZone: 4, partnerZone: 'na1' },
+  { city: 'Kaohsiung',            iata: 'KHH', country: 'Taiwan',    region: 'North Asia',  sqZone: 4, partnerZone: 'na1' },
+  { city: 'Guangzhou',            iata: 'CAN', country: 'China',     region: 'North Asia',  sqZone: 4, partnerZone: 'na1' },
+  { city: 'Shenzhen',             iata: 'SZX', country: 'China',     region: 'North Asia',  sqZone: 4, partnerZone: 'na1' },
+  { city: 'Chengdu',              iata: 'CTU', country: 'China',     region: 'North Asia',  sqZone: 4, partnerZone: 'na1' },
+  { city: 'Xiamen',               iata: 'XMN', country: 'China',     region: 'North Asia',  sqZone: 4, partnerZone: 'na1' },
+  { city: 'Kunming',              iata: 'KMG', country: 'China',     region: 'North Asia',  sqZone: 4, partnerZone: 'na1' },
+
+  // SQ Z5 — North China BJ/SH (partner: North Asia 2)
+  { city: 'Beijing',              iata: 'PEK', country: 'China',     region: 'North Asia',  sqZone: 5, partnerZone: 'na2' },
+  { city: 'Shanghai',             iata: 'PVG', country: 'China',     region: 'North Asia',  sqZone: 5, partnerZone: 'na2' },
+
+  // SQ Z6 — South Asia (partner: Central / South Asia)
+  { city: 'Male',                 iata: 'MLE', country: 'Maldives',   region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Colombo',              iata: 'CMB', country: 'Sri Lanka',  region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Dhaka',                iata: 'DAC', country: 'Bangladesh', region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Kathmandu',            iata: 'KTM', country: 'Nepal',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Chennai',              iata: 'MAA', country: 'India',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Bengaluru',            iata: 'BLR', country: 'India',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Hyderabad',            iata: 'HYD', country: 'India',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Kochi',                iata: 'COK', country: 'India',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Kolkata',              iata: 'CCU', country: 'India',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Mumbai',               iata: 'BOM', country: 'India',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Delhi',                iata: 'DEL', country: 'India',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+  { city: 'Ahmedabad',            iata: 'AMD', country: 'India',      region: 'South Asia', sqZone: 6, partnerZone: 'csa' },
+
+  // SQ Z7 — Japan & South Korea (partner: North Asia 2)
+  { city: 'Tokyo (Narita)',       iata: 'NRT', country: 'Japan', region: 'Japan',           sqZone: 7, partnerZone: 'na2' },
+  { city: 'Tokyo (Haneda)',       iata: 'HND', country: 'Japan', region: 'Japan',           sqZone: 7, partnerZone: 'na2' },
+  { city: 'Osaka',                iata: 'KIX', country: 'Japan', region: 'Japan',           sqZone: 7, partnerZone: 'na2' },
+  { city: 'Nagoya',               iata: 'NGO', country: 'Japan', region: 'Japan',           sqZone: 7, partnerZone: 'na2' },
+  { city: 'Fukuoka',              iata: 'FUK', country: 'Japan', region: 'Japan',           sqZone: 7, partnerZone: 'na2' },
+  { city: 'Sapporo',              iata: 'CTS', country: 'Japan', region: 'Japan',           sqZone: 7, partnerZone: 'na2' },
+  { city: 'Okinawa',              iata: 'OKA', country: 'Japan', region: 'Japan',           sqZone: 7, partnerZone: 'na2' },
+  { city: 'Seoul',                iata: 'ICN', country: 'South Korea', region: 'North Asia',sqZone: 7, partnerZone: 'na2' },
+  { city: 'Busan',                iata: 'PUS', country: 'South Korea', region: 'North Asia',sqZone: 7, partnerZone: 'na2' },
+
+  // SQ Z8 — Australia (Perth & Darwin only) (partner: South West Pacific)
+  { city: 'Perth',                iata: 'PER', country: 'Australia', region: 'Australia / NZ', sqZone: 8, partnerZone: 'swp' },
+  { city: 'Darwin',               iata: 'DRW', country: 'Australia', region: 'Australia / NZ', sqZone: 8, partnerZone: 'swp' },
+
+  // SQ Z9 — Australia (rest) & NZ (partner: South West Pacific)
+  { city: 'Adelaide',             iata: 'ADL', country: 'Australia',   region: 'Australia / NZ', sqZone: 9, partnerZone: 'swp' },
+  { city: 'Melbourne',            iata: 'MEL', country: 'Australia',   region: 'Australia / NZ', sqZone: 9, partnerZone: 'swp' },
+  { city: 'Sydney',               iata: 'SYD', country: 'Australia',   region: 'Australia / NZ', sqZone: 9, partnerZone: 'swp' },
+  { city: 'Brisbane',             iata: 'BNE', country: 'Australia',   region: 'Australia / NZ', sqZone: 9, partnerZone: 'swp' },
+  { city: 'Cairns',               iata: 'CNS', country: 'Australia',   region: 'Australia / NZ', sqZone: 9, partnerZone: 'swp' },
+  { city: 'Auckland',             iata: 'AKL', country: 'New Zealand', region: 'Australia / NZ', sqZone: 9, partnerZone: 'swp' },
+  { city: 'Christchurch',         iata: 'CHC', country: 'New Zealand', region: 'Australia / NZ', sqZone: 9, partnerZone: 'swp' },
+
+  // SQ Z10 — Africa / Middle East / Turkey (partner: split between MENA and CSAF)
+  { city: 'Dubai',                iata: 'DXB', country: 'UAE',         region: 'Middle East', sqZone: 10, partnerZone: 'mena' },
+  { city: 'Abu Dhabi',            iata: 'AUH', country: 'UAE',         region: 'Middle East', sqZone: 10, partnerZone: 'mena' },
+  { city: 'Doha',                 iata: 'DOH', country: 'Qatar',       region: 'Middle East', sqZone: 10, partnerZone: 'mena' },
+  { city: 'Riyadh',               iata: 'RUH', country: 'Saudi Arabia',region: 'Middle East', sqZone: 10, partnerZone: 'mena' },
+  { city: 'Jeddah',               iata: 'JED', country: 'Saudi Arabia',region: 'Middle East', sqZone: 10, partnerZone: 'mena' },
+  { city: 'Istanbul',             iata: 'IST', country: 'Turkey',      region: 'Middle East', sqZone: 10, partnerZone: 'mena' },
+  { city: 'Cairo',                iata: 'CAI', country: 'Egypt',       region: 'Africa',      sqZone: 10, partnerZone: 'mena' },
+  { city: 'Cape Town',            iata: 'CPT', country: 'South Africa',region: 'Africa',      sqZone: 10, partnerZone: 'csaf' },
+  { city: 'Johannesburg',         iata: 'JNB', country: 'South Africa',region: 'Africa',      sqZone: 10, partnerZone: 'csaf' },
+
+  // SQ Z11 — Europe (partner: Europe)
+  { city: 'London',               iata: 'LHR', country: 'UK',          region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Manchester',           iata: 'MAN', country: 'UK',          region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Paris',                iata: 'CDG', country: 'France',      region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Frankfurt',            iata: 'FRA', country: 'Germany',     region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Munich',               iata: 'MUC', country: 'Germany',     region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Zurich',               iata: 'ZRH', country: 'Switzerland', region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Amsterdam',            iata: 'AMS', country: 'Netherlands', region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Barcelona',            iata: 'BCN', country: 'Spain',       region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Madrid',               iata: 'MAD', country: 'Spain',       region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Rome',                 iata: 'FCO', country: 'Italy',       region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Milan',                iata: 'MXP', country: 'Italy',       region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Copenhagen',           iata: 'CPH', country: 'Denmark',     region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Stockholm',            iata: 'ARN', country: 'Sweden',      region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Athens',               iata: 'ATH', country: 'Greece',      region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Vienna',               iata: 'VIE', country: 'Austria',     region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+  { city: 'Brussels',             iata: 'BRU', country: 'Belgium',     region: 'Europe', sqZone: 11, partnerZone: 'eur' },
+
+  // SQ Z12 — USA West Coast (partner: North America)
+  { city: 'Los Angeles',          iata: 'LAX', country: 'USA',         region: 'North America', sqZone: 12, partnerZone: 'na' },
+  { city: 'San Francisco',        iata: 'SFO', country: 'USA',         region: 'North America', sqZone: 12, partnerZone: 'na' },
+  { city: 'Seattle',              iata: 'SEA', country: 'USA',         region: 'North America', sqZone: 12, partnerZone: 'na' },
+  { city: 'Houston',              iata: 'IAH', country: 'USA',         region: 'North America', sqZone: 12, partnerZone: 'na' },
+  { city: 'Vancouver',            iata: 'YVR', country: 'Canada',      region: 'North America', sqZone: 12, partnerZone: 'na' },
+
+  // SQ Z13 — USA East Coast (partner: North America)
+  { city: 'New York (JFK)',       iata: 'JFK', country: 'USA',         region: 'North America', sqZone: 13, partnerZone: 'na' },
+  { city: 'Newark',               iata: 'EWR', country: 'USA',         region: 'North America', sqZone: 13, partnerZone: 'na' },
+  { city: 'Chicago',              iata: 'ORD', country: 'USA',         region: 'North America', sqZone: 13, partnerZone: 'na' },
+  { city: 'Toronto',              iata: 'YYZ', country: 'Canada',      region: 'North America', sqZone: 13, partnerZone: 'na' },
+
+  // South America (no direct SQ; use partner only)
+  { city: 'São Paulo',            iata: 'GRU', country: 'Brazil',      region: 'South America', sqZone: null, partnerZone: 'sam' },
+  { city: 'Buenos Aires',         iata: 'EZE', country: 'Argentina',   region: 'South America', sqZone: null, partnerZone: 'sam' },
+];
+
+let redeemAirline = localStorage.getItem('redeemAirline') || 'sq-saver';
+// Migrate legacy values from earlier version of this app
+if (redeemAirline === 'sq') redeemAirline = 'sq-saver';
+if (!['sq-saver','sq-adv','partner'].includes(redeemAirline)) redeemAirline = 'sq-saver';
+let redeemCabin = localStorage.getItem('redeemCabin') || 'all';
+if (!['all','Y','W','J','F'].includes(redeemCabin)) redeemCabin = 'all';
+let redeemSort = { col: 'Y', dir: 1 }; // ascending miles
+
+function setRedeemAirline(a) {
+  redeemAirline = a;
+  localStorage.setItem('redeemAirline', a);
+  document.querySelectorAll('#redeem-airline-seg button').forEach(b =>
+    b.classList.toggle('active', b.dataset.airline === a));
+  renderRedemptions();
+}
+function setRedeemCabin(c) {
+  redeemCabin = c;
+  localStorage.setItem('redeemCabin', c);
+  document.querySelectorAll('#redeem-cabin-seg button').forEach(b =>
+    b.classList.toggle('active', b.dataset.cabin === c));
+  renderRedemptions();
+}
+function sortRedeem(col) {
+  if (redeemSort.col === col) redeemSort.dir *= -1;
+  else { redeemSort.col = col; redeemSort.dir = 1; }
+  renderRedemptions();
+}
+
+function getRedeemChart() {
+  if (redeemAirline === 'sq-saver') return SQ_SAVER_BY_ZONE;
+  if (redeemAirline === 'sq-adv')   return SQ_ADVANTAGE_BY_ZONE;
+  return PARTNER_SAVER_BY_ZONE;
+}
+function getZoneKeyFor(dest) {
+  return (redeemAirline === 'partner') ? dest.partnerZone : dest.sqZone;
+}
+function getZoneLabel(dest) {
+  const k = getZoneKeyFor(dest);
+  if (k == null) return null;
+  if (redeemAirline === 'partner') return k.toUpperCase();
+  return 'Z' + k;
+}
+function getMilesFor(dest, cabin) {
+  const k = getZoneKeyFor(dest);
+  if (k == null) return null;
+  const z = getRedeemChart()[k];
+  return z ? z[cabin] : null;
+}
+
+function fmtMiles(n) {
+  if (n == null) return '<span class="miles-na">—</span>';
+  return n.toLocaleString();
+}
+
+function airlineLabel() {
+  return redeemAirline === 'sq-saver' ? 'SQ Saver'
+       : redeemAirline === 'sq-adv'   ? 'SQ Advantage (peak)'
+       : 'Star Alliance Partner (one-way = round-trip ÷ 2)';
+}
+
+function renderRedemptions() {
+  // Zone summary cards
+  const chart = getRedeemChart();
+  const zoneEl = document.getElementById('redeem-zone-summary');
+  zoneEl.innerHTML = Object.entries(chart).map(([z, info]) => {
+    const cabins = [];
+    if (redeemCabin === 'all' || redeemCabin === 'Y') cabins.push(`<div class="cabin-row"><span>Economy</span><span class="cabin-y">${fmtMiles(info.Y)}</span></div>`);
+    if (redeemCabin === 'all' || redeemCabin === 'W') cabins.push(`<div class="cabin-row"><span>Prem Economy</span><span class="cabin-y">${fmtMiles(info.W)}</span></div>`);
+    if (redeemCabin === 'all' || redeemCabin === 'J') cabins.push(`<div class="cabin-row"><span>Business</span><span class="cabin-j">${fmtMiles(info.J)}</span></div>`);
+    if (redeemCabin === 'all' || redeemCabin === 'F') cabins.push(`<div class="cabin-row"><span>First / Suites</span><span class="cabin-f">${fmtMiles(info.F)}</span></div>`);
+    return `<div class="zone-card">
+      <div class="zone-name">${info.label}</div>
+      <div class="zone-cabins">${cabins.join('')}</div>
+    </div>`;
+  }).join('');
+
+  // Search filter
+  const q = document.getElementById('redeem-search').value.trim().toLowerCase();
+  let rows = REDEEM_DESTINATIONS.filter(d => {
+    if (!q) return true;
+    return [d.city, d.iata, d.country, d.region].some(s => s.toLowerCase().includes(q));
+  }).filter(d => getZoneKeyFor(d) != null); // hide dest with no chart entry for this airline
+
+  rows = rows.map(d => ({
+    ...d,
+    Y: getMilesFor(d, 'Y'),
+    W: getMilesFor(d, 'W'),
+    J: getMilesFor(d, 'J'),
+    F: getMilesFor(d, 'F'),
+    zoneLabel: getZoneLabel(d),
+    sortKey: (redeemAirline === 'partner') ? d.partnerZone : d.sqZone,
+  }));
+
+  // Sort
+  const { col, dir } = redeemSort;
+  rows.sort((a, b) => {
+    let av, bv;
+    if (col === 'city') { av = a.city; bv = b.city; }
+    else if (col === 'zone') { av = String(a.sortKey); bv = String(b.sortKey); }
+    else { av = a[col]; bv = b[col]; }
+    if (av == null && bv == null) return 0;
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    if (typeof av === 'string') return av.localeCompare(bv) * dir;
+    return (av - bv) * dir;
+  });
+
+  // Sort arrows
+  ['city', 'zone', 'Y', 'W', 'J', 'F'].forEach(c => {
+    const el = document.getElementById('rsa-' + c);
+    if (el) el.textContent = (col === c) ? (dir > 0 ? '▲' : '▼') : '';
+  });
+
+  // Hide cabin columns based on filter
+  const showY = redeemCabin === 'all' || redeemCabin === 'Y';
+  const showW = redeemCabin === 'all' || redeemCabin === 'W';
+  const showJ = redeemCabin === 'all' || redeemCabin === 'J';
+  const showF = redeemCabin === 'all' || redeemCabin === 'F';
+  const ths = document.querySelectorAll('#redeem-table thead th');
+  ths[2].style.display = showY ? '' : 'none';
+  ths[3].style.display = showW ? '' : 'none';
+  ths[4].style.display = showJ ? '' : 'none';
+  ths[5].style.display = showF ? '' : 'none';
+
+  // Body
+  document.getElementById('redeem-tbody').innerHTML = rows.map(d => `
+    <tr>
+      <td data-label="Destination" class="city-cell">
+        ${d.city}<span class="iata">${d.iata}</span>
+        <span class="country">${d.country} · ${d.region}</span>
+      </td>
+      <td data-label="Zone"><span class="zone-badge">${d.zoneLabel}</span></td>
+      <td data-label="Economy" class="miles-cell miles-y" style="${showY ? '' : 'display:none'}">${fmtMiles(d.Y)}</td>
+      <td data-label="Prem Economy" class="miles-cell miles-y" style="${showW ? '' : 'display:none'}">${fmtMiles(d.W)}</td>
+      <td data-label="Business" class="miles-cell miles-j" style="${showJ ? '' : 'display:none'}">${fmtMiles(d.J)}</td>
+      <td data-label="First / Suites" class="miles-cell miles-f" style="${showF ? '' : 'display:none'}">${fmtMiles(d.F)}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('redeem-count').textContent =
+    `${rows.length} destinations · ${airlineLabel()}`;
+}
+
+// Restore saved airline/cabin selection on load
+(function initRedeemUI() {
+  document.querySelectorAll('#redeem-airline-seg button').forEach(b =>
+    b.classList.toggle('active', b.dataset.airline === redeemAirline));
+  document.querySelectorAll('#redeem-cabin-seg button').forEach(b =>
+    b.classList.toggle('active', b.dataset.cabin === redeemCabin));
+})();
+
+// Activate saved tab (after all tab state is initialised)
 switchTab(activeTab);
 </script>
 
