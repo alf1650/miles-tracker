@@ -112,6 +112,22 @@
   .source-note { text-align: center; color: var(--text2); font-size: 0.75rem; margin-top: 2rem; padding: 1rem; border-top: 1px solid var(--border); }
   .source-note a { color: var(--accent); text-decoration: none; }
 
+  /* Lounge Benefits Tab */
+  .bank-CIMB { background: #fee2e2; color: #991b1b; }
+  .net-badge { display:inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em; white-space: nowrap; }
+  .net-PP { background: #dbeafe; color: #1e40af; }
+  .net-DP { background: #dcfce7; color: #166534; }
+  .net-Plaza { background: #fce7f3; color: #9d174d; }
+  .net-LK { background: #ede9fe; color: #5b21b6; }
+  .net-Multi { background: #fef3c7; color: #854d0e; }
+  .lounge-visits { font-weight: 700; font-size: 0.9rem; }
+  .visits-unlimited { color: var(--gold); }
+  .visits-high { color: var(--accent2); }
+  .visits-mid { color: var(--green); }
+  .visits-low { color: var(--text2); }
+  .share-yes { color: var(--green); font-size: 0.82rem; font-weight: 600; }
+  .share-no { color: var(--text2); font-size: 0.82rem; }
+
   @media (max-width: 768px) {
     .container { padding: 0.75rem; }
     header { padding: 1rem; }
@@ -300,6 +316,7 @@
     <button class="tab-btn" data-tab="mcc" onclick="switchTab('mcc')"><span class="tab-full">🔢 Search by MCC</span><span class="tab-short">🔢 MCC</span></button>
     <button class="tab-btn" data-tab="advisor" onclick="switchTab('advisor')"><span class="tab-full">🤖 Card Advisor</span><span class="tab-short">🤖 Advisor</span></button>
     <button class="tab-btn" data-tab="redeem" onclick="switchTab('redeem')"><span class="tab-full">✈️ KrisFlyer Redemptions</span><span class="tab-short">✈️ Redeem</span></button>
+    <button class="tab-btn" data-tab="lounge" onclick="switchTab('lounge')"><span class="tab-full">🛋️ Lounge Benefits</span><span class="tab-short">🛋️ Lounge</span></button>
   </div>
 
   <!-- Category Tab -->
@@ -468,6 +485,36 @@
         <tbody id="redeem-tbody"></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- Lounge Benefits Tab -->
+  <div id="tab-lounge" style="display:none">
+    <p style="color:var(--text2);font-size:0.88rem;margin-bottom:0.8rem;">🛋️ Add the lounge cards you own to filter results. Toggle <strong>Show only my cards</strong> to see only your cards.</p>
+    <div class="my-cards-bar">
+      <label class="toggle-label"><input type="checkbox" id="lounge-my-cards-toggle" onchange="toggleLoungeMyCardsFilter()"> Show only my cards</label>
+      <span class="card-count-label" id="lounge-my-cards-count">0 cards selected</span>
+      <button class="edit-btn" onclick="toggleLoungePanel()">✏️ Add / Edit my cards</button>
+    </div>
+    <div class="my-cards-panel" id="lounge-my-cards-panel">
+      <div class="my-cards-panel-header">
+        <h3>🃏 Select Your Lounge Cards</h3>
+        <div class="my-cards-panel-actions">
+          <button onclick="loungePanelSelectAll()">Select All</button>
+          <button onclick="loungePanelClearAll()">Clear All</button>
+        </div>
+      </div>
+      <div class="search-box" style="margin-bottom:0.8rem">
+        <span class="icon">🔍</span>
+        <input type="text" id="lounge-panel-search" placeholder="Filter cards..." oninput="renderLoungePanel()">
+      </div>
+      <div class="my-cards-grid" id="lounge-panel-list"></div>
+    </div>
+    <div class="chips" id="lounge-network-chips"></div>
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="lounge-search" placeholder="Search cards (e.g. DBS, Priority Pass, Citi...)" oninput="renderLoungeResults()">
+    </div>
+    <div id="lounge-results"></div>
   </div>
 
   <div class="source-note">
@@ -1233,6 +1280,46 @@ const DATA = [
 ];
 
 // ============================================================
+// LOUNGE BENEFITS DATA
+// Source: milelion.com/credit-cards/credit-card-lounge-benefits/
+// ============================================================
+const LOUNGE_DATA = [
+  // Income ≥ S$30K
+  { card: "Diners Club Cards",                  bank: "Other",     network: "Priority Pass",  principal: "1",             tracking: "CY",    guestShare: false, supp: null,             notes: "" },
+  { card: "Citi PremierMiles Card",             bank: "Citi",      network: "Priority Pass",  principal: "2",             tracking: "CY",    guestShare: true,  supp: null,             notes: "" },
+  { card: "DBS Altitude Visa",                  bank: "DBS",       network: "Priority Pass",  principal: "2",             tracking: "MY",    guestShare: true,  supp: null,             notes: "" },
+  { card: "StanChart Journey Card",             bank: "StanChart", network: "Priority Pass",  principal: "2",             tracking: "MY",    guestShare: true,  supp: null,             notes: "" },
+  { card: "HSBC TravelOne Card",               bank: "HSBC",      network: "DragonPass",     principal: "4",             tracking: "CY",    guestShare: true,  supp: null,             notes: "" },
+  { card: "UOB PRVI Miles Card",               bank: "UOB",       network: "Priority Pass",  principal: "4",             tracking: "CY",    guestShare: false, supp: null,             notes: "" },
+  // Income ≥ S$120K
+  { card: "CIMB Visa Infinite",                bank: "CIMB",      network: "DragonPass",     principal: "3",             tracking: "MY",    guestShare: false, supp: null,             notes: "" },
+  { card: "BOC Visa Infinite",                 bank: "BOC",       network: "Plaza Premium",  principal: "4",             tracking: "Custom",guestShare: true,  supp: null,             notes: "1 Nov–31 Oct cycle" },
+  { card: "Maybank Visa Infinite",             bank: "Maybank",   network: "Priority Pass",  principal: "4",             tracking: "MY",    guestShare: false, supp: null,             notes: "" },
+  { card: "StanChart Visa Infinite",           bank: "StanChart", network: "Priority Pass",  principal: "6",             tracking: "MY",    guestShare: true,  supp: null,             notes: "" },
+  // Premium cards
+  { card: "UOB Lady's Solitaire Metal Card",   bank: "UOB",       network: "DragonPass",     principal: "6",             tracking: "CY",    guestShare: false, supp: "6 CY",           notes: "" },
+  { card: "DBS Vantage Card",                  bank: "DBS",       network: "Priority Pass",  principal: "10",            tracking: "MY",    guestShare: true,  supp: null,             notes: "" },
+  { card: "Citi Prestige Card",                bank: "Citi",      network: "Priority Pass",  principal: "12",            tracking: "CY",    guestShare: true,  supp: null,             notes: "" },
+  { card: "OCBC VOYAGE",                       bank: "OCBC",      network: "DragonPass",     principal: "∞",             tracking: "—",     guestShare: false, supp: "2 CY",           notes: "Supp cannot share visits" },
+  { card: "HSBC Visa Infinite",                bank: "HSBC",      network: "LoungeKey",      principal: "∞",             tracking: "—",     guestShare: true,  supp: "∞ (max 5)",      notes: "" },
+  { card: "UOB Visa Infinite Metal Card",      bank: "UOB",       network: "DragonPass",     principal: "∞ + 1 guest",   tracking: "—",     guestShare: true,  supp: null,             notes: "4-hr cooldown policy" },
+  { card: "AMEX Platinum Charge",              bank: "AMEX",      network: "Multiple",       principal: "∞ + 1-2 guests",tracking: "—",     guestShare: true,  supp: "8 CY PP (max 1)",notes: "PP, Plaza Premium, AMEX & Centurion Lounges" },
+  // Income ≥ S$500K
+  { card: "DCS Imperium",                      bank: "DCS",       network: "DragonPass",     principal: "6",             tracking: "CY",    guestShare: false, supp: null,             notes: "" },
+  { card: "DBS Insignia",                      bank: "DBS",       network: "Priority Pass",  principal: "∞",             tracking: "—",     guestShare: true,  supp: null,             notes: "" },
+  { card: "HSBC Prive Card",                   bank: "HSBC",      network: "Priority Pass",  principal: "∞",             tracking: "—",     guestShare: true,  supp: "∞ (max 3)",      notes: "" },
+  { card: "Citi ULTIMA",                       bank: "Citi",      network: "Priority Pass",  principal: "∞",             tracking: "—",     guestShare: true,  supp: "∞ (max 2)",      notes: "" },
+  { card: "UOB Reserve",                       bank: "UOB",       network: "Priority Pass",  principal: "∞ + 1 guest",   tracking: "—",     guestShare: true,  supp: "∞",              notes: "" },
+  { card: "StanChart Beyond Card",             bank: "StanChart", network: "Priority Pass",  principal: "∞",             tracking: "—",     guestShare: true,  supp: "∞ (max 4)",      notes: "6 guest visits shared" },
+  { card: "AMEX Centurion",                    bank: "AMEX",      network: "Multiple",       principal: "∞ + 1-2 guests",tracking: "—",     guestShare: true,  supp: null,             notes: "PP, Plaza Premium, AMEX & Centurion Lounges" },
+  // Priority Banking
+  { card: "Maybank Premier World Mastercard",  bank: "Maybank",   network: "Plaza Premium",  principal: "2",             tracking: "CY",    guestShare: true,  supp: null,             notes: "" },
+  { card: "OCBC Premier Visa Infinite",        bank: "OCBC",      network: "DragonPass",     principal: "2",             tracking: "MY",    guestShare: false, supp: null,             notes: "" },
+  { card: "StanChart Priority Banking VI",     bank: "StanChart", network: "Priority Pass",  principal: "2–12",          tracking: "MY",    guestShare: true,  supp: null,             notes: "2 visits (AUM < S$200K), 12 (AUM ≥ S$200K)" },
+  { card: "HSBC Premier Mastercard",           bank: "HSBC",      network: "Priority Pass",  principal: "∞",             tracking: "—",     guestShare: true,  supp: "∞ (max 3)",      notes: "" },
+];
+
+// ============================================================
 // APP LOGIC
 // ============================================================
 const categories = [...new Set(DATA.map(d => d.category))].sort();
@@ -1255,11 +1342,13 @@ function switchTab(tab) {
   document.getElementById('tab-mcc').style.display = tab === 'mcc' ? '' : 'none';
   document.getElementById('tab-advisor').style.display = tab === 'advisor' ? '' : 'none';
   document.getElementById('tab-redeem').style.display = tab === 'redeem' ? '' : 'none';
+  document.getElementById('tab-lounge').style.display = tab === 'lounge' ? '' : 'none';
   if (tab === 'category') { updateMyCardsBar(); renderCategoryChips(); filterCategories(); }
   if (tab === 'card') { renderCardChips(); filterCards(); }
   if (tab === 'mcc') { updateMCCBar(); renderMCCChips(); renderMCCResults(); }
   if (tab === 'advisor') { updateAdvisorButton(); }
   if (tab === 'redeem') { renderRedemptions(); }
+  if (tab === 'lounge') { updateLoungeBar(); renderLoungeNetworkChips(); renderLoungeResults(); }
 }
 
 // Render stats
@@ -2249,6 +2338,148 @@ function renderRedemptions() {
 
   document.getElementById('redeem-count').textContent =
     `${rows.length} destinations · ${airlineLabel()}`;
+}
+
+// ============================================================
+// LOUNGE BENEFITS TAB
+// ============================================================
+let loungeSelectedCards = new Set();
+let loungeMyCardsFilterOn = false;
+let loungeNetworkFilter = 'All';
+try {
+  const saved = localStorage.getItem('loungeSelectedCards');
+  if (saved) loungeSelectedCards = new Set(JSON.parse(saved));
+  loungeMyCardsFilterOn = localStorage.getItem('loungeMyCardsFilterOn') === 'true';
+} catch(e) {}
+
+function updateLoungeBar() {
+  const toggle = document.getElementById('lounge-my-cards-toggle');
+  if (toggle) toggle.checked = loungeMyCardsFilterOn;
+  const n = loungeSelectedCards.size;
+  const el = document.getElementById('lounge-my-cards-count');
+  if (el) el.textContent = `${n} card${n !== 1 ? 's' : ''} selected`;
+}
+
+function toggleLoungeMyCardsFilter() {
+  loungeMyCardsFilterOn = document.getElementById('lounge-my-cards-toggle').checked;
+  localStorage.setItem('loungeMyCardsFilterOn', loungeMyCardsFilterOn);
+  renderLoungeResults();
+}
+
+function toggleLoungePanel() {
+  const panel = document.getElementById('lounge-my-cards-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderLoungePanel();
+}
+
+function renderLoungePanel() {
+  const q = (document.getElementById('lounge-panel-search')?.value || '').toLowerCase();
+  const cardsByBank = {};
+  LOUNGE_DATA.forEach(d => {
+    if (q && !d.card.toLowerCase().includes(q)) return;
+    if (!cardsByBank[d.bank]) cardsByBank[d.bank] = [];
+    if (!cardsByBank[d.bank].includes(d.card)) cardsByBank[d.bank].push(d.card);
+  });
+  let html = '';
+  for (const bank of Object.keys(cardsByBank).sort()) {
+    html += `<div class="bank-group">`;
+    html += `<div class="bank-group-label"><span class="bank-badge bank-${bank}">${bank}</span></div>`;
+    for (const card of cardsByBank[bank]) {
+      const checked = loungeSelectedCards.has(card) ? 'checked' : '';
+      html += `<label class="card-checkbox"><input type="checkbox" ${checked} data-card="${escHtml(card)}" onchange="toggleLoungeCard(this.dataset.card)"> ${escHtml(card)}</label>`;
+    }
+    html += `</div>`;
+  }
+  document.getElementById('lounge-panel-list').innerHTML = html;
+}
+
+function toggleLoungeCard(card) {
+  if (loungeSelectedCards.has(card)) loungeSelectedCards.delete(card);
+  else loungeSelectedCards.add(card);
+  localStorage.setItem('loungeSelectedCards', JSON.stringify([...loungeSelectedCards]));
+  updateLoungeBar();
+  renderLoungePanel();
+  if (loungeMyCardsFilterOn) renderLoungeResults();
+}
+
+function loungePanelSelectAll() {
+  const q = (document.getElementById('lounge-panel-search')?.value || '').toLowerCase();
+  LOUNGE_DATA.forEach(d => { if (!q || d.card.toLowerCase().includes(q)) loungeSelectedCards.add(d.card); });
+  localStorage.setItem('loungeSelectedCards', JSON.stringify([...loungeSelectedCards]));
+  updateLoungeBar(); renderLoungePanel();
+  if (loungeMyCardsFilterOn) renderLoungeResults();
+}
+
+function loungePanelClearAll() {
+  const q = (document.getElementById('lounge-panel-search')?.value || '').toLowerCase();
+  if (!q) { loungeSelectedCards.clear(); }
+  else { LOUNGE_DATA.forEach(d => { if (d.card.toLowerCase().includes(q)) loungeSelectedCards.delete(d.card); }); }
+  localStorage.setItem('loungeSelectedCards', JSON.stringify([...loungeSelectedCards]));
+  updateLoungeBar(); renderLoungePanel();
+  if (loungeMyCardsFilterOn) renderLoungeResults();
+}
+
+function renderLoungeNetworkChips() {
+  const networks = ['All', 'Priority Pass', 'DragonPass', 'Plaza Premium', 'LoungeKey', 'Multiple'];
+  document.getElementById('lounge-network-chips').innerHTML = networks.map(n =>
+    `<span class="chip ${loungeNetworkFilter === n ? 'active' : ''}" onclick="setLoungeNetwork('${n}')">${n}</span>`
+  ).join('');
+}
+
+function setLoungeNetwork(net) {
+  loungeNetworkFilter = net;
+  renderLoungeNetworkChips();
+  renderLoungeResults();
+}
+
+function loungeNetBadge(network) {
+  const map = { 'Priority Pass': 'PP', 'DragonPass': 'DP', 'Plaza Premium': 'Plaza', 'LoungeKey': 'LK', 'Multiple': 'Multi' };
+  const cls = map[network] || 'PP';
+  return `<span class="net-badge net-${cls}">${escHtml(network)}</span>`;
+}
+
+function loungeVisitClass(v) {
+  if (!v) return 'visits-low';
+  if (String(v).includes('∞')) return 'visits-unlimited';
+  const n = parseInt(v);
+  if (n >= 10) return 'visits-high';
+  if (n >= 4) return 'visits-mid';
+  return 'visits-low';
+}
+
+function renderLoungeResults() {
+  const q = (document.getElementById('lounge-search')?.value || '').toLowerCase();
+  const rows = LOUNGE_DATA.filter(d => {
+    if (loungeNetworkFilter !== 'All' && d.network !== loungeNetworkFilter) return false;
+    if (loungeMyCardsFilterOn && loungeSelectedCards.size > 0 && !loungeSelectedCards.has(d.card)) return false;
+    if (q && !d.card.toLowerCase().includes(q) && !d.bank.toLowerCase().includes(q) &&
+        !d.network.toLowerCase().includes(q) && !d.notes.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const tbody = rows.map(r => `<tr>
+    <td data-label="Card"><strong>${escHtml(r.card)}</strong><br><span class="bank-badge bank-${r.bank}">${r.bank}</span></td>
+    <td data-label="Network">${loungeNetBadge(r.network)}</td>
+    <td data-label="Principal Visits"><span class="lounge-visits ${loungeVisitClass(r.principal)}">${escHtml(r.principal)}</span></td>
+    <td data-label="Tracking">${r.tracking === '—' ? '<span style="color:var(--text2)">—</span>' : `<span class="zone-badge">${escHtml(r.tracking)}</span>`}</td>
+    <td data-label="Guest Sharing">${r.guestShare ? '<span class="share-yes">✓ Yes</span>' : '<span class="share-no">No</span>'}</td>
+    <td data-label="Supp. Visits">${r.supp ? `<span class="lounge-visits ${loungeVisitClass(r.supp)}">${escHtml(r.supp)}</span>` : '<span style="color:var(--text2)">N/A</span>'}</td>
+    <td data-label="Notes" class="remarks-text">${r.notes ? escHtml(r.notes) : '—'}</td>
+  </tr>`).join('');
+  document.getElementById('lounge-results').innerHTML = rows.length === 0
+    ? `<div class="no-results"><div class="emoji">🛋️</div><p>No results found</p></div>`
+    : `<div class="results-header"><h2>Airport Lounge Access</h2><span class="count">${rows.length} card${rows.length > 1 ? 's' : ''}</span></div>
+       <div class="table-wrap"><table class="card-table">
+         <thead><tr>
+           <th>Card</th>
+           <th>Network</th>
+           <th>Principal Visits</th>
+           <th>Tracking</th>
+           <th>Guest Sharing</th>
+           <th>Supp. Visits</th>
+           <th>Notes</th>
+         </tr></thead>
+         <tbody>${tbody}</tbody>
+       </table></div>`;
 }
 
 // Restore saved airline/cabin selection on load
