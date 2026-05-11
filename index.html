@@ -27,10 +27,29 @@
     --red: #e11d48;
     --border: #e2e8f0;
   }
+  html[data-theme="dark"] {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --gold: #fbbf24;
+    --green: #4ade80;
+    --red: #fb7185;
+    --border: #334155;
+  }
+  html[data-theme="dark"] header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+  html[data-theme="dark"] .redeem-disclaimer { background: #1c1400; border-color: #854d0e; color: #fcd34d; }
+  html[data-theme="dark"] .redeem-disclaimer strong { color: #fcd34d; }
+  html[data-theme="dark"] .redeem-disclaimer a { color: #fbbf24; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height:100vh; }
 
-  header { background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); border-bottom: 1px solid var(--border); padding: 1.5rem 2rem; text-align:center; }
+  header { position: relative; background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); border-bottom: 1px solid var(--border); padding: 1.5rem 2rem; text-align:center; }
+  .dark-toggle { position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%); background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 0.3rem 0.7rem; cursor: pointer; font-size: 0.8rem; color: var(--text2); font-weight: 600; transition: all 0.2s; white-space: nowrap; }
+  .dark-toggle:hover { border-color: var(--accent); color: var(--accent); }
   header h1 { font-size: 1.8rem; font-weight: 700; }
   header h1 span { color: var(--accent); }
   header p { color: var(--text2); margin-top: 0.3rem; font-size: 0.9rem; }
@@ -298,12 +317,14 @@
     .redeem-controls .seg button { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
   }
 </style>
+<script>if(localStorage.getItem('darkMode')==='true')document.documentElement.dataset.theme='dark';</script>
 </head>
 <body>
 
 <header>
   <h1>✈️ SG <span>Miles</span> Card Tracker</h1>
   <p>Find the best credit card for maximum miles — search by category or card</p>
+  <button class="dark-toggle" id="dark-toggle-btn" onclick="toggleDarkMode()">🌙 Dark</button>
 </header>
 
 <div class="container">
@@ -1329,6 +1350,17 @@ const allBanks = [...new Set(DATA.map(d => d.bank))].sort();
 let activeTab = localStorage.getItem('milesTab') || 'category';
 let selectedCategory = localStorage.getItem('milesSelectedCategory') || null;
 let selectedCard = localStorage.getItem('milesSelectedBank') || null;
+
+function toggleDarkMode() {
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = isDark ? '' : 'dark';
+  localStorage.setItem('darkMode', !isDark);
+  document.getElementById('dark-toggle-btn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+}
+(function() {
+  const btn = document.getElementById('dark-toggle-btn');
+  if (btn) btn.textContent = document.documentElement.dataset.theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+})();
 let sortCol = 'mpd';
 let sortDir = -1; // descending
 let myCardsFilterOn = localStorage.getItem('myCardsFilterOn') === 'true';
