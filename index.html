@@ -548,6 +548,25 @@
   <!-- Cashback Tab -->
   <div id="tab-cashback" style="display:none">
     <p style="color:var(--text2);font-size:0.88rem;margin-bottom:0.8rem;">💵 Compare cashback rates across Singapore credit cards. Select a category to see the best cards — or search for any card or keyword.</p>
+    <div class="my-cards-bar">
+      <label class="toggle-label"><input type="checkbox" id="cb-my-cards-toggle" onchange="toggleCbFilter()"> Show only my cards</label>
+      <span class="card-count-label" id="cb-my-cards-count">0 cards selected</span>
+      <button class="edit-btn" onclick="toggleCbPanel()">✏️ Add / Edit my cards</button>
+    </div>
+    <div class="my-cards-panel" id="cb-my-cards-panel">
+      <div class="my-cards-panel-header">
+        <h3>🃏 Select Your Cards</h3>
+        <div class="my-cards-panel-actions">
+          <button onclick="cbSelectAll()">Select All</button>
+          <button onclick="cbClearAll()">Clear All</button>
+        </div>
+      </div>
+      <div class="search-box" style="margin-bottom:0.8rem">
+        <span class="icon">🔍</span>
+        <input type="text" id="cb-panel-card-search" placeholder="Filter cards..." oninput="renderCbPanel()">
+      </div>
+      <div class="my-cards-grid" id="cb-panel-card-list"></div>
+    </div>
     <div class="search-box">
       <span class="icon">🔍</span>
       <input type="text" id="cb-search" placeholder="Search categories (e.g. Dining, Groceries, Petrol...)" oninput="filterCashback()">
@@ -1444,6 +1463,12 @@ function toggleDarkMode() {
 let sortCol = 'mpd';
 let sortDir = -1; // descending
 let myCardsFilterOn = localStorage.getItem('myCardsFilterOn') === 'true';
+let cbMyCardsFilterOn = localStorage.getItem('cbMyCardsFilterOn') === 'true';
+let cbSelectedCards = new Set();
+try {
+  const cbSaved = localStorage.getItem('cbSelectedCards');
+  if (cbSaved) cbSelectedCards = new Set(JSON.parse(cbSaved));
+} catch(e) {}
 
 function switchTab(tab) {
   activeTab = tab;
@@ -1462,7 +1487,7 @@ function switchTab(tab) {
   if (tab === 'advisor') { updateAdvisorButton(); }
   if (tab === 'redeem') { renderRedemptions(); }
   if (tab === 'lounge') { updateLoungeBar(); renderLoungeNetworkChips(); renderLoungeResults(); }
-  if (tab === 'cashback') { renderCashbackChips(); renderCashbackResults(); }
+  if (tab === 'cashback') { updateCbBar(); renderCashbackChips(); renderCashbackResults(); }
 }
 
 // Render stats
@@ -1480,6 +1505,7 @@ function renderStats() {
 // CASHBACK TAB
 // ============================================================
 const cbCategories = [...new Set(CASHBACK_DATA.map(d => d.category))].sort();
+const allCbCards = [...new Map(CASHBACK_DATA.map(d => [d.card, d.bank])).entries()];
 let selectedCbCategory = null;
 let cbSortCol = 'rate';
 let cbSortDir = -1;
@@ -1567,6 +1593,11 @@ function renderCashbackResults() {
     return;
   }
 
+  // Apply "my cards" filter
+  if (cbMyCardsFilterOn && cbSelectedCards.size > 0) {
+    results = results.filter(d => cbSelectedCards.has(d.card));
+  }
+
   results.sort((a, b) => {
     if (cbSortCol === 'rate') return (a.rate - b.rate) * cbSortDir;
     if (cbSortCol === 'card') return a.card.localeCompare(b.card) * cbSortDir;
@@ -1586,6 +1617,75 @@ function renderCashbackResults() {
     html += renderCashbackTable(items);
   }
   document.getElementById('cb-results').innerHTML = html || `<div class="no-results"><div class="emoji">🔍</div><p>No results found</p></div>`;
+}
+
+function updateCbBar() {
+  const toggle = document.getElementById('cb-my-cards-toggle');
+  if (toggle) toggle.checked = cbMyCardsFilterOn;
+  const n = cbSelectedCards.size;
+  const countEl = document.getElementById('cb-my-cards-count');
+  if (countEl) countEl.textContent = `${n} card${n !== 1 ? 's' : ''} selected`;
+}
+
+function toggleCbFilter() {
+  cbMyCardsFilterOn = document.getElementById('cb-my-cards-toggle').checked;
+  localStorage.setItem('cbMyCardsFilterOn', cbMyCardsFilterOn);
+  renderCashbackResults();
+}
+
+function toggleCbPanel() {
+  const panel = document.getElementById('cb-my-cards-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderCbPanel();
+}
+
+function renderCbPanel() {
+  const q = (document.getElementById('cb-panel-card-search')?.value || '').toLowerCase();
+  const cardsByBank = {};
+  allCbCards.forEach(([card, bank]) => {
+    if (q && !card.toLowerCase().includes(q)) return;
+    if (!cardsByBank[bank]) cardsByBank[bank] = [];
+    cardsByBank[bank].push(card);
+  });
+  let html = '';
+  for (const bank of Object.keys(cardsByBank).sort()) {
+    html += `<div class="bank-group">`;
+    html += `<div class="bank-group-label"><span class="bank-badge bank-${bank}">${bank}</span></div>`;
+    for (const card of cardsByBank[bank]) {
+      const checked = cbSelectedCards.has(card) ? 'checked' : '';
+      html += `<label class="card-checkbox"><input type="checkbox" ${checked} data-card="${escHtml(card)}" onchange="cbToggleCard(this.dataset.card)"> ${escHtml(card)}</label>`;
+    }
+    html += `</div>`;
+  }
+  document.getElementById('cb-panel-card-list').innerHTML = html;
+}
+
+function cbToggleCard(card) {
+  if (cbSelectedCards.has(card)) cbSelectedCards.delete(card);
+  else cbSelectedCards.add(card);
+  localStorage.setItem('cbSelectedCards', JSON.stringify([...cbSelectedCards]));
+  updateCbBar();
+  renderCbPanel();
+  renderCashbackResults();
+}
+
+function cbSelectAll() {
+  const q = (document.getElementById('cb-panel-card-search')?.value || '').toLowerCase();
+  allCbCards.forEach(([card]) => {
+    if (!q || card.toLowerCase().includes(q)) cbSelectedCards.add(card);
+  });
+  localStorage.setItem('cbSelectedCards', JSON.stringify([...cbSelectedCards]));
+  updateCbBar();
+  renderCbPanel();
+  renderCashbackResults();
+}
+
+function cbClearAll() {
+  cbSelectedCards.clear();
+  localStorage.setItem('cbSelectedCards', JSON.stringify([]));
+  updateCbBar();
+  renderCbPanel();
+  renderCashbackResults();
 }
 
 // Category chips
