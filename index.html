@@ -91,6 +91,10 @@
   .mpd-high { color: var(--gold); }
   .mpd-mid { color: var(--green); }
   .mpd-low { color: var(--text2); }
+  .cb-rate { font-weight: 700; font-size: 1rem; }
+  .cb-high { color: var(--gold); }
+  .cb-mid { color: var(--green); }
+  .cb-low { color: var(--text2); }
 
   .bank-badge { display:inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em; }
   .bank-UOB { background: #dbeafe; color: #1e40af; }
@@ -105,6 +109,7 @@
   .bank-Chocolate { background: #fef3c7; color: #92400e; }
   .bank-KrisFlyer { background: #e0f2fe; color: #0369a1; }
   .bank-DCS { background: #ede9fe; color: #6d28d9; }
+  .bank-Mari { background: #fce7f3; color: #be185d; }
   .bank-Other { background: var(--surface2); color: var(--text2); }
 
   .cap-info { font-size: 0.8rem; color: var(--text2); margin-top: 0.2rem; }
@@ -159,6 +164,7 @@
     .tab-btn { padding: 0.7rem 0.5rem; font-size: 0.82rem; flex: 0 0 50%; box-sizing: border-box; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .tab-btn:nth-child(2n) { border-right: none; }
     .tab-btn:nth-last-child(-n+2) { border-bottom: none; }
+    .tab-btn:last-child:nth-child(odd) { flex: 1; border-right: none; }
     .tab-btn .tab-full { display: none; }
     .tab-btn .tab-short { display: inline; }
     .search-box input { padding: 0.75rem 1rem 0.75rem 2.5rem; font-size: 0.9rem; border-radius: 8px; }
@@ -338,6 +344,7 @@
     <button class="tab-btn" data-tab="advisor" onclick="switchTab('advisor')"><span class="tab-full">🤖 Card Advisor</span><span class="tab-short">🤖 Advisor</span></button>
     <button class="tab-btn" data-tab="redeem" onclick="switchTab('redeem')"><span class="tab-full">✈️ KrisFlyer Redemptions</span><span class="tab-short">✈️ Redeem</span></button>
     <button class="tab-btn" data-tab="lounge" onclick="switchTab('lounge')"><span class="tab-full">🛋️ Lounge Benefits</span><span class="tab-short">🛋️ Lounge</span></button>
+    <button class="tab-btn" data-tab="cashback" onclick="switchTab('cashback')"><span class="tab-full">💵 Cashback Cards</span><span class="tab-short">💵 Cashback</span></button>
   </div>
 
   <!-- Category Tab -->
@@ -536,6 +543,17 @@
       <input type="text" id="lounge-search" placeholder="Search cards (e.g. DBS, Priority Pass, Citi...)" oninput="renderLoungeResults()">
     </div>
     <div id="lounge-results"></div>
+  </div>
+
+  <!-- Cashback Tab -->
+  <div id="tab-cashback" style="display:none">
+    <p style="color:var(--text2);font-size:0.88rem;margin-bottom:0.8rem;">💵 Compare cashback rates across Singapore credit cards. Select a category to see the best cards — or search for any card or keyword.</p>
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="cb-search" placeholder="Search categories (e.g. Dining, Groceries, Petrol...)" oninput="filterCashback()">
+    </div>
+    <div class="chips" id="cb-chips"></div>
+    <div id="cb-results"></div>
   </div>
 
   <div class="source-note">
@@ -1341,6 +1359,68 @@ const LOUNGE_DATA = [
 ];
 
 // ============================================================
+// CASHBACK DATA
+// ============================================================
+const CASHBACK_DATA = [
+  // ===== GENERAL SPENDING =====
+  {card:"UOB Absolute Cashback Card", bank:"UOB", category:"General Spending", rate:1.7, cap:"No cap", remarks:"No minimum spend. Almost no exclusions — best flat-rate cashback card"},
+  {card:"Mari Credit Card", bank:"Mari", category:"General Spending", rate:1.7, cap:"No cap", remarks:"No minimum spend. Shopee integration"},
+  {card:"StanChart Simply Cash Card", bank:"StanChart", category:"General Spending", rate:1.5, cap:"No cap", remarks:"No minimum spend. Good fallback card"},
+
+  // ===== DINING =====
+  {card:"HSBC Live+ Card", bank:"HSBC", category:"Dining", rate:5, cap:"S$250/quarter (combined Dining+Entertainment+Shopping)", remarks:"New cardholders (card issued Apr 2025–Mar 2027) get 8% (5%+3%) for first 2 calendar quarters. Min spend: S$1,000 in first Q; S$600/month all 3 months in subsequent Qs. 0.3% if min not met."},
+  {card:"Maybank Family & Friends", bank:"Maybank", category:"Dining", rate:8, cap:"S$25/category/m.month", remarks:"Select Dining as 1 of 5 bonus categories. Min S$800/m.month total. 0.3% otherwise"},
+  {card:"Citi Cash Back Card", bank:"Citi", category:"Dining", rate:6, cap:"S$80/s.month (combined Dining+Groceries)", remarks:"Min S$800/s.month. 0.25% otherwise"},
+  {card:"OCBC 365 Card", bank:"OCBC", category:"Dining", rate:6, cap:"S$80/s.month (combined all categories)", remarks:"Min S$800/s.month. 0.25% otherwise"},
+  {card:"POSB Everyday Card", bank:"DBS", category:"Dining", rate:5, cap:"S$50/s.month", remarks:"Includes hawker centres via PayLah!. Min S$800/s.month"},
+
+  // ===== GROCERIES =====
+  {card:"DBS yuu Card", bank:"DBS", category:"Groceries", rate:18, cap:"S$60/m.month at yuu merchants", remarks:"As yuu Points (Cold Storage, Giant, Guardian) — not direct cash. Redeem at yuu merchants"},
+  {card:"Maybank Family & Friends", bank:"Maybank", category:"Groceries", rate:8, cap:"S$25/category/m.month", remarks:"Select Groceries as 1 of 5 bonus categories. Min S$800/m.month"},
+  {card:"Citi Cash Back Card", bank:"Citi", category:"Groceries", rate:6, cap:"S$80/s.month (combined Dining+Groceries)", remarks:"Min S$800/s.month. 0.25% otherwise"},
+  {card:"POSB Everyday Card", bank:"DBS", category:"Groceries", rate:5, cap:"S$50/s.month", remarks:"NTUC FairPrice, Cold Storage, Giant, Sheng Siong. Min S$800/s.month"},
+  {card:"Citi SMRT Card", bank:"Citi", category:"Groceries", rate:5, cap:"S$600/year (all bonus categories combined)", remarks:"Min S$500/s.month. Annual cap shared with Online and Transport"},
+  {card:"OCBC 365 Card", bank:"OCBC", category:"Groceries", rate:3, cap:"S$80/s.month (combined all categories)", remarks:"Min S$800/s.month"},
+
+  // ===== ONLINE SHOPPING =====
+  {card:"HSBC Live+ Card", bank:"HSBC", category:"Online Shopping", rate:5, cap:"S$250/quarter (combined Dining+Entertainment+Shopping)", remarks:"New cardholders (card issued Apr 2025–Mar 2027) get 8% (5%+3%) for first 2 calendar quarters. Includes online retail. Min spend: S$1,000 in first Q; S$600/month all 3 months in subsequent Qs."},
+  {card:"Maybank Family & Friends", bank:"Maybank", category:"Online Shopping", rate:8, cap:"S$25/category/m.month", remarks:"Select Online Shopping as 1 of 5 bonus categories. Min S$800/m.month"},
+  {card:"DBS Live Fresh Card", bank:"DBS", category:"Online Shopping", rate:5, cap:"S$60/m.month (combined Online+Contactless)", remarks:"No online category restriction. Min S$600/m.month"},
+  {card:"Citi SMRT Card", bank:"Citi", category:"Online Shopping", rate:5, cap:"S$600/year (all bonus categories combined)", remarks:"Excludes travel bookings and mobile wallet top-ups. Min S$500/s.month"},
+  {card:"OCBC 365 Card", bank:"OCBC", category:"Online Shopping", rate:3, cap:"S$80/s.month (combined all categories)", remarks:"Min S$800/s.month"},
+
+  // ===== PETROL =====
+  {card:"HSBC Live+ Card", bank:"HSBC", category:"Petrol", rate:5, cap:"S$250/quarter (combined all bonus categories)", remarks:"Caltex and Shell only. Plus up to 17% upfront fuel savings. Min spend: S$1,000 in first Q; S$600/month all 3 months in subsequent Qs. 0.3% if min not met."},
+  {card:"UOB One Card", bank:"UOB", category:"Petrol", rate:10, cap:"No specific petrol cap", remarks:"At Shell & SPC. Requires min S$500 or S$1K overall spend/s.month. Stacks with station discounts"},
+  {card:"Maybank Family & Friends", bank:"Maybank", category:"Petrol", rate:8, cap:"S$25/category/m.month", remarks:"Select Petrol as 1 of 5 bonus categories. Min S$800/m.month"},
+  {card:"Citi Cash Back Card", bank:"Citi", category:"Petrol", rate:8, cap:"S$25/s.month", remarks:"All petrol stations. Min S$800/s.month overall"},
+  {card:"OCBC 365 Card", bank:"OCBC", category:"Petrol", rate:5, cap:"S$80/s.month (combined all categories)", remarks:"Caltex & Esso only. Min S$800/s.month"},
+
+  // ===== TRANSPORT / RIDE-HAILING =====
+  {card:"Citi Cash Back Card", bank:"Citi", category:"Transport / Ride-hailing", rate:8, cap:"S$25/s.month", remarks:"Grab, Gojek and taxis. Min S$800/s.month overall"},
+  {card:"Maybank Family & Friends", bank:"Maybank", category:"Transport / Ride-hailing", rate:8, cap:"S$25/category/m.month", remarks:"Select Grab/Transport as 1 of 5 bonus categories. Min S$800/m.month"},
+  {card:"POSB Everyday Card", bank:"DBS", category:"Transport / Ride-hailing", rate:5, cap:"S$50/s.month", remarks:"SimplyGo (bus/MRT) & Grab. Min S$800/s.month"},
+  {card:"Citi SMRT Card", bank:"Citi", category:"Transport / Ride-hailing", rate:5, cap:"S$600/year (all bonus categories combined)", remarks:"SimplyGo and Grab/ComfortDelGro taxis. Min S$500/s.month"},
+  {card:"OCBC 365 Card", bank:"OCBC", category:"Transport / Ride-hailing", rate:3, cap:"S$80/s.month (combined all categories)", remarks:"Grab, Gojek, ComfortDelGro. Min S$800/s.month"},
+
+  // ===== ENTERTAINMENT / STREAMING =====
+  {card:"HSBC Live+ Card", bank:"HSBC", category:"Entertainment / Streaming", rate:5, cap:"S$250/quarter (combined Dining+Entertainment+Shopping)", remarks:"New cardholders (card issued Apr 2025–Mar 2027) get 8% (5%+3%) for first 2 calendar quarters. Streaming (Netflix, Spotify, Disney+), movies/cinemas. Min spend: S$1,000 in first Q; S$600/month all 3 months in subsequent Qs."},
+  {card:"Maybank Family & Friends", bank:"Maybank", category:"Entertainment / Streaming", rate:8, cap:"S$25/category/m.month", remarks:"Select Entertainment as 1 of 5 bonus categories. Min S$800/m.month"},
+
+  // ===== CONTACTLESS SPENDING =====
+  {card:"DBS Live Fresh Card", bank:"DBS", category:"Contactless Spending", rate:5, cap:"S$60/m.month (combined Online+Contactless)", remarks:"Visa payWave / Apple Pay / Google Pay. Min S$600/m.month"},
+
+  // ===== UTILITIES / BILLS =====
+  {card:"Maybank Family & Friends", bank:"Maybank", category:"Utilities / Bills", rate:8, cap:"S$25/category/m.month", remarks:"Select Utilities/Telecom as 1 of 5 bonus categories. Min S$800/m.month"},
+  {card:"OCBC 365 Card", bank:"OCBC", category:"Utilities / Bills", rate:3, cap:"S$80/s.month (combined all categories)", remarks:"Electricity, telco, cable TV. Min S$800/s.month"},
+
+  // ===== FOREIGN CURRENCY =====
+  {card:"UOB Absolute Cashback Card", bank:"UOB", category:"Foreign Currency", rate:1.7, cap:"No cap", remarks:"Standard FCY admin fees still apply. Earns same flat rate overseas"},
+  {card:"Mari Credit Card", bank:"Mari", category:"Foreign Currency", rate:1.7, cap:"No cap", remarks:"Standard FCY fees apply (3%). Not recommended for FCY — fee exceeds cashback"},
+  {card:"StanChart Simply Cash Card", bank:"StanChart", category:"Foreign Currency", rate:1.5, cap:"No cap", remarks:"Standard FCY fees apply"},
+];
+
+// ============================================================
 // APP LOGIC
 // ============================================================
 const categories = [...new Set(DATA.map(d => d.category))].sort();
@@ -1375,12 +1455,14 @@ function switchTab(tab) {
   document.getElementById('tab-advisor').style.display = tab === 'advisor' ? '' : 'none';
   document.getElementById('tab-redeem').style.display = tab === 'redeem' ? '' : 'none';
   document.getElementById('tab-lounge').style.display = tab === 'lounge' ? '' : 'none';
+  document.getElementById('tab-cashback').style.display = tab === 'cashback' ? '' : 'none';
   if (tab === 'category') { updateMyCardsBar(); renderCategoryChips(); filterCategories(); }
   if (tab === 'card') { renderCardChips(); filterCards(); }
   if (tab === 'mcc') { updateMCCBar(); renderMCCChips(); renderMCCResults(); }
   if (tab === 'advisor') { updateAdvisorButton(); }
   if (tab === 'redeem') { renderRedemptions(); }
   if (tab === 'lounge') { updateLoungeBar(); renderLoungeNetworkChips(); renderLoungeResults(); }
+  if (tab === 'cashback') { renderCashbackChips(); renderCashbackResults(); }
 }
 
 // Render stats
@@ -1392,6 +1474,118 @@ function renderStats() {
     <div class="stat-card"><div class="num">${allBanks.length}</div><div class="label">Banks</div></div>
     <div class="stat-card"><div class="num">${maxMpd}</div><div class="label">Max MPD</div></div>
   `;
+}
+
+// ============================================================
+// CASHBACK TAB
+// ============================================================
+const cbCategories = [...new Set(CASHBACK_DATA.map(d => d.category))].sort();
+let selectedCbCategory = null;
+let cbSortCol = 'rate';
+let cbSortDir = -1;
+
+function cbRateClass(rate) {
+  if (rate >= 6) return 'cb-high';
+  if (rate >= 3) return 'cb-mid';
+  return 'cb-low';
+}
+
+function cbSortArrow(col) {
+  if (cbSortCol !== col) return '<span class="sort-arrow">⇅</span>';
+  return `<span class="sort-arrow">${cbSortDir > 0 ? '↑' : '↓'}</span>`;
+}
+
+function toggleCbSort(col) {
+  if (cbSortCol === col) cbSortDir *= -1;
+  else { cbSortCol = col; cbSortDir = col === 'rate' ? -1 : 1; }
+  renderCashbackResults();
+}
+
+function renderCashbackTable(items) {
+  return `<div class="table-wrap"><table class="card-table">
+    <thead><tr>
+      <th onclick="toggleCbSort('card')">Card ${cbSortArrow('card')}</th>
+      <th onclick="toggleCbSort('bank')">Bank ${cbSortArrow('bank')}</th>
+      <th onclick="toggleCbSort('rate')">Cashback ${cbSortArrow('rate')}</th>
+      <th>Cap</th>
+      <th>Remarks</th>
+    </tr></thead>
+    <tbody>
+      ${items.map(r => `<tr>
+        <td data-label="Card"><strong>${escHtml(r.card)}</strong></td>
+        <td data-label="Bank"><span class="bank-badge bank-${r.bank}">${r.bank}</span></td>
+        <td data-label="Cashback"><span class="cb-rate ${cbRateClass(r.rate)}">${r.rate}%</span></td>
+        <td data-label="Cap">${r.cap !== 'No cap' ? `<span class="cap-highlight">${escHtml(r.cap)}</span>` : '<span style="color:var(--green)">No cap</span>'}</td>
+        <td data-label="Remarks" class="remarks-text">${escHtml(r.remarks) || '\u2014'}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+function renderCashbackChips() {
+  const q = document.getElementById('cb-search').value.toLowerCase();
+  const filtered = cbCategories.filter(c => c.toLowerCase().includes(q));
+  document.getElementById('cb-chips').innerHTML = filtered.map(c =>
+    `<span class="chip ${selectedCbCategory===c?'active':''}" onclick="selectCbCategory('${c.replace(/'/g, "\\'")}')">  ${c}</span>`
+  ).join('');
+}
+
+function selectCbCategory(cat) {
+  selectedCbCategory = selectedCbCategory === cat ? null : cat;
+  renderCashbackChips();
+  renderCashbackResults();
+}
+
+function filterCashback() {
+  selectedCbCategory = null;
+  renderCashbackChips();
+  renderCashbackResults();
+}
+
+function renderCashbackResults() {
+  const q = document.getElementById('cb-search').value.toLowerCase();
+  let results;
+  if (selectedCbCategory) {
+    results = CASHBACK_DATA.filter(d => d.category === selectedCbCategory);
+  } else if (q) {
+    results = CASHBACK_DATA.filter(d =>
+      d.category.toLowerCase().includes(q) ||
+      d.card.toLowerCase().includes(q) ||
+      d.bank.toLowerCase().includes(q) ||
+      d.remarks.toLowerCase().includes(q)
+    );
+  } else {
+    results = [];
+  }
+
+  if (!q && !selectedCbCategory) {
+    document.getElementById('cb-results').innerHTML = `
+      <div class="no-results">
+        <div class="emoji">💵</div>
+        <p>Select a category above or type to search</p>
+      </div>`;
+    return;
+  }
+
+  results.sort((a, b) => {
+    if (cbSortCol === 'rate') return (a.rate - b.rate) * cbSortDir;
+    if (cbSortCol === 'card') return a.card.localeCompare(b.card) * cbSortDir;
+    if (cbSortCol === 'bank') return a.bank.localeCompare(b.bank) * cbSortDir;
+    return 0;
+  });
+
+  const grouped = {};
+  results.forEach(r => {
+    if (!grouped[r.category]) grouped[r.category] = [];
+    grouped[r.category].push(r);
+  });
+
+  let html = '';
+  for (const [cat, items] of Object.entries(grouped)) {
+    html += `<div class="results-header"><h2>${cat}</h2><span class="count">${items.length} card${items.length>1?'s':''}</span></div>`;
+    html += renderCashbackTable(items);
+  }
+  document.getElementById('cb-results').innerHTML = html || `<div class="no-results"><div class="emoji">🔍</div><p>No results found</p></div>`;
 }
 
 // Category chips
@@ -1678,9 +1872,11 @@ function toggleMyCard(card) {
   saveAdvisorCards();
   updateMyCardsBar();
   updateMCCBar();
+  updateLoungeBar();
   renderMyCardsPanel();
   renderCategoryResults();
   if (document.getElementById('tab-mcc').style.display !== 'none') renderMCCResults();
+  if (document.getElementById('tab-lounge').style.display !== 'none' && loungeMyCardsFilterOn) renderLoungeResults();
   // Keep advisor tab in sync
   if (document.getElementById('advisor-card-list').innerHTML) {
     renderAdvisorCards();
@@ -1695,6 +1891,7 @@ function panelSelectAll() {
   saveAdvisorCards();
   updateMyCardsBar();
   updateMCCBar();
+  updateLoungeBar();
   renderMyCardsPanel();
   renderCategoryResults();
 }
@@ -1704,6 +1901,7 @@ function panelClearAll() {
   saveAdvisorCards();
   updateMyCardsBar();
   updateMCCBar();
+  updateLoungeBar();
   renderMyCardsPanel();
   renderCategoryResults();
 }
@@ -1750,6 +1948,8 @@ function toggleAdvisorCard(card) {
   saveAdvisorCards();
   updateAdvisorButton();
   updateMyCardsBar();
+  updateMCCBar();
+  updateLoungeBar();
 }
 
 function advisorSelectAll() {
@@ -1760,6 +1960,8 @@ function advisorSelectAll() {
   saveAdvisorCards();
   renderAdvisorCards();
   updateMyCardsBar();
+  updateMCCBar();
+  updateLoungeBar();
 }
 
 function advisorClearAll() {
@@ -1767,6 +1969,8 @@ function advisorClearAll() {
   saveAdvisorCards();
   renderAdvisorCards();
   updateMyCardsBar();
+  updateMCCBar();
+  updateLoungeBar();
 }
 
 function updateAdvisorButton() {
@@ -1890,6 +2094,7 @@ function toggleMCCCard(card) {
   saveAdvisorCards();
   updateMCCBar();
   updateMyCardsBar();
+  updateLoungeBar();
   renderMCCPanel();
   renderMCCResults();
   if (document.getElementById('advisor-card-list').innerHTML) renderAdvisorCards();
@@ -1899,12 +2104,12 @@ function toggleMCCCard(card) {
 function mccPanelSelectAll() {
   const q = (document.getElementById('mcc-panel-card-search')?.value || '').toLowerCase();
   allCards.forEach(card => { if (!q || card.toLowerCase().includes(q)) advisorSelectedCards.add(card); });
-  saveAdvisorCards(); updateMCCBar(); updateMyCardsBar(); renderMCCPanel(); renderMCCResults();
+  saveAdvisorCards(); updateMCCBar(); updateMyCardsBar(); updateLoungeBar(); renderMCCPanel(); renderMCCResults();
 }
 
 function mccPanelClearAll() {
   advisorSelectedCards.clear();
-  saveAdvisorCards(); updateMCCBar(); updateMyCardsBar(); renderMCCPanel(); renderMCCResults();
+  saveAdvisorCards(); updateMCCBar(); updateMyCardsBar(); updateLoungeBar(); renderMCCPanel(); renderMCCResults();
 }
 
 // ============================================================
@@ -2375,19 +2580,16 @@ function renderRedemptions() {
 // ============================================================
 // LOUNGE BENEFITS TAB
 // ============================================================
-let loungeSelectedCards = new Set();
 let loungeMyCardsFilterOn = false;
 let loungeNetworkFilter = 'All';
 try {
-  const saved = localStorage.getItem('loungeSelectedCards');
-  if (saved) loungeSelectedCards = new Set(JSON.parse(saved));
   loungeMyCardsFilterOn = localStorage.getItem('loungeMyCardsFilterOn') === 'true';
 } catch(e) {}
 
 function updateLoungeBar() {
   const toggle = document.getElementById('lounge-my-cards-toggle');
   if (toggle) toggle.checked = loungeMyCardsFilterOn;
-  const n = loungeSelectedCards.size;
+  const n = advisorSelectedCards.size;
   const el = document.getElementById('lounge-my-cards-count');
   if (el) el.textContent = `${n} card${n !== 1 ? 's' : ''} selected`;
 }
@@ -2417,7 +2619,7 @@ function renderLoungePanel() {
     html += `<div class="bank-group">`;
     html += `<div class="bank-group-label"><span class="bank-badge bank-${bank}">${bank}</span></div>`;
     for (const card of cardsByBank[bank]) {
-      const checked = loungeSelectedCards.has(card) ? 'checked' : '';
+      const checked = advisorSelectedCards.has(card) ? 'checked' : '';
       html += `<label class="card-checkbox"><input type="checkbox" ${checked} data-card="${escHtml(card)}" onchange="toggleLoungeCard(this.dataset.card)"> ${escHtml(card)}</label>`;
     }
     html += `</div>`;
@@ -2426,28 +2628,34 @@ function renderLoungePanel() {
 }
 
 function toggleLoungeCard(card) {
-  if (loungeSelectedCards.has(card)) loungeSelectedCards.delete(card);
-  else loungeSelectedCards.add(card);
-  localStorage.setItem('loungeSelectedCards', JSON.stringify([...loungeSelectedCards]));
+  if (advisorSelectedCards.has(card)) advisorSelectedCards.delete(card);
+  else advisorSelectedCards.add(card);
+  saveAdvisorCards();
   updateLoungeBar();
+  updateMyCardsBar();
+  updateMCCBar();
   renderLoungePanel();
+  if (document.getElementById('panel-card-list').innerHTML) renderMyCardsPanel();
+  if (document.getElementById('mcc-panel-card-list').innerHTML) renderMCCPanel();
   if (loungeMyCardsFilterOn) renderLoungeResults();
 }
 
 function loungePanelSelectAll() {
   const q = (document.getElementById('lounge-panel-search')?.value || '').toLowerCase();
-  LOUNGE_DATA.forEach(d => { if (!q || d.card.toLowerCase().includes(q)) loungeSelectedCards.add(d.card); });
-  localStorage.setItem('loungeSelectedCards', JSON.stringify([...loungeSelectedCards]));
-  updateLoungeBar(); renderLoungePanel();
+  LOUNGE_DATA.forEach(d => { if (!q || d.card.toLowerCase().includes(q)) advisorSelectedCards.add(d.card); });
+  saveAdvisorCards();
+  updateLoungeBar(); updateMyCardsBar(); updateMCCBar();
+  renderLoungePanel();
   if (loungeMyCardsFilterOn) renderLoungeResults();
 }
 
 function loungePanelClearAll() {
   const q = (document.getElementById('lounge-panel-search')?.value || '').toLowerCase();
-  if (!q) { loungeSelectedCards.clear(); }
-  else { LOUNGE_DATA.forEach(d => { if (d.card.toLowerCase().includes(q)) loungeSelectedCards.delete(d.card); }); }
-  localStorage.setItem('loungeSelectedCards', JSON.stringify([...loungeSelectedCards]));
-  updateLoungeBar(); renderLoungePanel();
+  if (!q) { advisorSelectedCards.clear(); }
+  else { LOUNGE_DATA.forEach(d => { if (d.card.toLowerCase().includes(q)) advisorSelectedCards.delete(d.card); }); }
+  saveAdvisorCards();
+  updateLoungeBar(); updateMyCardsBar(); updateMCCBar();
+  renderLoungePanel();
   if (loungeMyCardsFilterOn) renderLoungeResults();
 }
 
@@ -2483,7 +2691,7 @@ function renderLoungeResults() {
   const q = (document.getElementById('lounge-search')?.value || '').toLowerCase();
   const rows = LOUNGE_DATA.filter(d => {
     if (loungeNetworkFilter !== 'All' && d.network !== loungeNetworkFilter) return false;
-    if (loungeMyCardsFilterOn && loungeSelectedCards.size > 0 && !loungeSelectedCards.has(d.card)) return false;
+    if (loungeMyCardsFilterOn && advisorSelectedCards.size > 0 && !advisorSelectedCards.has(d.card)) return false;
     if (q && !d.card.toLowerCase().includes(q) && !d.bank.toLowerCase().includes(q) &&
         !d.network.toLowerCase().includes(q) && !d.notes.toLowerCase().includes(q)) return false;
     return true;
