@@ -2078,7 +2078,7 @@ function updateAdvisorButton() {
   const useAll = document.getElementById('advisor-use-all')?.checked;
   const prompt = document.getElementById('advisor-prompt')?.value.trim();
   const count = useAll ? allCards.length : n;
-  document.getElementById('advisor-btn').disabled = count === 0 || !prompt;
+  document.getElementById('advisor-btn').disabled = count === 0;
   document.getElementById('advisor-card-count').textContent = useAll
     ? `All ${allCards.length} cards`
     : `${n} card${n !== 1 ? 's' : ''} selected`;
@@ -2104,6 +2104,13 @@ async function getRecommendation() {
   const useAll = document.getElementById('advisor-use-all')?.checked;
   if (!prompt || (!useAll && advisorSelectedCards.size === 0)) return;
 
+  if (!prompt) {
+    const ta = document.getElementById('advisor-prompt');
+    ta.focus();
+    ta.style.outline = '2px solid var(--accent, #e63946)';
+    setTimeout(() => ta.style.outline = '', 2000);
+    return;
+  }
   const responseDiv = document.getElementById('advisor-response');
   const btn = document.getElementById('advisor-btn');
   btn.disabled = true;
