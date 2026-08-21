@@ -576,7 +576,7 @@
   </div>
 
   <div class="source-note">
-    Data sourced from <a href="https://milelion.com/credit-cards/guide/" target="_blank">The MileLion's Credit Card Guide</a> (Last updated: May 2026). Always verify with the bank before applying.
+    Data sourced from <a href="https://milelion.com/credit-cards/guide/" target="_blank">The MileLion's Credit Card Guide</a> (Last updated: 16 July 2026). Always verify with the bank before applying.
   </div>
 </div>
 
@@ -1089,6 +1089,7 @@ const DATA = [
   {card:"Citi ULTIMA Card", bank:"Citi", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
   {card:"DBS Insignia Card", bank:"DBS", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
   {card:"UOB Reserve Card", bank:"UOB", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
+  {card:"DCS Imperium Card", bank:"DCS", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
   {card:"OCBC VOYAGE Card (Premier/PPC/BOS)", bank:"OCBC", category:"Local General Spending", mpd:1.6, cap:"No cap", remarks:""},
   {card:"DBS Vantage Card", bank:"DBS", category:"Local General Spending", mpd:1.5, cap:"No cap", remarks:""},
   {card:"BOC Elite Miles Card", bank:"BOC", category:"Local General Spending", mpd:1.4, cap:"No cap", remarks:""},
@@ -1114,7 +1115,7 @@ const DATA = [
   // ===== FOREIGN CURRENCY GENERAL SPENDING =====
   {card:"DCS Imperium Card", bank:"DCS", category:"Foreign Currency Spending", mpd:4, cap:"No cap", remarks:"Min S$4K FCY spend/c.month"},
   {card:"Amaze + Citi Rewards", bank:"Citi", category:"Foreign Currency Spending", mpd:4, cap:"S$1K/s.month", remarks:"Excludes travel and mobile wallet"},
-  {card:"Maybank XL Card", bank:"Maybank", category:"Foreign Currency Spending", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Foreign Currency Spending", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
   {card:"UOB Visa Signature", bank:"UOB", category:"Foreign Currency Spending", mpd:4, cap:"S$1.2K/s.month", remarks:"Min S$1K FCY spend/s.month"},
   {card:"StanChart Beyond Card", bank:"StanChart", category:"Foreign Currency Spending", mpd:4, cap:"No cap", remarks:"Regular: 3 mpd, PB: 3.5 mpd, PP: 4 mpd"},
   {card:"Maybank Visa Infinite", bank:"Maybank", category:"Foreign Currency Spending", mpd:3.2, cap:"No cap", remarks:"Min S$4K spend/c.month, otherwise 2 mpd"},
@@ -1143,12 +1144,13 @@ const DATA = [
   {card:"DBS Insignia Card", bank:"DBS", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:""},
   {card:"HSBC Visa Infinite", bank:"HSBC", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:"Step-up earn rates sunset"},
   {card:"StanChart Journey Card", bank:"StanChart", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:""},
+  {card:"Maybank Perks Card", bank:"Maybank", category:"Foreign Currency Spending", mpd:2, cap:"No cap", remarks:"Min S$500 spend/c.month"},
   {card:"Chocolate Visa Card", bank:"Chocolate", category:"Foreign Currency Spending", mpd:1, cap:"S$1K/c.month", remarks:"No FCY fees. 0.4 mpd after cap"},
 
   // ===== AIR TICKETS =====
   {card:"DBS Woman's World Card", bank:"DBS", category:"Air Tickets", mpd:4, cap:"S$1K/c.month", remarks:""},
   {card:"HSBC Revolution Card", bank:"HSBC", category:"Air Tickets", mpd:4, cap:"S$1K/c.month", remarks:""},
-  {card:"Maybank XL Card", bank:"Maybank", category:"Air Tickets", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Air Tickets", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
   {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Air Tickets", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Travel must be chosen as bonus category"},
   {card:"UOB PRVI Miles", bank:"UOB", category:"Air Tickets", mpd:3, cap:"No cap", remarks:"For selected airline bookings on Expedia"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Air Tickets", mpd:3, cap:"No cap", remarks:"SIA & Scoot only"},
@@ -1156,10 +1158,11 @@ const DATA = [
   {card:"AMEX HighFlyer Card", bank:"AMEX", category:"Air Tickets", mpd:2, cap:"No cap", remarks:"SIA & Scoot only"},
   {card:"AMEX KrisFlyer Ascend", bank:"AMEX", category:"Air Tickets", mpd:2, cap:"No cap", remarks:"SIA & Scoot only"},
   {card:"AMEX KrisFlyer Credit Card", bank:"AMEX", category:"Air Tickets", mpd:2, cap:"No cap", remarks:"SIA & Scoot only"},
+  {card:"AMEX Platinum Charge", bank:"AMEX", category:"Air Tickets", mpd:1.56, cap:"No cap", remarks:"SIA & Scoot only"},
 
   // ===== AMAZE =====
   {card:"Citi Rewards Card", bank:"Citi", category:"Amaze", mpd:4, cap:"S$1K/s.month", remarks:"Excludes travel transactions"},
-  {card:"Maybank XL Card", bank:"Maybank", category:"Amaze", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500. Dining, shopping, entertainment, travel"},
+  {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Amaze", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500. Dining, shopping, entertainment, travel"},
   {card:"OCBC Rewards Card", bank:"OCBC", category:"Amaze", mpd:4, cap:"S$1.1K/c.month", remarks:"Clothes, bags, shoes and shopping"},
 
   // ===== ATOME =====
@@ -1193,10 +1196,10 @@ const DATA = [
   {card:"AMEX Platinum Charge", bank:"AMEX", category:"Charitable Donations", mpd:0.63, cap:"No cap", remarks:""},
 
   // ===== DINING =====
-  {card:"Kris+ Feast to Fly (Promo)", bank:"KrisFlyer", category:"Dining", mpd:8, cap:"No cap", remarks:"1 May - 30 Jun 26. At 73+ partner restaurants via Kris+ app. Stackable with 4 mpd from credit cards (max 12 mpd). Visa: 400 bonus miles/week with min S$50 spend"},
   {card:"StanChart Smart Card", bank:"StanChart", category:"Dining", mpd:9.28, cap:"No cap", remarks:"Min S$1.5K spend/s.month. 7.42 mpd with min S$800, 3.71 mpd otherwise. Selected fast food only"},
+  {card:"StanChart Beyond Card", bank:"StanChart", category:"Dining", mpd:8, cap:"No cap", remarks:"Priority Private only, for overseas dining"},
   {card:"HSBC Revolution Card", bank:"HSBC", category:"Dining", mpd:4, cap:"S$1K/c.month", remarks:""},
-  {card:"Maybank XL Card", bank:"Maybank", category:"Dining", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Dining", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
   {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Dining", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Dining must be chosen as bonus category"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Dining", mpd:2.4, cap:"No cap", remarks:"Min S$1K spend on SIA Group in a m.year"},
 
@@ -1224,7 +1227,7 @@ const DATA = [
   {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Food Delivery", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Dining must be chosen as bonus category"},
   {card:"Citi Rewards Card", bank:"Citi", category:"Food Delivery", mpd:4, cap:"S$1K/s.month", remarks:"Online/app payment only. Excludes mobile wallet"},
   {card:"DBS Woman's World Card", bank:"DBS", category:"Food Delivery", mpd:4, cap:"S$1K/c.month", remarks:""},
-  {card:"Maybank XL Card", bank:"Maybank", category:"Food Delivery", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Food Delivery", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
   {card:"UOB Preferred Visa", bank:"UOB", category:"Food Delivery", mpd:4, cap:"S$600/c.month", remarks:""},
   {card:"StanChart Journey Card", bank:"StanChart", category:"Food Delivery", mpd:3, cap:"S$1K/s.month", remarks:"Must be online in SGD"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Food Delivery", mpd:2.4, cap:"No cap", remarks:"Min S$1K spend on SIA Group in a m.year"},
@@ -1270,7 +1273,7 @@ const DATA = [
   {card:"HSBC Revolution Card", bank:"HSBC", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:""},
   {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Hotels", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Travel must be chosen as bonus category"},
   {card:"DBS Woman's World Card", bank:"DBS", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:"Must be online"},
-  {card:"Maybank XL Card", bank:"Maybank", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
+  {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Hotels", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Hotels", mpd:2.4, cap:"No cap", remarks:"Agoda, AirBnB, Booking.com, Expedia, Hotels.com, Kaligo, Traveloka, Trip.com. Min S$1K on SIA Group/m.year"},
 
   // ===== INSURANCE PREMIUMS =====
@@ -1280,13 +1283,12 @@ const DATA = [
   {card:"Chocolate Visa Card", bank:"Chocolate", category:"Insurance Premiums", mpd:1, cap:"100 Max Miles/c.month", remarks:"Cap shared with all other bill payments"},
 
   // ===== KRIS+ =====
-  {card:"Kris+ Feast to Fly Dining (Promo)", bank:"KrisFlyer", category:"Kris+", mpd:8, cap:"No cap", remarks:"1 May - 30 Jun 26. At 73+ dining partners. Stackable with 4 mpd from credit cards (max 12 mpd). Visa: 400 bonus miles/week, min S$50 spend"},
   {card:"DBS Woman's World Card", bank:"DBS", category:"Kris+", mpd:4, cap:"S$1K/c.month", remarks:""},
   {card:"Amaze + Citi Rewards", bank:"Citi", category:"Kris+", mpd:4, cap:"S$1K/s.month", remarks:"1% admin fee (min S$0.50) for SGD. No bonuses for naked Citi Rewards Card"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Kris+", mpd:3, cap:"No cap", remarks:""},
 
   // ===== ONLINE TRANSACTIONS =====
-  {card:"OCBC Rewards Card", bank:"OCBC", category:"Online Transactions", mpd:6, cap:"S$1K/c.month", remarks:"6 mpd for Shopee, Lazada, TikTok Shop, Taobao (till 30 Jun 26). 4 mpd other online, cap S$1.1K/c.month"},
+  {card:"OCBC Rewards Card", bank:"OCBC", category:"Online Transactions", mpd:6, cap:"S$1K/c.month", remarks:"6 mpd for Shopee, Lazada, TikTok Shop, Taobao (till 31 Mar 27). 4 mpd other online, cap S$1.1K/c.month"},
   {card:"Citi Rewards Card", bank:"Citi", category:"Online Transactions", mpd:4, cap:"S$1K/s.month", remarks:"Online only. Excludes travel, mobile wallet, utilities, insurance"},
   {card:"DBS Woman's World Card", bank:"DBS", category:"Online Transactions", mpd:4, cap:"S$1K/c.month", remarks:""},
   {card:"HSBC Revolution Card", bank:"HSBC", category:"Online Transactions", mpd:4, cap:"S$1K/c.month", remarks:"For online shopping and travel"},
@@ -1304,7 +1306,7 @@ const DATA = [
 
   // ===== PHARMACIES =====
   {card:"DBS yuu Card", bank:"DBS", category:"Pharmacies", mpd:10, cap:"S$822/c.month", remarks:"For Guardian. Min S$800/c.month"},
-  {card:"OCBC Rewards Card (Watsons promo)", bank:"OCBC", category:"Pharmacies", mpd:6, cap:"S$1.1K/c.month", remarks:"Watsons only, till 30 Jun 26. Online + offline. Avoid Amaze (overseas)"},
+  {card:"OCBC Rewards Card (Watsons promo)", bank:"OCBC", category:"Pharmacies", mpd:6, cap:"S$1.1K/c.month", remarks:"Watsons only, till 31 Mar 27. Online + offline. Avoid Amaze (overseas)"},
   {card:"OCBC Rewards Card", bank:"OCBC", category:"Pharmacies", mpd:4, cap:"S$1.1K/c.month", remarks:"Guardian, Unity (whitelist, not MCC 5912)"},
   {card:"HSBC Revolution Card", bank:"HSBC", category:"Pharmacies", mpd:4, cap:"S$1K/c.month", remarks:""},
   {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Pharmacies", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"Beauty & Wellness must be chosen as bonus category"},
@@ -1323,7 +1325,7 @@ const DATA = [
   {card:"HSBC Revolution Card", bank:"HSBC", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"38 MCCs"},
   {card:"UOB Preferred Visa", bank:"UOB", category:"Shopping", mpd:4, cap:"S$600/c.month", remarks:"Online only. 36 MCCs"},
   {card:"Maybank XL Rewards Card", bank:"Maybank", category:"Shopping", mpd:4, cap:"S$1K/c.month", remarks:"Min S$500/c.month. 13 MCCs"},
-  {card:"OCBC Rewards Card", bank:"OCBC", category:"Shopping", mpd:4, cap:"S$1.1K/c.month", remarks:"13 MCCs. 6 mpd for Watsons, Shopee, Lazada, TikTok Shop, Taobao (till 30 Jun 26)"},
+  {card:"OCBC Rewards Card", bank:"OCBC", category:"Shopping", mpd:4, cap:"S$1.1K/c.month", remarks:"13 MCCs. 6 mpd for Watsons, Shopee, Lazada, TikTok Shop, Taobao (till 31 Mar 27)"},
   {card:"Citi Rewards Card", bank:"Citi", category:"Shopping", mpd:4, cap:"S$1K/s.month", remarks:"Offline retail (11 MCCs: dept stores, clothing, bags, shoes). All other categories require online payment"},
   {card:"UOB Lady's Card & Lady's Solitaire", bank:"UOB", category:"Shopping", mpd:4, cap:"S$1K/c.month (Lady's), S$750/c.month (Solitaire)", remarks:"10 MCCs. Fashion as bonus category"},
   {card:"KrisFlyer UOB Credit Card", bank:"UOB", category:"Shopping", mpd:2.4, cap:"No cap", remarks:"Online. 29 MCCs. Min S$1K on SIA Group/m.year"},
