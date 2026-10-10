@@ -1,0 +1,1021 @@
+{
+  "last_updated": "8 October 2026",
+  "sections": {
+    "Air Tickets": {
+      "AMEX HighFlyer Card": {
+        "rate": "2 mpd",
+        "remarks": "SIA & Scoot only Review"
+      },
+      "AMEX KrisFlyer Ascend": {
+        "rate": "2 mpd",
+        "remarks": "SIA & Scoot only Review"
+      },
+      "AMEX KrisFlyer Credit Card": {
+        "rate": "2 mpd",
+        "remarks": "SIA & Scoot only Review"
+      },
+      "AMEX Platinum Charge": {
+        "rate": "1.56 mpd",
+        "remarks": "SIA & Scoot only Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "3 mpd",
+        "remarks": "SIA & Scoot only Review"
+      },
+      "Maybank Horizon Visa Signature": {
+        "rate": "2.8 mpd",
+        "remarks": "Min S$800 spend per c. month. Capped at S$10K per c. month Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Min. S$500, max S$1K per c. month Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Travel must be chosen as bonus category Review"
+      },
+      "UOB PRVI Miles AMEX Mastercard": {
+        "rate": "3 mpd",
+        "remarks": "For selected airline bookings on Expedia Review"
+      }
+    },
+    "Amaze": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Citi Rewards Card": {
+        "rate": "4 mpd 1",
+        "remarks": "Max S$1K per s. month Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "4 mpd 2",
+        "remarks": "Min. S$500, max S$1K per c. month Review"
+      },
+      "OCBC Rewards Card": {
+        "rate": "4 mpd 3",
+        "remarks": "Max S$1.1K per c. month Review"
+      }
+    },
+    "Atome": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Citi Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per s. month Review"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Min. S$1K spend on SIA Group in a m. year. No cap Review"
+      }
+    },
+    "Car Rental": {
+      "BOC Elite Miles Card": {
+        "rate": "2.8 mpd FCY only",
+        "remarks": "No min. spend or cap Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd Online only",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month. MCC 7512 not included Review"
+      },
+      "Maybank Horizon Visa Signature": {
+        "rate": "2.8 mpd FCY only",
+        "remarks": "Min. retail spend of S$800 per c. month. No cap Review"
+      },
+      "Maybank Visa Infinite": {
+        "rate": "3.2 mpd FCY only",
+        "remarks": "Min. S$4K spend per c. month Review"
+      },
+      "Maybank World Mastercard": {
+        "rate": "3.2 mpd FCY only",
+        "remarks": "Min. S$4K spend per c. month. 2.8 mpd with min. S$800 spend per c. month Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "4 mpd FCY only",
+        "remarks": "Min. spend S$500 per c. month, capped at S$1K per c. month Review"
+      },
+      "StanChart Beyond Card": {
+        "rate": "3-4 mpd FCY only",
+        "remarks": "3 mpd for regular, 3.5 mpd for PB, 4 mpd for PP. No cap Review"
+      },
+      "StanChart Visa Infinite": {
+        "rate": "3 mpd FCY only",
+        "remarks": "Min S$2K per s. month, no cap, otherwise 1 mpd Review"
+      },
+      "UOB Preferred Visa": {
+        "rate": "4 mpd",
+        "remarks": "Max. S$600 per c. month. Must pay via mobile contactless Review"
+      },
+      "UOB Visa Signature": {
+        "rate": "4 mpd FCY only",
+        "remarks": "Min S$1K, max S$1.2K FCY spend per s. month Review"
+      }
+    },
+    "Charitable Donations": {
+      "AMEX Centurion": {
+        "rate": "0.78 mpd",
+        "remarks": "Review"
+      },
+      "AMEX Platinum Charge": {
+        "rate": "0.63 mpd",
+        "remarks": "Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Chocolate Visa Card": {
+        "rate": "1 mpd",
+        "remarks": "Card will not work for overseas charities. Max S$2K per c. month, 0.4 mpd after Review"
+      }
+    },
+    "Dining": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Min S$1K spend on SIA Group transactions in a m. year Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Min. S$500, max S$1K per c. month Review"
+      },
+      "StanChart Beyond Card": {
+        "rate": "8 mpd",
+        "remarks": "Priority Private only, for overseas dining Review"
+      },
+      "StanChart Smart Card": {
+        "rate": "9.28 mpd",
+        "remarks": "Min S$1.5K spend per s. month. 7.42 mpd with min. S$800 spend, 0.46 mpd otherwise. Selected fast food only Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Capped at S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Dining must be chosen as bonus category Review"
+      }
+    },
+    "EV Charging": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Citi Rewards Card": {
+        "rate": "4 mpd Online only",
+        "remarks": "Cap S$1K per s. month Review"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd Online only",
+        "remarks": "Cap S$1K per c. month Review"
+      },
+      "DBS yuu Visa": {
+        "rate": "10 mpd",
+        "remarks": "For Charge+ only. Min. S$800 max S$822 per c. month. Visa card only Review"
+      },
+      "StanChart Smart Card": {
+        "rate": "Up to 9.28 mpd",
+        "remarks": "Min S$1.5K spend per s. month. 7.42 mpd with min. S$800 spend, 0.46 mpd otherwise Review"
+      }
+    },
+    "Education": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Chocolate Visa Card": {
+        "rate": "1 mpd",
+        "remarks": "Max S$2K per c. month, 0.4 mpd after Review"
+      },
+      "HSBC Premier Mastercard": {
+        "rate": "2.76 mpd",
+        "remarks": "Overseas education only Review"
+      },
+      "Maybank Horizon Visa Signature": {
+        "rate": "0.16 mpd",
+        "remarks": "Capped at 480 miles per month, shared with all other Selected Categories Review"
+      },
+      "Maybank Manchester United Card": {
+        "rate": "0.4 mpd",
+        "remarks": ""
+      },
+      "Maybank Visa Infinite": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "Maybank World Mastercard": {
+        "rate": "0.4 mpd",
+        "remarks": "Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "0.4 mpd",
+        "remarks": "Review"
+      },
+      "UOB Privilege Banking Card": {
+        "rate": "1.2 mpd",
+        "remarks": ""
+      },
+      "UOB Reserve Card": {
+        "rate": "1.6 mpd",
+        "remarks": "Review"
+      },
+      "UOB Visa Infinite Metal Card": {
+        "rate": "1.4 mpd",
+        "remarks": "Review"
+      }
+    },
+    "Food Delivery": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Citi Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per s. month Review"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month Review"
+      },
+      "DBS yuu Card AMEX": {
+        "rate": "10 mpd",
+        "remarks": "For FoodPanda only. Min. S$800, max S$822 per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Min S$1K spend on SIA Group transactions in a m. year Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Min. S$500, max S$1K per c. month Review"
+      },
+      "StanChart Journey Card": {
+        "rate": "3 mpd",
+        "remarks": "Cap S$1K per s. month, must be online in SGD Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Dining must be chosen as bonus category Review"
+      },
+      "UOB Preferred Visa": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$600 per c. month Review"
+      }
+    },
+    "Foreign Currency General Spending": {
+      "AMEX Centurion": {
+        "rate": "2.3 mpd",
+        "remarks": "Till 22 Feb 27, capped at S$50K for entire period. 0.78 mpd after the cap Review"
+      },
+      "AMEX Platinum Charge": {
+        "rate": "2.2 mpd",
+        "remarks": "Till 22 Feb 27, capped at S$15K for entire period. 0.63 mpd after the cap Review"
+      },
+      "AMEX Platinum Credit Card": {
+        "rate": "0.57 mpd",
+        "remarks": "Review"
+      },
+      "AMEX Platinum Reserve": {
+        "rate": "0.57 mpd",
+        "remarks": ""
+      },
+      "Amaze + Citi Rewards": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per s. month, excludes travel and mobile wallet Review"
+      },
+      "BOC Elite Miles Card": {
+        "rate": "2.8 mpd",
+        "remarks": "Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Chocolate Visa Card": {
+        "rate": "1 mpd",
+        "remarks": "No FCY fees. Max S$2K per c. month, 0.4 mpd after Review"
+      },
+      "Citi PremierMiles Card": {
+        "rate": "2.2 mpd",
+        "remarks": "Review"
+      },
+      "Citi Prestige Card": {
+        "rate": "2 mpd",
+        "remarks": "Up to 0.06/0.12 mpd extra from relationship bonus Review"
+      },
+      "Citi ULTIMA Card": {
+        "rate": "2 mpd",
+        "remarks": "Review"
+      },
+      "DBS Altitude Card AMEX": {
+        "rate": "2.2 mpd",
+        "remarks": "Review"
+      },
+      "DBS Insignia Card": {
+        "rate": "2 mpd",
+        "remarks": "Review"
+      },
+      "DBS Treasures": {
+        "rate": "2.4 mpd",
+        "remarks": ""
+      },
+      "DBS Vantage Card": {
+        "rate": "2.2 mpd",
+        "remarks": "Review"
+      },
+      "DCS Imperium Card": {
+        "rate": "4 mpd",
+        "remarks": "Min. S$4K FCY spend per c. month Review"
+      },
+      "HSBC Premier Mastercard": {
+        "rate": "2.76 mpd",
+        "remarks": "Review"
+      },
+      "HSBC TravelOne Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Review"
+      },
+      "HSBC Visa Infinite": {
+        "rate": "2 mpd",
+        "remarks": "Step-up earn rates have been sunset Review"
+      },
+      "Maybank Horizon Visa Signature": {
+        "rate": "2.8 mpd",
+        "remarks": "Min S$800 spend per c. month, otherwise 1.2 mpd Review"
+      },
+      "Maybank Perks Card": {
+        "rate": "2 mpd",
+        "remarks": "Min. S$500 spend per c. month Review"
+      },
+      "Maybank Visa Infinite": {
+        "rate": "3.2 mpd",
+        "remarks": "Min S$4K spend per c. month, otherwise 2 mpd Review"
+      },
+      "Maybank World Mastercard": {
+        "rate": "3.2 mpd",
+        "remarks": "Min S$4K spend per c. month. 2.8 mpd if min S$800 spend per c. month, otherwise 0.4 mpd Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Min. S$500, max S$1K per c. month Review"
+      },
+      "OCBC 90\u00b0N Card Mastercard": {
+        "rate": "2.1 mpd",
+        "remarks": "Review"
+      },
+      "OCBC Premier Visa Infinite": {
+        "rate": "2.24 mpd",
+        "remarks": "Review"
+      },
+      "OCBC VOYAGE (Premier, PPC, BOS)": {
+        "rate": "2.3 mpd",
+        "remarks": "Review"
+      },
+      "OCBC VOYAGE Card": {
+        "rate": "2.2 mpd",
+        "remarks": "Review"
+      },
+      "StanChart Beyond Card": {
+        "rate": "Up to 4 mpd",
+        "remarks": "Regular: 3 mpd PB: 3.5 mpd PP: 4 mpd Review"
+      },
+      "StanChart Journey Card": {
+        "rate": "2 mpd",
+        "remarks": "Review"
+      },
+      "StanChart Rewards+ Card": {
+        "rate": "2.9 mpd",
+        "remarks": "Max S$2.2K foreign currency spending per m. year"
+      },
+      "StanChart Visa Infinite": {
+        "rate": "3 mpd",
+        "remarks": "Min S$2K overall spend per s. month, otherwise 1 mpd Review"
+      },
+      "Trust Freedom Card via app with referral code 2GQEAM81": {
+        "rate": "1.3 mpd",
+        "remarks": "No FCY fees Review"
+      },
+      "UOB PRVI Miles AMEX Mastercard": {
+        "rate": "2.4 mpd",
+        "remarks": "3 mpd if in IDR, MYR, THB, VND Review"
+      },
+      "UOB Reserve Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Review"
+      },
+      "UOB Visa Infinite Metal Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Review"
+      },
+      "UOB Visa Signature": {
+        "rate": "4 mpd",
+        "remarks": "Min S$1K, max S$1.2K FCY spend per s. month Review"
+      }
+    },
+    "Government services": {
+      "AMEX Centurion": {
+        "rate": "0.98 mpd",
+        "remarks": "Review"
+      },
+      "AMEX HighFlyer Card": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "AMEX KrisFlyer Ascend": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "AMEX KrisFlyer Credit Card": {
+        "rate": "1.1 mpd",
+        "remarks": "Review"
+      },
+      "AMEX PPS Credit Card": {
+        "rate": "1.3 mpd",
+        "remarks": "Review"
+      },
+      "AMEX Platinum Charge": {
+        "rate": "0.78 mpd",
+        "remarks": "Review"
+      },
+      "AMEX Platinum Credit Card": {
+        "rate": "0.69 mpd",
+        "remarks": "Review"
+      },
+      "AMEX Platinum Reserve": {
+        "rate": "0.69 mpd",
+        "remarks": ""
+      },
+      "AMEX Solitaire PPS Credit Card": {
+        "rate": "1.3 mpd",
+        "remarks": "Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Chocolate Visa Card": {
+        "rate": "1 mpd",
+        "remarks": "Max 300 Max Miles per c. month (cap shared with all other bill payments) Review"
+      }
+    },
+    "Grab, Gojek, Ryde, TADA and other ridehailing": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Citi Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per s. month Review"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month Review"
+      },
+      "DBS yuu Card AMEX": {
+        "rate": "10 mpd",
+        "remarks": "For Gojek. Min. S$800 max S$822 per c. month Review"
+      },
+      "GXS Credit Card via app with code AARO742": {
+        "rate": "3.84 mpd",
+        "remarks": "Better to use GrabCoins for a 10% rebate on Grab services rather than convert to KrisFlyer miles Review"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Min. S$1K spend on SIA Group transactions in a m. year Review"
+      },
+      "StanChart Journey Card": {
+        "rate": "3 mpd",
+        "remarks": "Cap S$1K per s. month, must be online in SGD Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Transport must be chosen as bonus category Review"
+      }
+    },
+    "Groceries/Supermarket": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "DBS yuu Card AMEX": {
+        "rate": "10 mpd",
+        "remarks": "For Cold Storage and Giant. Min. S$800, max S$822 per c. month Review"
+      },
+      "StanChart Journey Card": {
+        "rate": "3 mpd",
+        "remarks": "Cap S$1K per s. month, must be online in SGD Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Family must be chosen as your bonus category Review"
+      }
+    },
+    "Hospitals": {
+      "AMEX Centurion": {
+        "rate": "0.78 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "AMEX HighFlyer Card": {
+        "rate": "1.2 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "AMEX KrisFlyer Ascend": {
+        "rate": "1.2 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "AMEX KrisFlyer Credit Card": {
+        "rate": "1.1 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "AMEX PPS Credit Card": {
+        "rate": "1.3 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "AMEX Platinum Charge": {
+        "rate": "0.63 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "AMEX Platinum Credit Card": {
+        "rate": "0.57 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "AMEX Platinum Reserve": {
+        "rate": "0.57 mpd",
+        "remarks": "Excludes public hospitals"
+      },
+      "AMEX Solitaire PPS Credit Card": {
+        "rate": "1.3 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Chocolate Visa Card": {
+        "rate": "1 mpd",
+        "remarks": "Max 300 Max Miles per c. month (cap shared with all other bill payments) Review"
+      },
+      "Citi ULTIMA Card": {
+        "rate": "1.6 mpd",
+        "remarks": "Review"
+      },
+      "Maybank Visa Infinite": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "Maybank World Mastercard": {
+        "rate": "0.4 mpd",
+        "remarks": "Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "0.4 mpd",
+        "remarks": "Review"
+      },
+      "OCBC Premier Visa Infinite": {
+        "rate": "1.28 mpd",
+        "remarks": "Excludes public hospitals Review"
+      },
+      "OCBC VOYAGE Card": {
+        "rate": "1.3 mpd",
+        "remarks": "Excludes public hospitals Review"
+      }
+    },
+    "Hotels": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Citi PremierMiles Card": {
+        "rate": "10 mpd on Kaligo , 7.2 mpd on Agoda",
+        "remarks": "Refer to T&Cs for exclusions Review"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month. Must be online Review"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Agoda, Airbnb, Booking.com, Expedia, Hotels.com, Kaligo, Traveloka, Trip.com (with min S$1K spend on SIA Group in a m. year) Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Min. S$500, max S$1K per c. month Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Travel must be chosen as bonus category Review"
+      },
+      "UOB PRVI Miles AMEX Mastercard": {
+        "rate": "8 mpd on Agoda and Expedia",
+        "remarks": "Review"
+      }
+    },
+    "Insurance Premiums": {
+      "AMEX KrisFlyer Ascend": {
+        "rate": "1.2 mpd",
+        "remarks": "Chubb only Review"
+      },
+      "AMEX KrisFlyer Credit Card": {
+        "rate": "1.1 mpd",
+        "remarks": "Chubb only Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Chocolate Visa Card": {
+        "rate": "1 mpd",
+        "remarks": "Max 300 Max Miles per c. month (cap shared with all other bill payments) Review"
+      },
+      "Maybank Horizon Visa Signature": {
+        "rate": "0.16 mpd",
+        "remarks": "Capped at 480 miles per month, shared with all other Selected Categories Review"
+      },
+      "Maybank Visa Infinite": {
+        "rate": "1.2 mpd",
+        "remarks": "Capped at S$3K per c. month Review"
+      }
+    },
+    "Kris+": {
+      "Amaze + Citi Rewards": {
+        "rate": "4 mpd",
+        "remarks": "1% admin fee (min. S$0.50) applies for SGD spend. Max. S$1K per s. month. No bonuses for naked Citi Rewards Card Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd",
+        "remarks": "Max. S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "3 mpd",
+        "remarks": "No cap Review"
+      }
+    },
+    "Local General Spending": {
+      "AMEX Centurion": {
+        "rate": "0.78 mpd",
+        "remarks": "Review"
+      },
+      "AMEX HighFlyer Card": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "AMEX KrisFlyer Ascend": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "AMEX KrisFlyer Credit Card": {
+        "rate": "1.1 mpd",
+        "remarks": "Review"
+      },
+      "AMEX Platinum Charge": {
+        "rate": "0.63 mpd",
+        "remarks": "Review"
+      },
+      "AMEX Platinum Credit Card": {
+        "rate": "0.57 mpd",
+        "remarks": "Review"
+      },
+      "AMEX Platinum Reserve": {
+        "rate": "0.57 mpd",
+        "remarks": ""
+      },
+      "Amaze + Citi Rewards": {
+        "rate": "4 mpd",
+        "remarks": "1% admin fee (min. S$0.50) applies. Max S$1K per s. month, excludes travel and mobile wallet Review"
+      },
+      "BOC Elite Miles Card": {
+        "rate": "1.4 mpd",
+        "remarks": "Review"
+      },
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Chocolate Visa Card": {
+        "rate": "1 mpd",
+        "remarks": "Max S$2K per c. month, 0.4 mpd after Review"
+      },
+      "Citi PremierMiles Card": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "Citi Prestige Card": {
+        "rate": "1.3 mpd",
+        "remarks": "Up to 0.06/0.12 mpd extra from relationship bonus Review"
+      },
+      "Citi ULTIMA Card": {
+        "rate": "1.6 mpd",
+        "remarks": "Review"
+      },
+      "DBS Altitude Card AMEX": {
+        "rate": "1.3 mpd",
+        "remarks": "Review"
+      },
+      "DBS Chromo Card": {
+        "rate": "1.3 mpd",
+        "remarks": "Review"
+      },
+      "DBS Insignia Card": {
+        "rate": "1.6 mpd",
+        "remarks": "Review"
+      },
+      "DBS Vantage Card": {
+        "rate": "1.5 mpd (1.4 mpd from 2 Nov 26)",
+        "remarks": "Review"
+      },
+      "DCS Imperium Card": {
+        "rate": "1.6 mpd",
+        "remarks": "Review"
+      },
+      "HSBC Premier Mastercard": {
+        "rate": "1.68 mpd",
+        "remarks": "Review"
+      },
+      "HSBC TravelOne Card": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "HSBC Visa Infinite": {
+        "rate": "1 mpd",
+        "remarks": "Step-up earn rates have been sunset Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "Maybank Visa Infinite": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "OCBC 90\u00b0N Card Mastercard": {
+        "rate": "1.3 mpd",
+        "remarks": "Review"
+      },
+      "OCBC Premier Visa Infinite": {
+        "rate": "1.28 mpd",
+        "remarks": "Review"
+      },
+      "OCBC VOYAGE Card": {
+        "rate": "1.3 mpd",
+        "remarks": "Review"
+      },
+      "OCBC VOYAGE Card (Premier, PPC, BOS)": {
+        "rate": "1.6 mpd",
+        "remarks": "Review"
+      },
+      "StanChart Beyond Card": {
+        "rate": "Up to 2 mpd",
+        "remarks": "Regular: 1.5 mpd PB & PP: 2 mpd Review"
+      },
+      "StanChart Journey Card": {
+        "rate": "1.2 mpd",
+        "remarks": "Review"
+      },
+      "StanChart Visa Infinite": {
+        "rate": "1.4 mpd",
+        "remarks": "Min S$2K total spend per s. month, otherwise 1 mpd Review"
+      },
+      "Trust Freedom Card via app with referral code 2GQEAM81": {
+        "rate": "1.3 mpd",
+        "remarks": "Review"
+      },
+      "UOB PRVI Miles AMEX Mastercard": {
+        "rate": "1.4 mpd",
+        "remarks": "Review"
+      },
+      "UOB Reserve Card": {
+        "rate": "1.6 mpd",
+        "remarks": "Review"
+      },
+      "UOB Visa Infinite Metal Card": {
+        "rate": "1.4 mpd",
+        "remarks": "Review"
+      }
+    },
+    "Online Transactions": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Citi Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per s. month, excludes travel Review"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month Review"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd",
+        "remarks": "For online shopping and travel, cap S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd",
+        "remarks": "For online shopping and travel , with min S$1K spend on SIA Group in a m. year Review"
+      },
+      "OCBC Rewards Card": {
+        "rate": "6 mpd",
+        "remarks": "For Shopee, Lazada, TikTok Shop, Taobao, cap S$1K per c. month until 31 Mar 27. Other online shopping earns 4 mpd, cap S$1.1K per c. month Review"
+      },
+      "UOB Preferred Visa": {
+        "rate": "4 mpd",
+        "remarks": "For online shopping and entertainment, cap S$600 per c. month Review"
+      }
+    },
+    "PayWave or Mobile Payments": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "UOB Preferred Visa": {
+        "rate": "4 mpd",
+        "remarks": "Max S$600 per c. month. Must use mobile payments; no points for paying with physical card Review"
+      },
+      "UOB Visa Signature": {
+        "rate": "4 mpd",
+        "remarks": "Min S$1K, max S$1.2K per s. month Review"
+      }
+    },
+    "Petrol": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Maybank World Mastercard": {
+        "rate": "4 mpd",
+        "remarks": "No cap. Offline only Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Capped at S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Transport must be chosen as your bonus category Review"
+      },
+      "UOB Visa Signature": {
+        "rate": "4 mpd",
+        "remarks": "Min. S$1K, max S$1.2K combined spending on petrol and local contactless spend per s. month Review"
+      }
+    },
+    "Pharmacies": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "DBS yuu Card AMEX": {
+        "rate": "10 mpd",
+        "remarks": "For Guardian. Min. S$800 max S$822 per c. month Review"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Min S$1K spend on SIA Group transactions in a m. year. Must be online Review"
+      },
+      "OCBC Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "6 mpd for Watsons . Capped at S$1.1K per c. month Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Capped at S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Beauty & Wellness must be chosen as your bonus category Review"
+      }
+    },
+    "Public Transportation (SimplyGo)": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "DBS yuu Card AMEX": {
+        "rate": "10 mpd",
+        "remarks": "Min. S$800, max S$822 per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd",
+        "remarks": "Min S$1K spend on SIA Group transactions in a m. year Review"
+      },
+      "StanChart Smart Card": {
+        "rate": "9.28 mpd",
+        "remarks": "Min S$1.5K spend per s. month. 7.42 mpd with min. S$800 spend, 0.46 mpd otherwise Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd",
+        "remarks": "Capped at S$1K per c. month for Lady\u2019s Card and S$750 per c. month for Lady\u2019s Solitaire. Transport must be chosen as your bonus category Review"
+      },
+      "UOB Preferred Visa": {
+        "rate": "4 mpd",
+        "remarks": "Cap S$600 per c. month. Must use mobile contactless Review"
+      },
+      "UOB Visa Signature": {
+        "rate": "4 mpd",
+        "remarks": "Min S$1K, max S$1.2K per s. month. Must use contactless Review"
+      }
+    },
+    "Shopping": {
+      "Card": {
+        "rate": "Earn Rate No. of MCCs",
+        "remarks": "Remarks"
+      },
+      "Citi Rewards Card": {
+        "rate": "4 mpd (Offline) 11 MCCs",
+        "remarks": "Max S$1K per s. month Review"
+      },
+      "HSBC Revolution": {
+        "rate": "4 mpd 38 MCCs",
+        "remarks": "Max S$1K per c. month Review"
+      },
+      "KrisFlyer UOB Credit Card": {
+        "rate": "2.4 mpd (Online) 29 MCCs",
+        "remarks": "No cap. Min. S$1K spend on SIA Group in a m. year Review"
+      },
+      "Maybank XL Rewards Card": {
+        "rate": "4 mpd 13 MCCs",
+        "remarks": "Min. S$500, max S$1K per c. month Review"
+      },
+      "OCBC Rewards": {
+        "rate": "4 mpd^ 13 MCCs",
+        "remarks": "Max S$1.1K per c. month Review"
+      },
+      "UOB Lady\u2019s Card & Lady\u2019s Solitaire": {
+        "rate": "4 mpd 10 MCCs",
+        "remarks": "Max S$750 (Lady\u2019s Solitaire) or S$1K (Lady\u2019s) with Fashion as bonus category Review"
+      },
+      "UOB Preferred Visa": {
+        "rate": "4 mpd (Online) 36 MCCs",
+        "remarks": "Max S$600 per c. month Review"
+      }
+    },
+    "Telco Bills (Singtel, Starhub, M1 etc)": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Citi Rewards Card": {
+        "rate": "4 mpd",
+        "remarks": "Capped at S$1K per s. month, must be paid online or via app. No points if set up as recurring credit card payment Review"
+      },
+      "DBS Woman\u2019s World Card": {
+        "rate": "4 mpd",
+        "remarks": "Capped at S$1K per c. month, for bills paid via app. No points if set up as recurring credit card payment Review"
+      },
+      "DBS yuu Card AMEX": {
+        "rate": "10 mpd",
+        "remarks": "For Singtel (must pay at kiosk ). Min. S$800, max S$822 per c. month Review"
+      }
+    },
+    "Utilities": {
+      "Card": {
+        "rate": "Earn Rate",
+        "remarks": "Remarks"
+      },
+      "Chocolate Visa Card": {
+        "rate": "1 mpd",
+        "remarks": "Max 300 Max Miles per c. month (cap shared with all other bill payments) Review"
+      }
+    }
+  }
+}

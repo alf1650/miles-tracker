@@ -1,0 +1,50 @@
+name: Check MileLion for updates
+
+on:
+  schedule:
+    - cron: '0 2 1,15 * *'  # 02:00 UTC on the 1st and 15th
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install requests beautifulsoup4
+
+      - id: check
+        run: python scripts/check_milelion.py
+
+      - name: Commit snapshot update
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/milelion_snapshot.json
+          git commit -m "chore: update MileLion snapshot" || echo "no snapshot change"
+          git push
+
+      - name: Open issue with change report
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT: ${{ steps.check.outputs.report }}
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          printf '%s\n\n---\nSource: https://milelion.com/credit-cards/guide/\n' "$REPORT" > body.md
+          gh issue create \
+            --title "MileLion updates detected ($DATE)" \
+            --body-file body.md \
+            --label "milelion-update" || \
+          gh issue create \
+            --title "MileLion updates detected ($DATE)" \
+            --body-file body.md
